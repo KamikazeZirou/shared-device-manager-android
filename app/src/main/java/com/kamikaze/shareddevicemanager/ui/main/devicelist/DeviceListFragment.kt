@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.kamikaze.shareddevicemanager.R
 
 class DeviceListFragment : Fragment() {
@@ -20,10 +20,10 @@ class DeviceListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         deviceListViewModel =
-            ViewModelProviders.of(this).get(DeviceListViewModel::class.java)
+            ViewModelProvider(this).get(DeviceListViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_device_list, container, false)
         val textView: TextView = root.findViewById(R.id.text_device_list)
-        deviceListViewModel.text.observe(this, Observer {
+        deviceListViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
         return root
