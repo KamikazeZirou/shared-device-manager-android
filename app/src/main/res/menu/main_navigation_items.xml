@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/device_list_item"
+        android:icon="@drawable/ic_list_black_48dp"
+        android:title="@string/device_list" />
+    <item android:id="@+id/my_device_item"
+        android:icon="@drawable/ic_perm_device_information_black_48dp"
+        android:title="@string/my_device" />
+</menu>

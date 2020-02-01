@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">SharedDeviceManager</string>
+    <string name="device_list">Devices</string>
+    <string name="my_device">My Device</string>
 </resources>
