@@ -8,8 +8,10 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.kamikaze.shareddevicemanager.R
+import com.kamikaze.shareddevicemanager.ui.main.devicelist.DeviceListFragment
+import com.kamikaze.shareddevicemanager.ui.main.devicelist.dummy.DummyContent
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), DeviceListFragment.OnListFragmentInteractionListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,5 +28,8 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+    }
+
+    override fun onListFragmentInteraction(item: DummyContent.DummyItem?) {
     }
 }
