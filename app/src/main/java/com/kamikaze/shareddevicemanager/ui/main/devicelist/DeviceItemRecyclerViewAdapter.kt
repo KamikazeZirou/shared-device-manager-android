@@ -1,15 +1,13 @@
 package com.kamikaze.shareddevicemanager.ui.main.devicelist
 
-import androidx.recyclerview.widget.RecyclerView
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.kamikaze.shareddevicemanager.R
-
-
-import com.kamikaze.shareddevicemanager.ui.main.devicelist.dummy.DummyContent.DummyItem
-
+import com.kamikaze.shareddevicemanager.model.data.Device
 import kotlinx.android.synthetic.main.fragment_device_item.view.*
 
 /**
@@ -18,7 +16,7 @@ import kotlinx.android.synthetic.main.fragment_device_item.view.*
  * TODO: Replace the implementation with code for your data type.
  */
 class DeviceItemRecyclerViewAdapter(
-    private val mValues: List<DummyItem>,
+    private val mValues: List<Device>,
     private val mListener: DeviceListFragment.OnListFragmentInteractionListener?
 ) : RecyclerView.Adapter<DeviceItemRecyclerViewAdapter.ViewHolder>() {
 
@@ -26,7 +24,7 @@ class DeviceItemRecyclerViewAdapter(
 
     init {
         mOnClickListener = View.OnClickListener { v ->
-            val item = v.tag as DummyItem
+            val item = v.tag as Device
             // Notify the active callbacks interface (the activity, if the fragment is attached to
             // one) that an item has been selected.
             mListener?.onListFragmentInteraction(item)
@@ -41,8 +39,8 @@ class DeviceItemRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = mValues[position]
-        holder.mIdView.text = item.id
-        holder.mContentView.text = item.content
+        holder.mIdView.text = item.id.toString()
+        holder.mContentView.text = item.name
 
         with(holder.mView) {
             tag = item
@@ -51,6 +49,9 @@ class DeviceItemRecyclerViewAdapter(
     }
 
     override fun getItemCount(): Int = mValues.size
+
+    fun setList(it: List<Device>?) {
+    }
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
         val mIdView: TextView = mView.item_number

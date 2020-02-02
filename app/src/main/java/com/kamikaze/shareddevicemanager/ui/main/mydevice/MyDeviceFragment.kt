@@ -10,12 +10,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
 import com.kamikaze.shareddevicemanager.R
 import com.kamikaze.shareddevicemanager.databinding.FragmentMyDeviceBinding
 import com.kamikaze.shareddevicemanager.ui.register.RegisterDeviceActivity
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
 
 class MyDeviceFragment : Fragment() {
@@ -34,6 +32,7 @@ class MyDeviceFragment : Fragment() {
         binding =
             DataBindingUtil.inflate(layoutInflater, R.layout.fragment_my_device, container, false)
         binding.viewModel = myDeviceViewModel
+        binding.lifecycleOwner = viewLifecycleOwner
 
         myDeviceViewModel.text.observe(viewLifecycleOwner, Observer {
             binding.textMyDevice.text = it

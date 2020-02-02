@@ -6,12 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kamikaze.shareddevicemanager.R
-import com.kamikaze.shareddevicemanager.ui.main.devicelist.dummy.DummyContent
+import com.kamikaze.shareddevicemanager.model.data.Device
+import kotlinx.android.synthetic.main.fragment_device_item_list.*
 
 class DeviceListFragment : Fragment() {
     // TODO: Customize parameters
@@ -47,9 +49,13 @@ class DeviceListFragment : Fragment() {
                     columnCount <= 1 -> LinearLayoutManager(context)
                     else -> GridLayoutManager(context, columnCount)
                 }
-                adapter = DeviceItemRecyclerViewAdapter(DummyContent.ITEMS, listener)
             }
         }
+
+        deviceListViewModel.devices.observe(viewLifecycleOwner, Observer {
+            list.adapter = DeviceItemRecyclerViewAdapter(it, listener)
+        })
+
         return view
     }
 
@@ -80,7 +86,7 @@ class DeviceListFragment : Fragment() {
      */
     interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        fun onListFragmentInteraction(item: DummyContent.DummyItem?)
+        fun onListFragmentInteraction(item: Device?)
     }
 
     companion object {
