@@ -26,6 +26,7 @@ class RegisterDeviceFragment : Fragment() {
 
         binding =
             DataBindingUtil.inflate(layoutInflater, R.layout.fragment_register_device, container, false)
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
         return binding.root
