@@ -7,43 +7,32 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import com.kamikaze.shareddevicemanager.R
 import com.kamikaze.shareddevicemanager.databinding.FragmentMyDeviceBinding
 import com.kamikaze.shareddevicemanager.ui.register.RegisterDeviceActivity
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 
 class MyDeviceFragment : Fragment() {
 
     private lateinit var binding: FragmentMyDeviceBinding
-    private lateinit var myDeviceViewModel: MyDeviceViewModel
+    private lateinit var viewModel: MyDeviceViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        myDeviceViewModel =
+        viewModel =
             ViewModelProvider(this).get(MyDeviceViewModel::class.java)
 
         binding =
             DataBindingUtil.inflate(layoutInflater, R.layout.fragment_my_device, container, false)
-        binding.viewModel = myDeviceViewModel
+        binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
-        myDeviceViewModel.text.observe(viewLifecycleOwner, Observer {
-            binding.textMyDevice.text = it
-        })
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            myDeviceViewModel.requestStartRegisterDevice
-                .collect {
-                    val intent = Intent(activity, RegisterDeviceActivity::class.java)
-                    startActivity(intent)
-                }
+        binding.buttonRegisterDevice.setOnClickListener {
+            val intent = Intent(activity, RegisterDeviceActivity::class.java)
+            startActivity(intent)
         }
 
         return binding.root
