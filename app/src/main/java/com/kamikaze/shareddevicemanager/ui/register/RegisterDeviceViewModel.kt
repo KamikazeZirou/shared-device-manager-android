@@ -1,6 +1,5 @@
 package com.kamikaze.shareddevicemanager.ui.register
 
-import android.os.Build
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.kamikaze.shareddevicemanager.model.data.IMyDeviceBuilder
@@ -13,12 +12,13 @@ class RegisterDeviceViewModel : ViewModel() {
     private val deviceRepository: IDeviceRepository = FakeDeviceRepository.instance
     private val deviceBuilder: IMyDeviceBuilder = MyDeviceBuilder()
 
+    private val device = deviceBuilder.build()
     val deviceName = MutableLiveData<String>().apply {
-        value = Build.MODEL
+        value = device.model
     }
 
     fun registerDevice() {
-        val device = deviceBuilder.build(deviceName.value!!)
+        val device = device.copy(name = deviceName.value!!)
         deviceRepository.register(device)
     }
 }

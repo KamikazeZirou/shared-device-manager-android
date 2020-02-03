@@ -7,8 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.launch
 
-class FakeDeviceRepository()
-    : IDeviceRepository {
+class FakeDeviceRepository() : IDeviceRepository {
     companion object {
         val instance: FakeDeviceRepository = FakeDeviceRepository()
     }
@@ -28,13 +27,31 @@ class FakeDeviceRepository()
     }
 
     override fun register(device: Device) {
-        devices += device
-        device.id = devices.size.toLong()
+        val registeredDevice = device.copy(id = devices.size.toLong() + 1)
+        devices += registeredDevice
 
         // FIXME 正式実装
         GlobalScope.launch {
+            myDeviceChannel.send(registeredDevice)
             devicesChannel.send(devices)
             deviceRegisteredChannel.send(true)
+        }
+    }
+
+    override fun borrow(device: Device) {
+        // FIXME 正式実装
+        GlobalScope.launch {
+            val index = devices.indexOfFirst {
+                it.id == device.id
+            }
+            if (index == -1) {
+                return@launch
+            }
+
+            val newDevice = device.copy(status = Device.Status.IN_USE)
+            myDeviceChannel.send(newDevice)
+            devices[index] = newDevice
+            devicesChannel.send(devices)
         }
     }
 
@@ -43,4 +60,7 @@ class FakeDeviceRepository()
 
     private val deviceRegisteredChannel = ConflatedBroadcastChannel<Boolean>()
     override val deviceRegisteredFlow: Flow<Boolean> = deviceRegisteredChannel.asFlow()
+
+    private val myDeviceChannel = ConflatedBroadcastChannel<Device>()
+    override val myDeviceFlow: Flow<Device> = myDeviceChannel.asFlow()
 }

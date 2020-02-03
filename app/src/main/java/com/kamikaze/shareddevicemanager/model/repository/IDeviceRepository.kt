@@ -5,6 +5,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface IDeviceRepository {
     fun register(device: Device)
+    fun borrow(device: Device)
+
+    val myDeviceFlow: Flow<Device>
     val devicesFlow: Flow<List<Device>>
     val deviceRegisteredFlow: Flow<Boolean>
 }

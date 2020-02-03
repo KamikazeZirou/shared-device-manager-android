@@ -30,9 +30,26 @@ class MyDeviceFragment : Fragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
+
+        //
+        // Not Registered Screen
+        //
         binding.buttonRegisterDevice.setOnClickListener {
             val intent = Intent(activity, RegisterDeviceActivity::class.java)
             startActivity(intent)
+        }
+
+        // Registered Screen
+        binding.borrowButton.setOnClickListener {
+            val intent = Intent(activity, BorrowDeviceActivity::class.java)
+            startActivity(intent)
+//            val dialogFragment = BorrowDeviceDialogFragment.newInstance()
+//            dialogFragment.show(parentFragmentManager, "borrow_dialog")
+        }
+
+        binding.unregisterButton.setOnClickListener {
+            // TODO 確認ダイアログを出して、OKなら登録を消す
+            viewModel.unregister()
         }
 
         return binding.root

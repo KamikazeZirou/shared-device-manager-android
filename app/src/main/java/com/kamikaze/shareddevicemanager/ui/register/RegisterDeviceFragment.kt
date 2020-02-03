@@ -5,6 +5,7 @@ import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.kamikaze.shareddevicemanager.R
 import com.kamikaze.shareddevicemanager.databinding.FragmentRegisterDeviceBinding
@@ -28,6 +29,9 @@ class RegisterDeviceFragment : Fragment() {
             DataBindingUtil.inflate(layoutInflater, R.layout.fragment_register_device, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+        viewModel.deviceName.observe(viewLifecycleOwner, Observer {
+            val hoge = it
+        })
 
         return binding.root
     }
