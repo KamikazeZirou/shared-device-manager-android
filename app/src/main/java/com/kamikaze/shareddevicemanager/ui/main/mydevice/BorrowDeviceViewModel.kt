@@ -3,8 +3,10 @@ package com.kamikaze.shareddevicemanager.ui.main.mydevice
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import com.kamikaze.shareddevicemanager.model.repository.FakeDeviceRepository
 import com.kamikaze.shareddevicemanager.model.repository.IDeviceRepository
+import kotlinx.coroutines.launch
 
 class BorrowDeviceViewModel : ViewModel() {
     // TODO DI
@@ -25,6 +27,9 @@ class BorrowDeviceViewModel : ViewModel() {
             user = userName.value!!,
             estimatedReturnDate = estimatedReturnDate.value!!
         )
-        deviceRepository.borrow(device)
+
+        viewModelScope.launch {
+            deviceRepository.borrow(device)
+        }
     }
 }

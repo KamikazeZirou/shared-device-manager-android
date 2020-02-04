@@ -19,39 +19,32 @@ class FakeDeviceRepository() : IDeviceRepository {
             Device(id = it.toLong(), name = "Device $it")
         }
 
-        // FIXME 正式実装
         GlobalScope.launch {
             devicesChannel.send(devices)
             deviceRegisteredChannel.send(false)
         }
     }
 
-    override fun register(device: Device) {
+    override suspend fun register(device: Device) {
         val registeredDevice = device.copy(id = devices.size.toLong() + 1)
         devices += registeredDevice
 
-        // FIXME 正式実装
-        GlobalScope.launch {
-            myDeviceChannel.send(registeredDevice)
-            devicesChannel.send(devices)
-            deviceRegisteredChannel.send(true)
-        }
+        myDeviceChannel.send(registeredDevice)
+        devicesChannel.send(devices)
+        deviceRegisteredChannel.send(true)
     }
 
-    override fun borrow(device: Device) {
-        // FIXME 正式実装
-        GlobalScope.launch {
-            val updatedDevice = device.copy(status = Device.Status.IN_USE)
-            myDeviceChannel.send(updatedDevice)
+    override suspend fun borrow(device: Device) {
+        val updatedDevice = device.copy(status = Device.Status.IN_USE)
+        myDeviceChannel.send(updatedDevice)
 
-            devices
-                .indexOfFirst { it.id == updatedDevice.id }
-                .takeIf { it != -1 }
-                ?.let {
-                    devices[it] = updatedDevice
-                    devicesChannel.send(devices)
-                }
-        }
+        devices
+            .indexOfFirst { it.id == updatedDevice.id }
+            .takeIf { it != -1 }
+            ?.let {
+                devices[it] = updatedDevice
+                devicesChannel.send(devices)
+            }
     }
 
     override suspend fun returnDevice() {
