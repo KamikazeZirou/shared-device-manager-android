@@ -45,6 +45,10 @@ class MyDeviceFragment : Fragment() {
             startActivity(intent)
         }
 
+        binding.returnButton.setOnClickListener {
+            viewModel.returnDevice()
+        }
+
         binding.unregisterButton.setOnClickListener {
             // TODO 確認ダイアログを出して、OKなら登録を消す
             viewModel.unregister()

@@ -1,12 +1,10 @@
 package com.kamikaze.shareddevicemanager.ui.main.mydevice
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.map
+import androidx.lifecycle.*
 import com.kamikaze.shareddevicemanager.model.data.Device
 import com.kamikaze.shareddevicemanager.model.repository.FakeDeviceRepository
 import com.kamikaze.shareddevicemanager.model.repository.IDeviceRepository
+import kotlinx.coroutines.launch
 
 class MyDeviceViewModel : ViewModel() {
     // TODO DI
@@ -26,5 +24,11 @@ class MyDeviceViewModel : ViewModel() {
 
     fun unregister() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    fun returnDevice() {
+        viewModelScope.launch {
+            deviceRepository.returnDevice()
+        }
     }
 }

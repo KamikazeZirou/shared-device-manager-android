@@ -41,18 +41,32 @@ class FakeDeviceRepository() : IDeviceRepository {
     override fun borrow(device: Device) {
         // FIXME 正式実装
         GlobalScope.launch {
-            val index = devices.indexOfFirst {
-                it.id == device.id
-            }
-            if (index == -1) {
-                return@launch
-            }
+            val updatedDevice = device.copy(status = Device.Status.IN_USE)
+            myDeviceChannel.send(updatedDevice)
 
-            val newDevice = device.copy(status = Device.Status.IN_USE)
-            myDeviceChannel.send(newDevice)
-            devices[index] = newDevice
-            devicesChannel.send(devices)
+            devices
+                .indexOfFirst { it.id == updatedDevice.id }
+                .takeIf { it != -1 }
+                ?.let {
+                    devices[it] = updatedDevice
+                    devicesChannel.send(devices)
+                }
         }
+    }
+
+    override suspend fun returnDevice() {
+        val updatedMyDevice = myDeviceChannel.value.copy(
+            status = Device.Status.FREE
+        )
+        myDeviceChannel.send(updatedMyDevice)
+
+        devices
+            .indexOfFirst { it.id == updatedMyDevice.id }
+            .takeIf { it != -1 }
+            ?.let {
+                devices[it] = updatedMyDevice
+                devicesChannel.send(devices)
+            }
     }
 
     private val devicesChannel = ConflatedBroadcastChannel<List<Device>>()
