@@ -21,11 +21,11 @@ class FakeDeviceRepository() : IDeviceRepository {
 
         GlobalScope.launch {
             devicesChannel.send(devices)
-            deviceRegisteredChannel.send(false)
         }
     }
 
     override suspend fun register(device: Device) {
+        // 使い方によっては、異なるデバイスに同じIDを振ってしまうが、Fake実装なので許容
         val registeredDevice = device.copy(id = devices.size.toLong() + 1)
         devices += registeredDevice
 
@@ -37,27 +37,23 @@ class FakeDeviceRepository() : IDeviceRepository {
     override suspend fun borrow(device: Device) {
         val updatedDevice = device.copy(status = Device.Status.IN_USE)
         myDeviceChannel.send(updatedDevice)
-
-        devices
-            .indexOfFirst { it.id == updatedDevice.id }
-            .takeIf { it != -1 }
-            ?.let {
-                devices[it] = updatedDevice
-                devicesChannel.send(devices)
-            }
+        updateDevice(updatedDevice)
     }
 
     override suspend fun returnDevice() {
-        val updatedMyDevice = myDeviceChannel.value.copy(
+        val updatedDevice = myDeviceChannel.value.copy(
             status = Device.Status.FREE
         )
-        myDeviceChannel.send(updatedMyDevice)
+        myDeviceChannel.send(updatedDevice)
+        updateDevice(updatedDevice)
+    }
 
+    private suspend fun updateDevice(device: Device) {
         devices
-            .indexOfFirst { it.id == updatedMyDevice.id }
+            .indexOfFirst { it.id == device.id }
             .takeIf { it != -1 }
             ?.let {
-                devices[it] = updatedMyDevice
+                devices[it] = device
                 devicesChannel.send(devices)
             }
     }
@@ -65,7 +61,7 @@ class FakeDeviceRepository() : IDeviceRepository {
     private val devicesChannel = ConflatedBroadcastChannel<List<Device>>()
     override val devicesFlow: Flow<List<Device>> = devicesChannel.asFlow()
 
-    private val deviceRegisteredChannel = ConflatedBroadcastChannel<Boolean>()
+    private val deviceRegisteredChannel = ConflatedBroadcastChannel<Boolean>(false)
     override val deviceRegisteredFlow: Flow<Boolean> = deviceRegisteredChannel.asFlow()
 
     private val myDeviceChannel = ConflatedBroadcastChannel<Device>()
