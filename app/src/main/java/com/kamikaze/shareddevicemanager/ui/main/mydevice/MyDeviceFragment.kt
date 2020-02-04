@@ -43,8 +43,6 @@ class MyDeviceFragment : Fragment() {
         binding.borrowButton.setOnClickListener {
             val intent = Intent(activity, BorrowDeviceActivity::class.java)
             startActivity(intent)
-//            val dialogFragment = BorrowDeviceDialogFragment.newInstance()
-//            dialogFragment.show(parentFragmentManager, "borrow_dialog")
         }
 
         binding.unregisterButton.setOnClickListener {
