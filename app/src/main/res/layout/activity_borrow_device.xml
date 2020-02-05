@@ -54,6 +54,8 @@
                 android:layout_marginLeft="16dp"
                 android:ems="10"
                 android:inputType="date"
+                android:clickable="true"
+                android:focusable="false"
                 android:text="@={viewModel.estimatedReturnDate}" />
 
         </LinearLayout>
