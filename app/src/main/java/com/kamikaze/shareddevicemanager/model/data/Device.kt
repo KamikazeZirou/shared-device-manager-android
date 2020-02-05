@@ -12,6 +12,7 @@ data class Device(
     val user: String = "",
     val issueDate: String = "",
     val estimatedReturnDate: String = "",
+    val returnDate: String = "",
     val registerDate: String = ""
 ) {
     enum class Status {
