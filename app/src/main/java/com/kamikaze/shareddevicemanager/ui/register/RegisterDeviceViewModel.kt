@@ -9,8 +9,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class RegisterDeviceViewModel @Inject constructor(
-    private val deviceRepository: IDeviceRepository,
-    private val deviceBuilder: IMyDeviceBuilder
+private val deviceRepository: IDeviceRepository,
+private val deviceBuilder: IMyDeviceBuilder
 ) : ViewModel() {
 
     private val device = deviceBuilder.build()

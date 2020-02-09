@@ -5,8 +5,7 @@ data class Device(
     val name: String = "",
     val model: String = "",
     val manufacturer: String = "",
-    val isPhone: Boolean = true,
-    val os: String = "Android",
+    val isTablet: Boolean = false,
     val osVersion: String = "",
     val status: Status = Status.FREE,
     val user: String = "",
@@ -15,6 +14,8 @@ data class Device(
     val returnDate: String = "",
     val registerDate: String = ""
 ) {
+    val os: String = "Android"
+
     enum class Status {
         FREE,
         IN_USE,
