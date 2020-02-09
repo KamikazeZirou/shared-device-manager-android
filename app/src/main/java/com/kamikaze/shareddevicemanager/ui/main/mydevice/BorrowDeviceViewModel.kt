@@ -4,15 +4,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.kamikaze.shareddevicemanager.model.repository.FakeDeviceRepository
 import com.kamikaze.shareddevicemanager.model.repository.IDeviceRepository
 import kotlinx.coroutines.launch
 import java.util.*
+import javax.inject.Inject
 
-class BorrowDeviceViewModel : ViewModel() {
-    // TODO DI
-    private var deviceRepository: IDeviceRepository = FakeDeviceRepository.instance
-
+class BorrowDeviceViewModel @Inject constructor(private val deviceRepository: IDeviceRepository) :
+    ViewModel() {
     val device = deviceRepository.myDeviceFlow.asLiveData()
 
     val userName = MutableLiveData<String>().apply {

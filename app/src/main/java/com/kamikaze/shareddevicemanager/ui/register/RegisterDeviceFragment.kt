@@ -4,29 +4,34 @@ import android.os.Bundle
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.kamikaze.shareddevicemanager.R
 import com.kamikaze.shareddevicemanager.databinding.FragmentRegisterDeviceBinding
+import dagger.android.support.DaggerFragment
+import javax.inject.Inject
 
-class RegisterDeviceFragment : Fragment() {
+class RegisterDeviceFragment : DaggerFragment() {
 
     companion object {
         fun newInstance() = RegisterDeviceFragment()
     }
 
     private lateinit var binding: FragmentRegisterDeviceBinding
-    private lateinit var viewModel: RegisterDeviceViewModel
+
+    @Inject
+    lateinit var viewModel: RegisterDeviceViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        viewModel = ViewModelProvider(this).get(RegisterDeviceViewModel::class.java)
-
         binding =
-            DataBindingUtil.inflate(layoutInflater, R.layout.fragment_register_device, container, false)
+            DataBindingUtil.inflate(
+                layoutInflater,
+                R.layout.fragment_register_device,
+                container,
+                false
+            )
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
         viewModel.deviceName.observe(viewLifecycleOwner, Observer {

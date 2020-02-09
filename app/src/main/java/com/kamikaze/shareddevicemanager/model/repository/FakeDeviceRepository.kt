@@ -7,13 +7,21 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.launch
 import java.util.*
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class FakeDeviceRepository() : IDeviceRepository {
-    companion object {
-        val instance: FakeDeviceRepository = FakeDeviceRepository()
-    }
-
+@Singleton
+class FakeDeviceRepository @Inject constructor() : IDeviceRepository {
     private val devices = mutableListOf<Device>()
+
+    private val devicesChannel = ConflatedBroadcastChannel<List<Device>>()
+    override val devicesFlow: Flow<List<Device>> = devicesChannel.asFlow()
+
+    private val deviceRegisteredChannel = ConflatedBroadcastChannel<Boolean>(false)
+    override val deviceRegisteredFlow: Flow<Boolean> = deviceRegisteredChannel.asFlow()
+
+    private val myDeviceChannel = ConflatedBroadcastChannel<Device>()
+    override val myDeviceFlow: Flow<Device> = myDeviceChannel.asFlow()
 
     init {
         devices += (1..25).map {
@@ -73,13 +81,4 @@ class FakeDeviceRepository() : IDeviceRepository {
         val day = c.get(Calendar.DAY_OF_MONTH)
         return "%04d/%02d/%02d".format(year, month, day)
     }
-
-    private val devicesChannel = ConflatedBroadcastChannel<List<Device>>()
-    override val devicesFlow: Flow<List<Device>> = devicesChannel.asFlow()
-
-    private val deviceRegisteredChannel = ConflatedBroadcastChannel<Boolean>(false)
-    override val deviceRegisteredFlow: Flow<Boolean> = deviceRegisteredChannel.asFlow()
-
-    private val myDeviceChannel = ConflatedBroadcastChannel<Device>()
-    override val myDeviceFlow: Flow<Device> = myDeviceChannel.asFlow()
 }

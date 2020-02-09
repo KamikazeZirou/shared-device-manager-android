@@ -4,15 +4,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kamikaze.shareddevicemanager.model.data.IMyDeviceBuilder
-import com.kamikaze.shareddevicemanager.model.data.MyDeviceBuilder
-import com.kamikaze.shareddevicemanager.model.repository.FakeDeviceRepository
 import com.kamikaze.shareddevicemanager.model.repository.IDeviceRepository
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class RegisterDeviceViewModel : ViewModel() {
-    // TODO DI
-    private val deviceRepository: IDeviceRepository = FakeDeviceRepository.instance
-    private val deviceBuilder: IMyDeviceBuilder = MyDeviceBuilder()
+class RegisterDeviceViewModel @Inject constructor(
+    private val deviceRepository: IDeviceRepository,
+    private val deviceBuilder: IMyDeviceBuilder
+) : ViewModel() {
 
     private val device = deviceBuilder.build()
     val deviceName = MutableLiveData<String>().apply {

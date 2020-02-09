@@ -1,0 +1,22 @@
+package com.kamikaze.shareddevicemanager.di
+
+import androidx.lifecycle.ViewModel
+import com.kamikaze.shareddevicemanager.ui.main.mydevice.BorrowDeviceActivity
+import com.kamikaze.shareddevicemanager.ui.main.mydevice.BorrowDeviceViewModel
+import dagger.Binds
+import dagger.Module
+import dagger.android.ContributesAndroidInjector
+import dagger.multibindings.IntoMap
+
+@Module
+abstract class BorrowDeviceModule {
+    @ContributesAndroidInjector(modules = [
+        ViewModelBuilder::class
+    ])
+    internal abstract fun registerDeviceActivity(): BorrowDeviceActivity
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(BorrowDeviceViewModel::class)
+    abstract fun bindViewModel(viewmodel: BorrowDeviceViewModel): ViewModel
+}

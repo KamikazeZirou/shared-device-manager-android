@@ -5,23 +5,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kamikaze.shareddevicemanager.R
 import com.kamikaze.shareddevicemanager.model.data.Device
+import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_device_item_list.*
+import javax.inject.Inject
 
-class DeviceListFragment : Fragment() {
+class DeviceListFragment : DaggerFragment() {
     // TODO: Customize parameters
     private var columnCount = 1
 
     private var listener: OnListFragmentInteractionListener? = null
 
-    private lateinit var deviceListViewModel: DeviceListViewModel
+    @Inject
+    lateinit var deviceListViewModel: DeviceListViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,15 +32,11 @@ class DeviceListFragment : Fragment() {
         }
     }
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        deviceListViewModel =
-            ViewModelProvider(this).get(DeviceListViewModel::class.java)
-
         val view = inflater.inflate(R.layout.fragment_device_item_list, container, false)
 
         // Set the adapter
