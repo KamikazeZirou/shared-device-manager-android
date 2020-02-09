@@ -44,6 +44,10 @@ class FakeDeviceRepository @Inject constructor() : IDeviceRepository {
         }
     }
 
+    override suspend fun get(deviceId: Long): Device {
+        return devices.find { it.id == deviceId }!!
+    }
+
     override suspend fun register(device: Device) {
         // 使い方によっては、異なるデバイスに同じIDを振ってしまうが、Fake実装なので許容
         val registeredDevice = device.copy(

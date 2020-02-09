@@ -18,5 +18,5 @@ abstract class BorrowDeviceModule {
     @Binds
     @IntoMap
     @ViewModelKey(BorrowDeviceViewModel::class)
-    abstract fun bindViewModel(viewmodel: BorrowDeviceViewModel): ViewModel
+    abstract fun bindViewModel(viewModel: BorrowDeviceViewModel): ViewModel
 }

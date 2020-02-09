@@ -18,5 +18,5 @@ abstract class RegisterDeviceModule {
     @Binds
     @IntoMap
     @ViewModelKey(RegisterDeviceViewModel::class)
-    abstract fun bindViewModel(viewmodel: RegisterDeviceViewModel): ViewModel
+    abstract fun bindViewModel(viewModel: RegisterDeviceViewModel): ViewModel
 }

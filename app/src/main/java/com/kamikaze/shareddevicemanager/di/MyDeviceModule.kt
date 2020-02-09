@@ -18,5 +18,5 @@ abstract class MyDeviceModule {
     @Binds
     @IntoMap
     @ViewModelKey(MyDeviceViewModel::class)
-    abstract fun bindViewModel(viewmodel: MyDeviceViewModel): ViewModel
+    abstract fun bindViewModel(viewModel: MyDeviceViewModel): ViewModel
 }

@@ -14,6 +14,7 @@ import javax.inject.Singleton
         AndroidSupportInjectionModule::class,
         DeviceModule::class,
         DeviceListModule::class,
+        DeviceDetailModule::class,
         MyDeviceModule::class,
         RegisterDeviceModule::class,
         BorrowDeviceModule::class

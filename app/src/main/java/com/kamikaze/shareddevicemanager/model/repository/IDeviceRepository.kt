@@ -4,6 +4,7 @@ import com.kamikaze.shareddevicemanager.model.data.Device
 import kotlinx.coroutines.flow.Flow
 
 interface IDeviceRepository {
+    suspend fun get(deviceId: Long) : Device
     suspend fun register(device: Device)
     suspend fun borrow(device: Device)
     suspend fun returnDevice()
