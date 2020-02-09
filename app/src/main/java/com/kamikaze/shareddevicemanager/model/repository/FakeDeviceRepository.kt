@@ -25,7 +25,18 @@ class FakeDeviceRepository @Inject constructor() : IDeviceRepository {
 
     init {
         devices += (1..25).map {
-            Device(id = it.toLong(), name = "Device $it")
+            Device(id = it.toLong(),
+                name = "Device $it",
+                model = "Model $it",
+                manufacturer = "manufacturer $it",
+                isTablet = (it % 2 == 0),
+                osVersion = "8.0.0",
+                status = (Device.Status.values()[it % 3]),
+                user = "user $it",
+                issueDate = "2020/02/03",
+                estimatedReturnDate = "2020/02/04",
+                returnDate = "2020/02/03",
+                registerDate = "2020/02/01")
         }
 
         GlobalScope.launch {
