@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import com.kamikaze.shareddevicemanager.R
 import com.kamikaze.shareddevicemanager.databinding.FragmentRegisterDeviceBinding
 import dagger.android.support.DaggerFragment
@@ -34,9 +33,6 @@ class RegisterDeviceFragment : DaggerFragment() {
             )
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
-        viewModel.deviceName.observe(viewLifecycleOwner, Observer {
-            val hoge = it
-        })
 
         return binding.root
     }
