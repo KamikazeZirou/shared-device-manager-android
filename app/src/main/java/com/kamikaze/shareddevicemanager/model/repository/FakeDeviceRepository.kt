@@ -57,7 +57,7 @@ class FakeDeviceRepository @Inject constructor() : IDeviceRepository {
         devices += registeredDevice
 
         myDeviceChannel.send(registeredDevice)
-        devicesChannel.send(devices)
+        devicesChannel.send(devices.toList())
         deviceRegisteredChannel.send(true)
     }
 
@@ -85,7 +85,7 @@ class FakeDeviceRepository @Inject constructor() : IDeviceRepository {
             .takeIf { it != -1 }
             ?.let {
                 devices[it] = device
-                devicesChannel.send(devices)
+                devicesChannel.send(devices.toList())
             }
     }
 
