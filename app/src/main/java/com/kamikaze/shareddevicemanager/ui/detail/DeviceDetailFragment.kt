@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import com.kamikaze.shareddevicemanager.databinding.FragmentDeviceDetailBinding
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
@@ -34,8 +35,12 @@ class DeviceDetailFragment : DaggerFragment() {
         binding = FragmentDeviceDetailBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
+        binding.list.adapter = DeviceDetailRecyclerViewAdapter()
 
         viewModel.start(arguments!!.getLong(EXTRA_DEVICE_ID))
+        viewModel.items.observe(viewLifecycleOwner, Observer {
+            (binding.list.adapter as DeviceDetailRecyclerViewAdapter).submitList(it)
+        })
 
         return binding.root
     }

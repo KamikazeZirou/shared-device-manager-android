@@ -10,21 +10,15 @@
             type="com.kamikaze.shareddevicemanager.ui.detail.DeviceDetailViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/devicedetail"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list"
+        android:name="com.kamikaze.shareddevicemanager.DeviceDetailFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.devicedetail.DeviceDetailFragment">
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
 
-        <TextView
-            android:id="@+id/message"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{ viewModel.deviceName }"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        app:layoutManager="LinearLayoutManager"
+        tools:context=".DeviceDetailFragment"
+        tools:listitem="@layout/fragment_device_detail_item" />
 </layout>
