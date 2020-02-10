@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kamikaze.shareddevicemanager.R
@@ -42,9 +43,8 @@ class DeviceListFragment : DaggerFragment() {
 
         viewModel.openDeviceEvent.observe(viewLifecycleOwner, Observer {
             val deviceId = it.getContentIfNotHandled() ?: return@Observer
-            val intent = Intent(activity, DeviceDetailActivity::class.java)
-            intent.putExtra(DeviceDetailActivity.EXTRA_DEVICE_ID, deviceId)
-            startActivity(intent)
+            val action = DeviceListFragmentDirections.actionShowDeviceDetail(deviceId)
+            findNavController().navigate(action)
         })
 
         return view

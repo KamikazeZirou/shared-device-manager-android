@@ -9,12 +9,26 @@
         android:id="@+id/navigation_device_list"
         android:name="com.kamikaze.shareddevicemanager.ui.main.devicelist.DeviceListFragment"
         android:label="@string/title_device_list"
-        tools:layout="@layout/fragment_device_list" />
+        tools:layout="@layout/fragment_device_item_list" >
+        <action
+            android:id="@+id/action_show_device_detail"
+            app:destination="@id/device_detail_dest" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_my_device"
         android:name="com.kamikaze.shareddevicemanager.ui.main.mydevice.MyDeviceFragment"
         android:label="@string/title_my_device"
         tools:layout="@layout/fragment_my_device" />
+    <activity
+        android:id="@+id/device_detail_dest"
+        android:name="com.kamikaze.shareddevicemanager.ui.detail.DeviceDetailActivity"
+        android:label="activity_device_detail"
+        tools:layout="@layout/activity_device_detail" >
+        <argument
+            android:name="id"
+            app:argType="long"
+            android:defaultValue="0L" />
+    </activity>
 
 </navigation>

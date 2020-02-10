@@ -2,6 +2,7 @@ package com.kamikaze.shareddevicemanager.ui.detail
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.navArgs
 import com.kamikaze.shareddevicemanager.R
 
 class DeviceDetailActivity : AppCompatActivity() {
@@ -13,7 +14,8 @@ class DeviceDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_device_detail)
 
-        val deviceId = intent.getLongExtra(EXTRA_DEVICE_ID, -1)
+        val safeArgs: DeviceDetailActivityArgs by navArgs()
+        val deviceId = safeArgs.id
         val fragment = DeviceDetailFragment.newInstance(deviceId)
 
         if (savedInstanceState == null) {
