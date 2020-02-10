@@ -35,11 +35,11 @@ class DeviceDetailFragment : DaggerFragment() {
         binding = FragmentDeviceDetailBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.list.adapter = DeviceDetailRecyclerViewAdapter()
+        binding.list.adapter = DeviceDetailAdapter()
 
         viewModel.start(arguments!!.getLong(EXTRA_DEVICE_ID))
         viewModel.items.observe(viewLifecycleOwner, Observer {
-            (binding.list.adapter as DeviceDetailRecyclerViewAdapter).submitList(it)
+            (binding.list.adapter as DeviceDetailAdapter).submitList(it)
         })
 
         return binding.root

@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.kamikaze.shareddevicemanager.databinding.FragmentDeviceDetailItemBinding
 
-class DeviceDetailRecyclerViewAdapter() :
-    ListAdapter<DeviceDetailItem, DeviceDetailRecyclerViewAdapter.ViewHolder>(DeviceDetailDiffCallback()) {
+class DeviceDetailAdapter() :
+    ListAdapter<DeviceDetailItem, DeviceDetailAdapter.ViewHolder>(DeviceDetailDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.from(parent)
@@ -37,13 +37,7 @@ class DeviceDetailRecyclerViewAdapter() :
     }
 }
 
-/**
- * Callback for calculating the diff between two non-null items in a list.
- *
- * Used by ListAdapter to calculate the minimum number of changes between and old list and a new
- * list that's been passed to `submitList`.
- */
-class DeviceDetailDiffCallback : DiffUtil.ItemCallback<DeviceDetailItem>() {
+private class DeviceDetailDiffCallback : DiffUtil.ItemCallback<DeviceDetailItem>() {
     override fun areItemsTheSame(oldItem: DeviceDetailItem, newItem: DeviceDetailItem): Boolean {
         return oldItem.labelResId == newItem.labelResId
     }

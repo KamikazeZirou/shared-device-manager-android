@@ -1,6 +1,5 @@
 package com.kamikaze.shareddevicemanager.ui.main.devicelist
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +9,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kamikaze.shareddevicemanager.R
-import com.kamikaze.shareddevicemanager.ui.detail.DeviceDetailActivity
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_device_item_list.*
 import javax.inject.Inject
@@ -18,10 +16,6 @@ import javax.inject.Inject
 class DeviceListFragment : DaggerFragment() {
     @Inject
     lateinit var viewModel: DeviceListViewModel
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,12 +27,13 @@ class DeviceListFragment : DaggerFragment() {
         // Set the adapter
         if (view is RecyclerView) {
             with(view) {
-                LinearLayoutManager(context)
+                layoutManager = LinearLayoutManager(context)
+                adapter = DeviceListAdapter(viewModel)
             }
         }
 
         viewModel.devices.observe(viewLifecycleOwner, Observer {
-            list.adapter = DeviceItemRecyclerViewAdapter(it, viewModel)
+            (list.adapter as DeviceListAdapter).submitList(it)
         })
 
         viewModel.openDeviceEvent.observe(viewLifecycleOwner, Observer {
