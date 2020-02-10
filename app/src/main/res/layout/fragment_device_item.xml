@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
     <data>
+
         <variable
             name="device"
             type="com.kamikaze.shareddevicemanager.model.data.Device" />
@@ -12,26 +16,44 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_height="64dp"
         android:clickable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        android:onClick="@{() -> viewModel.openDevice(device.id)}">
+        android:gravity="center"
+        android:onClick="@{() -> viewModel.openDevice(device.id)}"
+        android:orientation="horizontal"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp">
 
-        <TextView
-            android:id="@+id/item_number"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/text_margin"
-            android:text="@{Long.toString(device.id)}"
-            android:textAppearance="?attr/textAppearanceListItem" />
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:device_status="@{device.status}"
+            tools:srcCompat="@android:drawable/presence_online" />
 
-        <TextView
-            android:id="@+id/content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/text_margin"
-            android:text="@{device.name}"
-            android:textAppearance="?attr/textAppearanceListItem" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="8dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/device_name_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{device.name}"
+                android:textAppearance="?attr/textAppearanceListItem" />
+
+            <TextView
+                android:id="@+id/device_os_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{device.os + ' ' + device.osVersion}"
+                android:textAppearance="?attr/textAppearanceListItemSecondary" />
+
+        </LinearLayout>
+
     </LinearLayout>
 </layout>
