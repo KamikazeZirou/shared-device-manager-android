@@ -27,4 +27,7 @@
     <string name="device_estimated_return_date_label">Estimated Return Date</string>
     <string name="device_issue_date_label">Issue Date</string>
     <string name="link_device">Link</string>
+    <string name="borrow_device_title">Borrow</string>
+    <string name="return_device_title">Return</string>
+    <string name="dispose_device_title">Dispose</string>
 </resources>

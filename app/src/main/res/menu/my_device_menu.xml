@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/borrow_device"
+        android:icon="@drawable/ic_borrow_device_white_32dp"
+        android:title="@string/borrow_device_title"
+        app:showAsAction="ifRoom" />
+    <item android:id="@+id/return_device"
+        android:icon="@drawable/ic_return_device_white_32dp"
+        android:title="@string/return_device_title"
+        app:showAsAction="ifRoom" />
+    <item android:id="@+id/dispose_device"
+        android:icon="@drawable/ic_dispose_device_white_32dp"
+        android:title="@string/dispose_device_title"
+        app:showAsAction="never" />
+</menu>
