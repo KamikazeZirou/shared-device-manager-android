@@ -7,6 +7,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.kamikaze.shareddevicemanager.R
 import com.kamikaze.shareddevicemanager.databinding.FragmentMyDeviceBinding
+import com.kamikaze.shareddevicemanager.model.data.Device
 import com.kamikaze.shareddevicemanager.ui.detail.DeviceDetailAdapter
 import com.kamikaze.shareddevicemanager.ui.register.RegisterDeviceActivity
 import dagger.android.support.DaggerFragment
@@ -43,10 +44,9 @@ class MyDeviceFragment : DaggerFragment() {
             activity!!.invalidateOptionsMenu()
         })
 
-        viewModel.isDeviceFree.observe(viewLifecycleOwner, Observer {
+        viewModel.deviceStatus.observe(viewLifecycleOwner, Observer {
             activity!!.invalidateOptionsMenu()
         })
-
 
         return binding.root
     }
@@ -57,10 +57,16 @@ class MyDeviceFragment : DaggerFragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        if (viewModel.deviceRegistered.value == true) {
-            inflater.inflate(R.menu.my_device_menu, menu)
-            menu.findItem(R.id.return_device).isVisible = (viewModel.isDeviceFree.value == false)
+        if (viewModel.deviceRegistered.value != true) {
+            return
         }
+
+        if (viewModel.deviceStatus.value == Device.Status.DISPOSAL) {
+            return
+        }
+
+        inflater.inflate(R.menu.my_device_menu, menu)
+        menu.findItem(R.id.return_device).isVisible = (viewModel.deviceStatus == Device.Status.IN_USE)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -75,7 +81,7 @@ class MyDeviceFragment : DaggerFragment() {
                 true
             }
             R.id.dispose_device -> {
-                viewModel.unregister()
+                viewModel.dispose()
                 true
             }
             else -> {

@@ -2,6 +2,7 @@ package com.kamikaze.shareddevicemanager.model.repository
 
 import com.kamikaze.shareddevicemanager.model.data.Device
 import com.kamikaze.shareddevicemanager.model.data.IMyDeviceBuilder
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.Flow
@@ -11,6 +12,8 @@ import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
+@ExperimentalCoroutinesApi
+@UseExperimental(kotlinx.coroutines.FlowPreview::class)
 @Singleton
 class FakeDeviceRepository @Inject constructor(deviceBuilder: IMyDeviceBuilder) :
     IDeviceRepository {
@@ -100,6 +103,15 @@ class FakeDeviceRepository @Inject constructor(deviceBuilder: IMyDeviceBuilder) 
         myDeviceChannel.send(updatedDevice)
         updateDevice(updatedDevice)
         deviceRegisteredChannel.send(true)
+    }
+
+    override suspend fun dispose() {
+        val updatedDevice = myDeviceChannel.value.copy(
+            status = Device.Status.DISPOSAL,
+            disposalDate = todayStr()
+        )
+        myDeviceChannel.send(updatedDevice)
+        updateDevice(updatedDevice)
     }
 
     private suspend fun updateDevice(device: Device) {

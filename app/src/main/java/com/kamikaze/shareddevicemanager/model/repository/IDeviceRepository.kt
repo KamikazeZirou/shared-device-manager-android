@@ -9,6 +9,7 @@ interface IDeviceRepository {
     suspend fun borrow(device: Device)
     suspend fun returnDevice()
     suspend fun linkDevice(targetDeviceId: Long)
+    suspend fun dispose()
 
     val myDeviceFlow: Flow<Device>
     val devicesFlow: Flow<List<Device>>

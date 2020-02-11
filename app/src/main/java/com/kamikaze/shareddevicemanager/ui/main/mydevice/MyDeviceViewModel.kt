@@ -3,7 +3,6 @@ package com.kamikaze.shareddevicemanager.ui.main.mydevice
 import androidx.lifecycle.*
 import com.kamikaze.shareddevicemanager.R
 import com.kamikaze.shareddevicemanager.model.data.Device
-import com.kamikaze.shareddevicemanager.model.data.readableOS
 import com.kamikaze.shareddevicemanager.model.repository.IDeviceRepository
 import com.kamikaze.shareddevicemanager.ui.detail.DeviceDetailItem
 import com.kamikaze.shareddevicemanager.ui.util.toVisibleStr
@@ -40,8 +39,14 @@ class MyDeviceViewModel @Inject constructor(private var deviceRepository: IDevic
 
     val deviceRegistered = deviceRepository.deviceRegisteredFlow.asLiveData()
 
-    fun unregister() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    val deviceStatus = myDevice.map {
+        it.status
+    }
+
+    fun dispose() {
+        viewModelScope.launch {
+            deviceRepository.dispose()
+        }
     }
 
     fun returnDevice() {

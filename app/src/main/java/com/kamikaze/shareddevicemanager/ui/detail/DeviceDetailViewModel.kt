@@ -3,7 +3,6 @@ package com.kamikaze.shareddevicemanager.ui.detail
 import androidx.lifecycle.*
 import com.kamikaze.shareddevicemanager.R
 import com.kamikaze.shareddevicemanager.model.data.Device
-import com.kamikaze.shareddevicemanager.model.data.readableOS
 import com.kamikaze.shareddevicemanager.model.repository.IDeviceRepository
 import com.kamikaze.shareddevicemanager.ui.util.toVisibleStr
 import kotlinx.coroutines.launch
@@ -41,6 +40,10 @@ class DeviceDetailViewModel @Inject constructor(private val deviceRepository: ID
     }
 
     val deviceRegistered = deviceRepository.deviceRegisteredFlow.asLiveData()
+
+    val deviceStatus = _device.map {
+        it.status
+    }
 
     fun start(deviceId: Long) {
         viewModelScope.launch {

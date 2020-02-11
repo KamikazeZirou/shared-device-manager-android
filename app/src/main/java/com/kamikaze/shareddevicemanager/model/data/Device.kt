@@ -2,6 +2,7 @@ package com.kamikaze.shareddevicemanager.model.data
 
 data class Device(
     val id: Long = -1,
+    val instanceId: String = "ID of phone or tablet", // TODO
     val name: String = "",
     val model: String = "",
     val manufacturer: String = "",
@@ -13,9 +14,12 @@ data class Device(
     val estimatedReturnDate: String = "",
     val returnDate: String = "",
     val registerDate: String = "",
-    val instanceId: String = "ID of phone or tablet" // TODO
+    val disposalDate: String = ""
 ) {
     val os: String = "Android"
+
+    val readableOS: String
+        get() = "%s %s".format(this.os, this.osVersion)
 
     enum class Status {
         FREE,
@@ -23,6 +27,3 @@ data class Device(
         DISPOSAL,
     }
 }
-
-val Device.readableOS: String
-    get() = "%s %s".format(this.os, this.osVersion)
