@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kamikaze.shareddevicemanager.model.repository.IDeviceRepository
-import kotlinx.coroutines.flow.single
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -15,15 +15,14 @@ class RegisterDeviceViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val device = deviceRepository.myDeviceFlow.single()
+            val device = deviceRepository.myDeviceFlow.first()
             deviceName.value = device.model
         }
-
     }
 
     fun registerDevice() {
         viewModelScope.launch {
-            val device = deviceRepository.myDeviceFlow.single().copy(
+            val device = deviceRepository.myDeviceFlow.first().copy(
                 name = deviceName.value!!
             )
             deviceRepository.register(device)
