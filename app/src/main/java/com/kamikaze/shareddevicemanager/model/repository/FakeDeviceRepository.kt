@@ -22,9 +22,6 @@ class FakeDeviceRepository @Inject constructor(deviceBuilder: IMyDeviceBuilder) 
     private val devicesChannel = ConflatedBroadcastChannel<List<Device>>()
     override val devicesFlow: Flow<List<Device>> = devicesChannel.asFlow()
 
-    private val deviceRegisteredChannel = ConflatedBroadcastChannel<Boolean>(false)
-    override val deviceRegisteredFlow: Flow<Boolean> = deviceRegisteredChannel.asFlow()
-
     private val myDeviceChannel = ConflatedBroadcastChannel<Device>(deviceBuilder.build())
     override val myDeviceFlow: Flow<Device> = myDeviceChannel.asFlow()
 
@@ -37,7 +34,7 @@ class FakeDeviceRepository @Inject constructor(deviceBuilder: IMyDeviceBuilder) 
                 manufacturer = "manufacturer $it",
                 isTablet = (it % 2 == 0),
                 osVersion = "8.0.0",
-                status = (Device.Status.values()[it % 3]),
+                status = getDeviceStatus(it % 3),
                 user = "user $it",
                 issueDate = "2020/02/03",
                 estimatedReturnDate = "2020/02/04",
@@ -51,6 +48,17 @@ class FakeDeviceRepository @Inject constructor(deviceBuilder: IMyDeviceBuilder) 
         }
     }
 
+    private fun getDeviceStatus(value: Int): Device.Status {
+        return when (value) {
+            0 -> Device.Status.FREE
+            1 -> Device.Status.IN_USE
+            2 -> Device.Status.DISPOSAL
+            else -> Device.Status.FREE
+        }
+
+    }
+
+
     override suspend fun get(deviceId: Long): Device {
         return devices.find { it.id == deviceId }!!
     }
@@ -59,13 +67,13 @@ class FakeDeviceRepository @Inject constructor(deviceBuilder: IMyDeviceBuilder) 
         // 使い方によっては、異なるデバイスに同じIDを振ってしまうが、Fake実装なので許容
         val registeredDevice = device.copy(
             id = devices.size.toLong() + 1,
+            status = Device.Status.FREE,
             registerDate = todayStr()
         )
         devices += registeredDevice
 
         myDeviceChannel.send(registeredDevice)
         devicesChannel.send(devices.toList())
-        deviceRegisteredChannel.send(true)
     }
 
     override suspend fun borrow(device: Device) {
@@ -102,7 +110,6 @@ class FakeDeviceRepository @Inject constructor(deviceBuilder: IMyDeviceBuilder) 
 
         myDeviceChannel.send(updatedDevice)
         updateDevice(updatedDevice)
-        deviceRegisteredChannel.send(true)
     }
 
     override suspend fun dispose() {

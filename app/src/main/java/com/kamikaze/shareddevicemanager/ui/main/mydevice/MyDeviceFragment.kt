@@ -40,10 +40,6 @@ class MyDeviceFragment : DaggerFragment() {
             (binding.registeredDeviceView.adapter as DeviceDetailAdapter).submitList(it)
         })
 
-        viewModel.deviceRegistered.observe(viewLifecycleOwner, Observer {
-            activity!!.invalidateOptionsMenu()
-        })
-
         viewModel.deviceStatus.observe(viewLifecycleOwner, Observer {
             activity!!.invalidateOptionsMenu()
         })
@@ -57,16 +53,13 @@ class MyDeviceFragment : DaggerFragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        if (viewModel.deviceRegistered.value != true) {
-            return
-        }
-
-        if (viewModel.deviceStatus.value == Device.Status.DISPOSAL) {
+        val status = viewModel.deviceStatus.value ?: return
+        if (!status.isRegistered || status == Device.Status.DISPOSAL) {
             return
         }
 
         inflater.inflate(R.menu.my_device_menu, menu)
-        menu.findItem(R.id.return_device).isVisible = (viewModel.deviceStatus == Device.Status.IN_USE)
+        menu.findItem(R.id.return_device).isVisible = (status == Device.Status.IN_USE)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

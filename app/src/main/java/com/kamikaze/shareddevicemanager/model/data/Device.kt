@@ -8,7 +8,7 @@ data class Device(
     val manufacturer: String = "",
     val isTablet: Boolean = false,
     val osVersion: String = "",
-    val status: Status = Status.FREE,
+    val status: Status = Status.UNKNOWN,
     val user: String = "",
     val issueDate: String = "",
     val estimatedReturnDate: String = "",
@@ -21,9 +21,11 @@ data class Device(
     val readableOS: String
         get() = "%s %s".format(this.os, this.osVersion)
 
-    enum class Status {
-        FREE,
-        IN_USE,
-        DISPOSAL,
+    enum class Status(val canLink: Boolean, val isRegistered: Boolean) {
+        UNKNOWN(canLink = false, isRegistered = false),
+        NOT_REGISTER(canLink = false, isRegistered = false),
+        FREE(canLink = true, isRegistered = true),
+        IN_USE(canLink = true, isRegistered = true),
+        DISPOSAL(canLink = false, isRegistered = true)
     }
 }

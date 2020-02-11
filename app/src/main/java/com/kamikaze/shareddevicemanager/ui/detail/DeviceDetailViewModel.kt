@@ -10,9 +10,9 @@ import javax.inject.Inject
 
 class DeviceDetailViewModel @Inject constructor(private val deviceRepository: IDeviceRepository) :
     ViewModel() {
-    private val _device = MutableLiveData<Device>()
+    private val device = MutableLiveData<Device>()
 
-    val items: LiveData<List<DeviceDetailItem>> = _device.map {
+    val items: LiveData<List<DeviceDetailItem>> = device.map {
         // FIXME Resouce IDを返すかIDから文字列を取れるようにする
         val deviceTypeText = if (it.isTablet) {
             "Tablet"
@@ -39,22 +39,33 @@ class DeviceDetailViewModel @Inject constructor(private val deviceRepository: ID
         )
     }
 
-    val deviceRegistered = deviceRepository.deviceRegisteredFlow.asLiveData()
 
-    val deviceStatus = _device.map {
-        it.status
+    private val myDevice = deviceRepository.myDeviceFlow.asLiveData()
+
+    private val _canLink = MediatorLiveData<Boolean>()
+    val canLink: LiveData<Boolean> = _canLink
+
+    init {
+        val observer = Observer<Device> {
+            val shownDeviceStatus = device.value?.status ?: return@Observer
+            val myDeviceStatus = myDevice.value?.status ?: return@Observer
+            _canLink.value = shownDeviceStatus.canLink && !myDeviceStatus.isRegistered
+
+        }
+        _canLink.addSource(device, observer)
+        _canLink.addSource(myDevice, observer)
     }
 
     fun start(deviceId: Long) {
         viewModelScope.launch {
             val device = deviceRepository.get(deviceId)
-            _device.postValue(device)
+            this@DeviceDetailViewModel.device.postValue(device)
         }
     }
 
     fun linkDevice() {
         viewModelScope.launch {
-            _device.value?.let {
+            device.value?.let {
                 deviceRepository.linkDevice(it.id)
             }
         }

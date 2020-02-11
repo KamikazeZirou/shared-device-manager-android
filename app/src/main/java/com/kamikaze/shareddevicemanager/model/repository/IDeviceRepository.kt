@@ -13,5 +13,4 @@ interface IDeviceRepository {
 
     val myDeviceFlow: Flow<Device>
     val devicesFlow: Flow<List<Device>>
-    val deviceRegisteredFlow: Flow<Boolean>
 }

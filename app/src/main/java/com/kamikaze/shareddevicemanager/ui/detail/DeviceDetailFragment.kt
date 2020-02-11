@@ -5,7 +5,6 @@ import android.view.*
 import androidx.lifecycle.Observer
 import com.kamikaze.shareddevicemanager.R
 import com.kamikaze.shareddevicemanager.databinding.FragmentDeviceDetailBinding
-import com.kamikaze.shareddevicemanager.model.data.Device
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
@@ -42,11 +41,7 @@ class DeviceDetailFragment : DaggerFragment() {
             (binding.list.adapter as DeviceDetailAdapter).submitList(it)
         })
 
-        viewModel.deviceRegistered.observe(viewLifecycleOwner, Observer {
-            activity!!.invalidateOptionsMenu()
-        })
-
-        viewModel.deviceStatus.observe(viewLifecycleOwner, Observer {
+        viewModel.canLink.observe(viewLifecycleOwner, Observer {
             activity!!.invalidateOptionsMenu()
         })
 
@@ -59,12 +54,9 @@ class DeviceDetailFragment : DaggerFragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        if (viewModel.deviceStatus.value == Device.Status.DISPOSAL) {
-            return
-        }
-
+        val canLink = viewModel.canLink.value ?: return
         inflater.inflate(R.menu.device_detail_menu, menu)
-        menu.findItem(R.id.link_device).isVisible = (viewModel.deviceRegistered.value == false)
+        menu.findItem(R.id.link_device).isVisible = canLink
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

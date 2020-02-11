@@ -13,14 +13,6 @@ class MyDeviceViewModel @Inject constructor(private var deviceRepository: IDevic
     ViewModel() {
     private val myDevice: LiveData<Device> = deviceRepository.myDeviceFlow.asLiveData()
 
-    val isDeviceFree: LiveData<Boolean> = myDevice.map {
-        myDevice.value?.status == Device.Status.FREE
-    }
-
-    val deviceName: LiveData<String> = myDevice.map {
-        myDevice.value?.name ?: "Dummy device name"
-    }
-
     val items: LiveData<List<DeviceDetailItem>> = myDevice.map {
         val statusText = it.status.toString()
 
@@ -36,8 +28,6 @@ class MyDeviceViewModel @Inject constructor(private var deviceRepository: IDevic
             )
         )
     }
-
-    val deviceRegistered = deviceRepository.deviceRegisteredFlow.asLiveData()
 
     val deviceStatus = myDevice.map {
         it.status

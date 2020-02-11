@@ -9,6 +9,8 @@ private val Device.Status.iconRes: Int
         Device.Status.FREE -> android.R.drawable.presence_online
         Device.Status.IN_USE -> android.R.drawable.presence_busy
         Device.Status.DISPOSAL -> android.R.drawable.presence_invisible
+        Device.Status.UNKNOWN -> throw IllegalStateException()
+        Device.Status.NOT_REGISTER -> throw IllegalStateException()
     }
 
 @BindingAdapter("app:device_status")
