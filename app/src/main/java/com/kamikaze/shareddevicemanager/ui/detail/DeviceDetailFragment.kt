@@ -1,10 +1,9 @@
 package com.kamikaze.shareddevicemanager.ui.detail
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.lifecycle.Observer
+import com.kamikaze.shareddevicemanager.R
 import com.kamikaze.shareddevicemanager.databinding.FragmentDeviceDetailBinding
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
@@ -42,6 +41,36 @@ class DeviceDetailFragment : DaggerFragment() {
             (binding.list.adapter as DeviceDetailAdapter).submitList(it)
         })
 
+        viewModel.deviceRegistered.observe(viewLifecycleOwner, Observer {
+            activity!!.invalidateOptionsMenu()
+        })
+
         return binding.root
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.device_detail_menu, menu)
+
+        menu.findItem(R.id.link_device).isVisible = when (viewModel.deviceRegistered.value) {
+            false -> true
+            else -> false
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.link_device -> {
+                viewModel.linkDevice()
+                true
+            }
+            else -> {
+                super.onOptionsItemSelected(item)
+            }
+        }
     }
 }

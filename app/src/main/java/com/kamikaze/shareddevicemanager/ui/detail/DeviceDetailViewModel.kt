@@ -7,7 +7,7 @@ import com.kamikaze.shareddevicemanager.model.repository.IDeviceRepository
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class DeviceDetailViewModel @Inject constructor(val deviceRepository: IDeviceRepository) :
+class DeviceDetailViewModel @Inject constructor(private val deviceRepository: IDeviceRepository) :
     ViewModel() {
     private val _device = MutableLiveData<Device>()
 
@@ -39,6 +39,8 @@ class DeviceDetailViewModel @Inject constructor(val deviceRepository: IDeviceRep
         )
     }
 
+    val deviceRegistered = deviceRepository.deviceRegisteredFlow.asLiveData()
+
     fun start(deviceId: Long) {
         viewModelScope.launch {
             val device = deviceRepository.get(deviceId)
@@ -52,4 +54,12 @@ class DeviceDetailViewModel @Inject constructor(val deviceRepository: IDeviceRep
         } else {
             this
         }
+
+    fun linkDevice() {
+        viewModelScope.launch {
+            _device.value?.let {
+                deviceRepository.linkDevice(it.id)
+            }
+        }
+    }
 }

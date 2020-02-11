@@ -22,14 +22,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="@{viewModel.deviceRegistered ? View.GONE : View.VISIBLE}"
-            tools:visibility="gone">
+            tools:visibility="visible">
 
             <TextView
                 android:id="@+id/text_my_device"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:text="@string/not_registered_device_text"
                 android:textAlignment="center"
                 android:textSize="20sp"
@@ -42,27 +42,15 @@
 
             <Button
                 android:id="@+id/button_register_device"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:text="@string/register"
-                app:layout_constraintBottom_toTopOf="@+id/link_device_button"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_my_device" />
-
-            <Button
-                android:id="@+id/link_device_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:text="@string/link"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/button_register_device" />
+                app:layout_constraintTop_toBottomOf="@+id/text_my_device" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -71,7 +59,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="@{viewModel.deviceRegistered ? View.VISIBLE : View.GONE}"
-            tools:visibility="visible">
+            tools:visibility="gone">
 
             <TextView
                 android:id="@+id/textView"

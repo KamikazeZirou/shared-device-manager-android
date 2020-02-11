@@ -1,9 +1,5 @@
 package com.kamikaze.shareddevicemanager.model.data
 
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
-
-@Parcelize
 data class Device(
     val id: Long = -1,
     val name: String = "",
@@ -16,8 +12,9 @@ data class Device(
     val issueDate: String = "",
     val estimatedReturnDate: String = "",
     val returnDate: String = "",
-    val registerDate: String = ""
-) : Parcelable {
+    val registerDate: String = "",
+    val instanceId: String = "ID of phone or tablet" // TODO
+) {
     val os: String = "Android"
 
     enum class Status {

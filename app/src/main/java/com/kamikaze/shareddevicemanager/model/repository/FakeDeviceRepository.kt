@@ -1,6 +1,7 @@
 package com.kamikaze.shareddevicemanager.model.repository
 
 import com.kamikaze.shareddevicemanager.model.data.Device
+import com.kamikaze.shareddevicemanager.model.data.IMyDeviceBuilder
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.Flow
@@ -11,7 +12,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class FakeDeviceRepository @Inject constructor() : IDeviceRepository {
+class FakeDeviceRepository @Inject constructor(deviceBuilder: IMyDeviceBuilder) :
+    IDeviceRepository {
     private val devices = mutableListOf<Device>()
 
     private val devicesChannel = ConflatedBroadcastChannel<List<Device>>()
@@ -20,12 +22,13 @@ class FakeDeviceRepository @Inject constructor() : IDeviceRepository {
     private val deviceRegisteredChannel = ConflatedBroadcastChannel<Boolean>(false)
     override val deviceRegisteredFlow: Flow<Boolean> = deviceRegisteredChannel.asFlow()
 
-    private val myDeviceChannel = ConflatedBroadcastChannel<Device>()
+    private val myDeviceChannel = ConflatedBroadcastChannel<Device>(deviceBuilder.build())
     override val myDeviceFlow: Flow<Device> = myDeviceChannel.asFlow()
 
     init {
         devices += (1..25).map {
-            Device(id = it.toLong(),
+            Device(
+                id = it.toLong(),
                 name = "Device $it",
                 model = "Model $it",
                 manufacturer = "manufacturer $it",
@@ -36,7 +39,8 @@ class FakeDeviceRepository @Inject constructor() : IDeviceRepository {
                 issueDate = "2020/02/03",
                 estimatedReturnDate = "2020/02/04",
                 returnDate = "2020/02/03",
-                registerDate = "2020/02/01")
+                registerDate = "2020/02/01"
+            )
         }
 
         GlobalScope.launch {
@@ -77,6 +81,25 @@ class FakeDeviceRepository @Inject constructor() : IDeviceRepository {
         )
         myDeviceChannel.send(updatedDevice)
         updateDevice(updatedDevice)
+    }
+
+    override suspend fun linkDevice(targetDeviceId: Long) {
+        val index = devices.indexOfFirst { it.id == targetDeviceId }
+        if (index == -1) {
+            return
+        }
+
+        val myDevice = myDeviceChannel.value
+        val updatedDevice = devices[index].copy(
+            instanceId = myDevice.instanceId,
+            model = myDevice.model,
+            manufacturer = myDevice.manufacturer,
+            osVersion = myDevice.osVersion
+        )
+
+        myDeviceChannel.send(updatedDevice)
+        updateDevice(updatedDevice)
+        deviceRegisteredChannel.send(true)
     }
 
     private suspend fun updateDevice(device: Device) {

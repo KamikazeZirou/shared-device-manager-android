@@ -8,7 +8,7 @@
     <string name="register">Register</string>
     <string name="link">Link</string>
     <string name="device_name_label">Name</string>
-    <string name="not_registered_device_text">Your device is not registered</string>
+    <string name="not_registered_device_text">Your device is not registered.\nRegister your device or link to an existing device.</string>
     <string name="user_name_label">利用者名</string>
     <string name="estimated_return_date_label">返却予定日</string>
 
@@ -26,4 +26,5 @@
     <string name="device_return_date_label">Return Date</string>
     <string name="device_estimated_return_date_label">Estimated Return Date</string>
     <string name="device_issue_date_label">Issue Date</string>
+    <string name="link_device">Link</string>
 </resources>
