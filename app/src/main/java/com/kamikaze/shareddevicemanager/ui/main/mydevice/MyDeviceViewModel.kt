@@ -6,6 +6,7 @@ import com.kamikaze.shareddevicemanager.model.data.Device
 import com.kamikaze.shareddevicemanager.model.data.readableOS
 import com.kamikaze.shareddevicemanager.model.repository.IDeviceRepository
 import com.kamikaze.shareddevicemanager.ui.detail.DeviceDetailItem
+import com.kamikaze.shareddevicemanager.ui.util.toVisibleStr
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,14 +26,14 @@ class MyDeviceViewModel @Inject constructor(private var deviceRepository: IDevic
         val statusText = it.status.toString()
 
         listOf(
-            DeviceDetailItem(R.string.device_name_label, it.name.toContent()),
-            DeviceDetailItem(R.string.device_model_label, it.model.toContent()),
+            DeviceDetailItem(R.string.device_name_label, it.name.toVisibleStr()),
+            DeviceDetailItem(R.string.device_model_label, it.model.toVisibleStr()),
             DeviceDetailItem(R.string.device_os_label, it.readableOS),
-            DeviceDetailItem(R.string.device_status_label, statusText.toContent()),
-            DeviceDetailItem(R.string.device_user_label, it.user.toContent()),
+            DeviceDetailItem(R.string.device_status_label, statusText.toVisibleStr()),
+            DeviceDetailItem(R.string.device_user_label, it.user.toVisibleStr()),
             DeviceDetailItem(
                 R.string.device_estimated_return_date_label,
-                it.estimatedReturnDate.toContent()
+                it.estimatedReturnDate.toVisibleStr()
             )
         )
     }
@@ -48,11 +49,4 @@ class MyDeviceViewModel @Inject constructor(private var deviceRepository: IDevic
             deviceRepository.returnDevice()
         }
     }
-
-    private fun String.toContent(): String =
-        if (this.isNullOrEmpty()) {
-            "---"
-        } else {
-            this
-        }
 }

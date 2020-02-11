@@ -5,6 +5,7 @@ import com.kamikaze.shareddevicemanager.R
 import com.kamikaze.shareddevicemanager.model.data.Device
 import com.kamikaze.shareddevicemanager.model.data.readableOS
 import com.kamikaze.shareddevicemanager.model.repository.IDeviceRepository
+import com.kamikaze.shareddevicemanager.ui.util.toVisibleStr
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,20 +23,20 @@ class DeviceDetailViewModel @Inject constructor(private val deviceRepository: ID
         val statusText = it.status.toString()
 
         listOf(
-            DeviceDetailItem(R.string.device_name_label, it.name.toContent()),
-            DeviceDetailItem(R.string.device_model_label, it.model.toContent()),
-            DeviceDetailItem(R.string.device_manufacturer_label, it.manufacturer.toContent()),
+            DeviceDetailItem(R.string.device_name_label, it.name.toVisibleStr()),
+            DeviceDetailItem(R.string.device_model_label, it.model.toVisibleStr()),
+            DeviceDetailItem(R.string.device_manufacturer_label, it.manufacturer.toVisibleStr()),
             DeviceDetailItem(R.string.device_os_label, it.readableOS),
-            DeviceDetailItem(R.string.device_type_label, deviceTypeText.toContent()),
-            DeviceDetailItem(R.string.device_status_label, statusText.toContent()),
-            DeviceDetailItem(R.string.device_user_label, it.user.toContent()),
-            DeviceDetailItem(R.string.device_issue_date_label, it.issueDate.toContent()),
+            DeviceDetailItem(R.string.device_type_label, deviceTypeText.toVisibleStr()),
+            DeviceDetailItem(R.string.device_status_label, statusText.toVisibleStr()),
+            DeviceDetailItem(R.string.device_user_label, it.user.toVisibleStr()),
+            DeviceDetailItem(R.string.device_issue_date_label, it.issueDate.toVisibleStr()),
             DeviceDetailItem(
                 R.string.device_estimated_return_date_label,
-                it.estimatedReturnDate.toContent()
+                it.estimatedReturnDate.toVisibleStr()
             ),
-            DeviceDetailItem(R.string.device_return_date_label, it.returnDate.toContent()),
-            DeviceDetailItem(R.string.device_register_date_label, it.registerDate.toContent())
+            DeviceDetailItem(R.string.device_return_date_label, it.returnDate.toVisibleStr()),
+            DeviceDetailItem(R.string.device_register_date_label, it.registerDate.toVisibleStr())
         )
     }
 
@@ -47,13 +48,6 @@ class DeviceDetailViewModel @Inject constructor(private val deviceRepository: ID
             _device.postValue(device)
         }
     }
-
-    private fun String.toContent(): String =
-        if (this.isNullOrEmpty()) {
-            "---"
-        } else {
-            this
-        }
 
     fun linkDevice() {
         viewModelScope.launch {
