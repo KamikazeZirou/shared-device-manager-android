@@ -3,6 +3,7 @@ package com.kamikaze.shareddevicemanager.ui.detail
 import androidx.lifecycle.*
 import com.kamikaze.shareddevicemanager.R
 import com.kamikaze.shareddevicemanager.model.data.Device
+import com.kamikaze.shareddevicemanager.model.data.readableOS
 import com.kamikaze.shareddevicemanager.model.repository.IDeviceRepository
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,8 +25,7 @@ class DeviceDetailViewModel @Inject constructor(private val deviceRepository: ID
             DeviceDetailItem(R.string.device_name_label, it.name.toContent()),
             DeviceDetailItem(R.string.device_model_label, it.model.toContent()),
             DeviceDetailItem(R.string.device_manufacturer_label, it.manufacturer.toContent()),
-            DeviceDetailItem(R.string.device_os_label, it.os.toContent()),
-            DeviceDetailItem(R.string.device_os_version_label, it.osVersion.toContent()),
+            DeviceDetailItem(R.string.device_os_label, it.readableOS),
             DeviceDetailItem(R.string.device_type_label, deviceTypeText.toContent()),
             DeviceDetailItem(R.string.device_status_label, statusText.toContent()),
             DeviceDetailItem(R.string.device_user_label, it.user.toContent()),

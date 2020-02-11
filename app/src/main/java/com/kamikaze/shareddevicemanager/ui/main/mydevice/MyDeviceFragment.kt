@@ -7,6 +7,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.kamikaze.shareddevicemanager.R
 import com.kamikaze.shareddevicemanager.databinding.FragmentMyDeviceBinding
+import com.kamikaze.shareddevicemanager.ui.detail.DeviceDetailAdapter
 import com.kamikaze.shareddevicemanager.ui.register.RegisterDeviceActivity
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
@@ -33,6 +34,11 @@ class MyDeviceFragment : DaggerFragment() {
             startActivity(intent)
         }
 
+        binding.registeredDeviceView.adapter = DeviceDetailAdapter()
+        viewModel.items.observe(viewLifecycleOwner, Observer {
+            (binding.registeredDeviceView.adapter as DeviceDetailAdapter).submitList(it)
+        })
+
         viewModel.deviceRegistered.observe(viewLifecycleOwner, Observer {
             activity!!.invalidateOptionsMenu()
         })
@@ -40,6 +46,7 @@ class MyDeviceFragment : DaggerFragment() {
         viewModel.isDeviceFree.observe(viewLifecycleOwner, Observer {
             activity!!.invalidateOptionsMenu()
         })
+
 
         return binding.root
     }

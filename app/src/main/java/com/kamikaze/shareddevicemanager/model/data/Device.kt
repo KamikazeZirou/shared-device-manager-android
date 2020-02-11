@@ -24,3 +24,5 @@ data class Device(
     }
 }
 
+val Device.readableOS: String
+    get() = "%s %s".format(this.os, this.osVersion)
