@@ -13,7 +13,7 @@ import javax.inject.Singleton
 @Singleton
 class FirebaseAuthService @Inject constructor():
     IAuthService {
-    private val firebaseAuth: FirebaseAuth
+    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
     private val userChannel = ConflatedBroadcastChannel<User?>(null)
     override val userFlow = userChannel.asFlow()
@@ -24,7 +24,6 @@ class FirebaseAuthService @Inject constructor():
     override val authStateFlow: Flow<AuthState> = authStateChannel.asFlow()
 
     init {
-        firebaseAuth = FirebaseAuth.getInstance()
 
         firebaseAuth.addAuthStateListener {
             var user: User? = null

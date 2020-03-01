@@ -11,11 +11,7 @@ class DataAccessException(message: String? = null, cause: Throwable? = null): Ex
 
 @Singleton
 class FirestoreGroupRepository @Inject constructor() : IGroupRepository {
-    private val firestore: FirebaseFirestore
-
-    init {
-        firestore = FirebaseFirestore.getInstance()
-    }
+    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     override suspend fun get(ownerId: String): Group? {
         val deferred = CompletableDeferred<Group?>()
