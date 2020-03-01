@@ -56,7 +56,7 @@ class DeviceDetailViewModel @Inject constructor(private val deviceRepository: ID
         _canLink.addSource(myDevice, observer)
     }
 
-    fun start(deviceId: Long) {
+    fun start(deviceId: String) {
         viewModelScope.launch {
             val device = deviceRepository.get(deviceId)
             this@DeviceDetailViewModel.device.postValue(device)
@@ -66,7 +66,7 @@ class DeviceDetailViewModel @Inject constructor(private val deviceRepository: ID
     fun linkDevice() {
         viewModelScope.launch {
             device.value?.let {
-                deviceRepository.linkDevice(it.id)
+                deviceRepository.linkDevice(myDevice.value!!, it.id)
             }
         }
     }

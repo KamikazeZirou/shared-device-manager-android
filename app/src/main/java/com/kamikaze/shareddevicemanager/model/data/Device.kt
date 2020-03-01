@@ -1,12 +1,17 @@
 package com.kamikaze.shareddevicemanager.model.data
 
+import com.google.firebase.firestore.Exclude
+import com.google.firebase.firestore.IgnoreExtraProperties
+
+@IgnoreExtraProperties
 data class Device(
-    val id: Long = -1,
+    @get:Exclude var id: String = "",
     val instanceId: String = "ID of phone or tablet", // TODO
     val name: String = "",
     val model: String = "",
     val manufacturer: String = "",
     val isTablet: Boolean = false,
+    val os: String = "Android",
     val osVersion: String = "",
     val status: Status = Status.UNKNOWN,
     val user: String = "",
@@ -16,8 +21,7 @@ data class Device(
     val registerDate: String = "",
     val disposalDate: String = ""
 ) {
-    val os: String = "Android"
-
+    @get:Exclude
     val readableOS: String
         get() = "%s %s".format(this.os, this.osVersion)
 

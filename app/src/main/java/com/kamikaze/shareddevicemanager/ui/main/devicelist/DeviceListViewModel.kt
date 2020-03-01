@@ -17,11 +17,11 @@ class DeviceListViewModel @Inject constructor(
 
     val devices = deviceRepository.devicesFlow.asLiveData()
 
-    private val _openDeviceEvent = MutableLiveData<Event<Long>>()
-    val openDeviceEvent: LiveData<Event<Long>> = _openDeviceEvent
+    private val _openDeviceEvent = MutableLiveData<Event<String>>()
+    val openDeviceEvent: LiveData<Event<String>> = _openDeviceEvent
 
     @SuppressWarnings("unused")
-    fun openDevice(deviceId: Long) {
+    fun openDevice(deviceId: String) {
         _openDeviceEvent.value = Event(deviceId)
     }
 

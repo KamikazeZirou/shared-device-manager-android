@@ -13,10 +13,10 @@ class DeviceDetailFragment : DaggerFragment() {
     companion object {
         const val EXTRA_DEVICE_ID = "device_id"
 
-        fun newInstance(deviceId: Long): DeviceDetailFragment {
+        fun newInstance(deviceId: String): DeviceDetailFragment {
             return DeviceDetailFragment().apply {
                 arguments = Bundle().apply {
-                    putLong(EXTRA_DEVICE_ID, deviceId)
+                    putString(EXTRA_DEVICE_ID, deviceId)
                 }
             }
         }
@@ -36,7 +36,7 @@ class DeviceDetailFragment : DaggerFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.list.adapter = DeviceDetailAdapter()
 
-        viewModel.start(arguments!!.getLong(EXTRA_DEVICE_ID))
+        viewModel.start(arguments!!.getString(EXTRA_DEVICE_ID, ""))
         viewModel.items.observe(viewLifecycleOwner, Observer {
             (binding.list.adapter as DeviceDetailAdapter).submitList(it)
         })

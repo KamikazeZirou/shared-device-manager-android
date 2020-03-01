@@ -2,6 +2,7 @@ package com.kamikaze.shareddevicemanager.ui.main
 
 import androidx.lifecycle.*
 import com.kamikaze.shareddevicemanager.model.data.Group
+import com.kamikaze.shareddevicemanager.model.repository.IDeviceRepository
 import com.kamikaze.shareddevicemanager.model.repository.IGroupRepository
 import com.kamikaze.shareddevicemanager.model.service.AuthState
 import com.kamikaze.shareddevicemanager.model.service.IAuthService
@@ -10,7 +11,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(private val auth: IAuthService,
-                                        private val groupRepository: IGroupRepository
+                                        private val groupRepository: IGroupRepository,
+                                        private val deviceRepository: IDeviceRepository
 ): ViewModel() {
     val isSigningIn = MutableLiveData<Boolean>().apply {
         value = false
@@ -43,7 +45,7 @@ class MainViewModel @Inject constructor(private val auth: IAuthService,
                     groupRepository.add(group)
                 }
 
-                // デバイスリストを取得する
+                deviceRepository.setGroup(group!!)
             }
         }
     }

@@ -1,6 +1,7 @@
 package com.kamikaze.shareddevicemanager.model.repository
 
 import com.kamikaze.shareddevicemanager.model.data.Device
+import com.kamikaze.shareddevicemanager.model.data.Group
 import com.kamikaze.shareddevicemanager.model.data.IMyDeviceBuilder
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -9,13 +10,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.launch
 import java.util.*
-import javax.inject.Inject
-import javax.inject.Singleton
 
 @ExperimentalCoroutinesApi
 @UseExperimental(kotlinx.coroutines.FlowPreview::class)
-@Singleton
-class FakeDeviceRepository @Inject constructor(deviceBuilder: IMyDeviceBuilder) :
+class FakeDeviceRepository constructor(deviceBuilder: IMyDeviceBuilder) :
     IDeviceRepository {
     private val devices = mutableListOf<Device>()
 
@@ -28,7 +26,7 @@ class FakeDeviceRepository @Inject constructor(deviceBuilder: IMyDeviceBuilder) 
     init {
         devices += (1..25).map {
             Device(
-                id = it.toLong(),
+                id = it.toString(),
                 name = "Device $it",
                 model = "Model $it",
                 manufacturer = "manufacturer $it",
@@ -59,14 +57,14 @@ class FakeDeviceRepository @Inject constructor(deviceBuilder: IMyDeviceBuilder) 
     }
 
 
-    override suspend fun get(deviceId: Long): Device {
+    override suspend fun get(deviceId: String): Device {
         return devices.find { it.id == deviceId }!!
     }
 
-    override suspend fun register(device: Device) {
+    override suspend fun register(device: Device): Device {
         // 使い方によっては、異なるデバイスに同じIDを振ってしまうが、Fake実装なので許容
         val registeredDevice = device.copy(
-            id = devices.size.toLong() + 1,
+            id = (devices.size + 1).toString(),
             status = Device.Status.FREE,
             registerDate = todayStr()
         )
@@ -74,6 +72,8 @@ class FakeDeviceRepository @Inject constructor(deviceBuilder: IMyDeviceBuilder) 
 
         myDeviceChannel.send(registeredDevice)
         devicesChannel.send(devices.toList())
+
+        return registeredDevice
     }
 
     override suspend fun borrow(device: Device) {
@@ -85,7 +85,7 @@ class FakeDeviceRepository @Inject constructor(deviceBuilder: IMyDeviceBuilder) 
         updateDevice(updatedDevice)
     }
 
-    override suspend fun returnDevice() {
+    override suspend fun returnDevice(device: Device) {
         val updatedDevice = myDeviceChannel.value.copy(
             status = Device.Status.FREE,
             returnDate = todayStr()
@@ -94,7 +94,7 @@ class FakeDeviceRepository @Inject constructor(deviceBuilder: IMyDeviceBuilder) 
         updateDevice(updatedDevice)
     }
 
-    override suspend fun linkDevice(targetDeviceId: Long) {
+    override suspend fun linkDevice(device: Device, targetDeviceId: String) {
         val index = devices.indexOfFirst { it.id == targetDeviceId }
         if (index == -1) {
             return
@@ -112,7 +112,7 @@ class FakeDeviceRepository @Inject constructor(deviceBuilder: IMyDeviceBuilder) 
         updateDevice(updatedDevice)
     }
 
-    override suspend fun dispose() {
+    override suspend fun dispose(device: Device) {
         val updatedDevice = myDeviceChannel.value.copy(
             status = Device.Status.DISPOSAL,
             disposalDate = todayStr()
@@ -137,5 +137,8 @@ class FakeDeviceRepository @Inject constructor(deviceBuilder: IMyDeviceBuilder) 
         val month = c.get(Calendar.MONTH) + 1
         val day = c.get(Calendar.DAY_OF_MONTH)
         return "%04d/%02d/%02d".format(year, month, day)
+    }
+
+    override suspend fun setGroup(group: Group?) {
     }
 }
