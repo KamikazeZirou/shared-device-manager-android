@@ -1,7 +1,7 @@
 package com.kamikaze.shareddevicemanager.di
 
-import com.kamikaze.shareddevicemanager.model.auth.FirebaseAuthService
-import com.kamikaze.shareddevicemanager.model.auth.IAuthService
+import com.kamikaze.shareddevicemanager.model.service.FirebaseAuthService
+import com.kamikaze.shareddevicemanager.model.service.IAuthService
 import dagger.Binds
 import dagger.Module
 

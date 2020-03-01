@@ -1,4 +1,4 @@
-package com.kamikaze.shareddevicemanager.model.auth
+package com.kamikaze.shareddevicemanager.model.service
 
 import com.google.firebase.auth.FirebaseAuth
 import com.kamikaze.shareddevicemanager.model.data.User
@@ -11,13 +11,16 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class FirebaseAuthService @Inject constructor(): IAuthService {
+class FirebaseAuthService @Inject constructor():
+    IAuthService {
     private val firebaseAuth: FirebaseAuth
 
     private val userChannel = ConflatedBroadcastChannel<User?>(null)
     override val userFlow = userChannel.asFlow()
 
-    private val authStateChannel = ConflatedBroadcastChannel<AuthState>(AuthState.UNKNOWN)
+    private val authStateChannel = ConflatedBroadcastChannel<AuthState>(
+        AuthState.UNKNOWN
+    )
     override val authStateFlow: Flow<AuthState> = authStateChannel.asFlow()
 
     init {

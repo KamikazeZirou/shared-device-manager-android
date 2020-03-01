@@ -1,8 +1,8 @@
 package com.kamikaze.shareddevicemanager.di
 
 import androidx.lifecycle.ViewModel
-import com.kamikaze.shareddevicemanager.ui.main.LoginViewModel
 import com.kamikaze.shareddevicemanager.ui.main.MainActivity
+import com.kamikaze.shareddevicemanager.ui.main.MainViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -17,6 +17,6 @@ abstract class MainModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(LoginViewModel::class)
-    abstract fun bindViewModel(viewModel: LoginViewModel): ViewModel
+    @ViewModelKey(MainViewModel::class)
+    abstract fun bindViewModel(viewModel: MainViewModel): ViewModel
 }

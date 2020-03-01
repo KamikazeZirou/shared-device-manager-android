@@ -2,9 +2,9 @@ package com.kamikaze.shareddevicemanager.ui.main.mydevice
 
 import androidx.lifecycle.*
 import com.kamikaze.shareddevicemanager.R
-import com.kamikaze.shareddevicemanager.model.auth.IAuthService
 import com.kamikaze.shareddevicemanager.model.data.Device
 import com.kamikaze.shareddevicemanager.model.repository.IDeviceRepository
+import com.kamikaze.shareddevicemanager.model.service.IAuthService
 import com.kamikaze.shareddevicemanager.ui.detail.DeviceDetailItem
 import com.kamikaze.shareddevicemanager.ui.util.toVisibleStr
 import kotlinx.coroutines.launch

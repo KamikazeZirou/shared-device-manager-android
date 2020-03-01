@@ -1,4 +1,4 @@
-package com.kamikaze.shareddevicemanager.model.auth
+package com.kamikaze.shareddevicemanager.model.service
 
 import com.kamikaze.shareddevicemanager.model.data.User
 import kotlinx.coroutines.flow.Flow

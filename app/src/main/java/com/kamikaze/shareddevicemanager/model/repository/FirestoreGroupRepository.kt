@@ -4,10 +4,12 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.kamikaze.shareddevicemanager.model.data.Group
 import kotlinx.coroutines.CompletableDeferred
 import javax.inject.Inject
+import javax.inject.Singleton
 
 
 class DataAccessException(message: String? = null, cause: Throwable? = null): Exception(message, cause)
 
+@Singleton
 class FirestoreGroupRepository @Inject constructor() : IGroupRepository {
     private val firestore: FirebaseFirestore
 

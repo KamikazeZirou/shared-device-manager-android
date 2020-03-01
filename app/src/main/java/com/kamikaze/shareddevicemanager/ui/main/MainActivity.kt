@@ -20,7 +20,7 @@ class MainActivity : DaggerAppCompatActivity() {
     }
 
     @Inject
-    lateinit var loginViewModel: LoginViewModel
+    lateinit var mainViewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +38,7 @@ class MainActivity : DaggerAppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        loginViewModel.shouldSignIn.observe(this, Observer {
+        mainViewModel.shouldSignIn.observe(this, Observer {
             if (it) {
                 startSignIn()
             }
@@ -56,7 +56,7 @@ class MainActivity : DaggerAppCompatActivity() {
             .setIsSmartLockEnabled(false)
             .build()
 
-        loginViewModel.isSigningIn.value = true
+        mainViewModel.isSigningIn.value = true
         startActivityForResult(intent, RC_SIGN_IN)
     }
 
@@ -64,9 +64,9 @@ class MainActivity : DaggerAppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == RC_SIGN_IN) {
-            loginViewModel.isSigningIn.value = false
+            mainViewModel.isSigningIn.value = false
 
-            if (resultCode != Activity.RESULT_OK && loginViewModel.shouldSignIn.value == true) {
+            if (resultCode != Activity.RESULT_OK && mainViewModel.shouldSignIn.value == true) {
                 startSignIn()
             }
         }

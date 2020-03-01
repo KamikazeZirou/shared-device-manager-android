@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import com.kamikaze.shareddevicemanager.model.auth.IAuthService
 import com.kamikaze.shareddevicemanager.model.repository.IDeviceRepository
+import com.kamikaze.shareddevicemanager.model.service.IAuthService
 import com.kamikaze.shareddevicemanager.ui.util.Event
 import javax.inject.Inject
 
