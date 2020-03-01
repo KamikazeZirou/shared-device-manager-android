@@ -1,6 +1,6 @@
 package com.kamikaze.shareddevicemanager.model.auth
 
-import com.kamikaze.shareddevicemanager.model.user.User
+import com.kamikaze.shareddevicemanager.model.data.User
 import kotlinx.coroutines.flow.Flow
 
 interface IAuthService {
