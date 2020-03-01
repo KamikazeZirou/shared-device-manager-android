@@ -9,6 +9,8 @@ import com.kamikaze.shareddevicemanager.R
 import com.kamikaze.shareddevicemanager.databinding.FragmentMyDeviceBinding
 import com.kamikaze.shareddevicemanager.model.data.Device
 import com.kamikaze.shareddevicemanager.ui.detail.DeviceDetailAdapter
+import com.kamikaze.shareddevicemanager.ui.main.LoginViewModel
+import com.kamikaze.shareddevicemanager.ui.main.MainActivity
 import com.kamikaze.shareddevicemanager.ui.register.RegisterDeviceActivity
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
@@ -19,6 +21,14 @@ class MyDeviceFragment : DaggerFragment() {
 
     @Inject
     lateinit var viewModel: MyDeviceViewModel
+
+    // FIXME 他と共有しつつDaggerでInject or 親Activityを意識しない
+    private lateinit var loginViewModel: LoginViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        loginViewModel = (activity as MainActivity).loginViewModel
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,12 +63,15 @@ class MyDeviceFragment : DaggerFragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.my_device_menu, menu)
+
         val status = viewModel.deviceStatus.value ?: return
-        if (!status.isRegistered || status == Device.Status.DISPOSAL) {
-            return
+        if (status.isRegistered && status != Device.Status.DISPOSAL) {
+            menu.findItem(R.id.borrow_device).isVisible = true
+            menu.findItem(R.id.return_device).isVisible = true
+            menu.findItem(R.id.dispose_device).isVisible = true
         }
 
-        inflater.inflate(R.menu.my_device_menu, menu)
         menu.findItem(R.id.return_device).isVisible = (status == Device.Status.IN_USE)
     }
 
@@ -75,6 +88,10 @@ class MyDeviceFragment : DaggerFragment() {
             }
             R.id.dispose_device -> {
                 viewModel.dispose()
+                true
+            }
+            R.id.sign_out -> {
+                loginViewModel.signOut()
                 true
             }
             else -> {

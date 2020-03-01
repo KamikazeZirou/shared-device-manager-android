@@ -1,15 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/borrow_device"
+    <item
+        android:id="@+id/borrow_device"
         android:icon="@drawable/ic_borrow_device_white_32dp"
         android:title="@string/borrow_device_title"
+        android:visible="false"
         app:showAsAction="ifRoom" />
-    <item android:id="@+id/return_device"
+    <item
+        android:id="@+id/return_device"
         android:icon="@drawable/ic_return_device_white_32dp"
         android:title="@string/return_device_title"
+        android:visible="false"
         app:showAsAction="ifRoom" />
-    <item android:id="@+id/dispose_device"
+    <item
+        android:id="@+id/dispose_device"
         android:title="@string/dispose_device_title"
+        android:visible="false"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/sign_out"
+        android:title="@string/sign_out_title"
         app:showAsAction="never" />
 </menu>

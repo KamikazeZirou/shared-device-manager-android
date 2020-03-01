@@ -30,4 +30,5 @@
     <string name="borrow_device_title">Borrow</string>
     <string name="return_device_title">Return</string>
     <string name="dispose_device_title">Dispose</string>
+    <string name="sign_out_title">Sign Out</string>
 </resources>
