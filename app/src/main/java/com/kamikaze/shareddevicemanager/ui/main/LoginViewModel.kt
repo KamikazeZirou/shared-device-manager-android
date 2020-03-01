@@ -17,7 +17,6 @@ class LoginViewModel @Inject constructor(private val auth: IAuthService): ViewMo
     val shouldSignIn: LiveData<Boolean> = _shouldSignIn
 
     private val _authState = auth.authStateFlow.asLiveData()
-    val authState: LiveData<AuthState> = _authState
 
     init {
         _shouldSignIn.addSource(isSigningIn, Observer {
@@ -26,9 +25,5 @@ class LoginViewModel @Inject constructor(private val auth: IAuthService): ViewMo
         _shouldSignIn.addSource(_authState, Observer {
             _shouldSignIn.value = (isSigningIn.value == false && _authState.value == AuthState.SIGN_OUT)
         })
-    }
-
-    fun signOut() {
-        auth.signOut()
     }
 }

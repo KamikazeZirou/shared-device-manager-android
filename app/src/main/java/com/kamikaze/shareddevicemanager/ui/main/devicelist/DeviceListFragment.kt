@@ -7,8 +7,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kamikaze.shareddevicemanager.R
-import com.kamikaze.shareddevicemanager.ui.main.LoginViewModel
-import com.kamikaze.shareddevicemanager.ui.main.MainActivity
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_device_item_list.*
 import javax.inject.Inject
@@ -16,14 +14,6 @@ import javax.inject.Inject
 class DeviceListFragment : DaggerFragment() {
     @Inject
     lateinit var viewModel: DeviceListViewModel
-
-    // FIXME 他と共有しつつDaggerでInject or 親Activityを意識しない
-    private lateinit var loginViewModel: LoginViewModel
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        loginViewModel = (activity as MainActivity).loginViewModel
-    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -67,7 +57,7 @@ class DeviceListFragment : DaggerFragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.sign_out -> {
-                loginViewModel.signOut()
+                viewModel.signOut()
                 true
             }
             else -> {
