@@ -66,7 +66,7 @@ class DeviceDetailViewModel @Inject constructor(private val deviceRepository: ID
     fun linkDevice() {
         viewModelScope.launch {
             device.value?.let {
-                deviceRepository.linkDevice(myDevice.value!!, it.id)
+                deviceRepository.update(myDevice.value!!.linkTo(it))
             }
         }
     }

@@ -6,12 +6,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface IDeviceRepository {
     suspend fun setGroup(group: Group?)
+    suspend fun add(device: Device): Device
     suspend fun get(deviceId: String) : Device
-    suspend fun register(device: Device): Device
-    suspend fun borrow(device: Device)
-    suspend fun returnDevice(device: Device)
-    suspend fun linkDevice(device: Device, targetDeviceId: String)
-    suspend fun dispose(device: Device)
+    suspend fun update(device: Device): Device
 
     val myDeviceFlow: Flow<Device>
     val devicesFlow: Flow<List<Device>>

@@ -2,6 +2,7 @@ package com.kamikaze.shareddevicemanager.model.data
 
 import com.google.firebase.firestore.Exclude
 import com.google.firebase.firestore.IgnoreExtraProperties
+import com.kamikaze.shareddevicemanager.util.todayStr
 
 @IgnoreExtraProperties
 data class Device(
@@ -21,6 +22,36 @@ data class Device(
     val registerDate: String = "",
     val disposalDate: String = ""
 ) {
+    fun register(): Device = this.copy(
+        instanceId = instanceId,
+        status = Device.Status.FREE,
+        registerDate = todayStr()
+    )
+
+    fun borrow(user: String, estimatedReturnDate: String): Device = this.copy(
+        user = user,
+        estimatedReturnDate = estimatedReturnDate,
+        status = Device.Status.IN_USE,
+        issueDate = todayStr()
+    )
+
+    fun `return`(): Device = this.copy(
+        status = Device.Status.FREE,
+        returnDate = todayStr()
+    )
+
+    fun linkTo(device: Device): Device = device.copy(
+        instanceId = this.instanceId,
+        model = this.model,
+        manufacturer = this.manufacturer,
+        osVersion = this.osVersion
+    )
+
+    fun dispose(): Device = this.copy(
+        status = Device.Status.DISPOSAL,
+        disposalDate = todayStr()
+    )
+
     @get:Exclude
     val readableOS: String
         get() = "%s %s".format(this.os, this.osVersion)

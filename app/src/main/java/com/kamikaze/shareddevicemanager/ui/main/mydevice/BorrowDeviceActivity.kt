@@ -6,11 +6,11 @@ import android.os.Bundle
 import android.widget.DatePicker
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.kamikaze.shareddevicemanager.R
 import com.kamikaze.shareddevicemanager.databinding.ActivityBorrowDeviceBinding
-import com.kamikaze.shareddevicemanager.model.data.Device
 import dagger.android.support.DaggerAppCompatActivity
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -34,18 +34,15 @@ class BorrowDeviceActivity : DaggerAppCompatActivity(), DatePickerDialog.OnDateS
         }
 
         binding.okButton.setOnClickListener {
-            viewModel.borrowDevice()
+            lifecycleScope.launch {
+                viewModel.borrowDevice()
+                finish()
+            }
         }
 
         binding.cancelButton.setOnClickListener {
             finish()
         }
-
-        viewModel.device.observe(this, Observer {
-            if (it.status == Device.Status.IN_USE) {
-                finish()
-            }
-        })
     }
 
     override fun onDateSet(picker: DatePicker?, year: Int, month: Int, day: Int) {
