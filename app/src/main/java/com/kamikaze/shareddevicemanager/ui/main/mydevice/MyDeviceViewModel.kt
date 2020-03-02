@@ -37,7 +37,7 @@ class MyDeviceViewModel @Inject constructor(
         it.status
     }
 
-    fun dispose() {
+    fun disposeDevice() {
         viewModelScope.launch {
             deviceRepository.update(myDevice.value!!.dispose())
         }

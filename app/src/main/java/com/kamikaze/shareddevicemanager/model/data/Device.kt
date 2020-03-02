@@ -22,8 +22,8 @@ data class Device(
     val registerDate: String = "",
     val disposalDate: String = ""
 ) {
-    fun register(): Device = this.copy(
-        instanceId = instanceId,
+    fun register(name: String): Device = this.copy(
+        name = name,
         status = Status.FREE,
         registerDate = todayStr()
     )

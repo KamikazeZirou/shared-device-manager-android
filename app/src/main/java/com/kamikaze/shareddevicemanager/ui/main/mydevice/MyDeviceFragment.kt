@@ -77,7 +77,7 @@ class MyDeviceFragment : DaggerFragment() {
                 true
             }
             R.id.dispose_device -> {
-                viewModel.dispose()
+                viewModel.disposeDevice()
                 true
             }
             R.id.sign_out -> {

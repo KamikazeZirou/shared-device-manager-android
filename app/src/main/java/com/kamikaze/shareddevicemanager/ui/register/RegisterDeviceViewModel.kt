@@ -22,7 +22,7 @@ class RegisterDeviceViewModel @Inject constructor(
 
     fun registerDevice() {
         viewModelScope.launch {
-            val device = deviceRepository.myDeviceFlow.first().copy(
+            val device = deviceRepository.myDeviceFlow.first().register(
                 name = deviceName.value!!
             )
             deviceRepository.add(device)
