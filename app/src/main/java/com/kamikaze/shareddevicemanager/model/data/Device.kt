@@ -24,19 +24,19 @@ data class Device(
 ) {
     fun register(): Device = this.copy(
         instanceId = instanceId,
-        status = Device.Status.FREE,
+        status = Status.FREE,
         registerDate = todayStr()
     )
 
     fun borrow(user: String, estimatedReturnDate: String): Device = this.copy(
         user = user,
         estimatedReturnDate = estimatedReturnDate,
-        status = Device.Status.IN_USE,
+        status = Status.IN_USE,
         issueDate = todayStr()
     )
 
     fun `return`(): Device = this.copy(
-        status = Device.Status.FREE,
+        status = Status.FREE,
         returnDate = todayStr()
     )
 
@@ -48,7 +48,7 @@ data class Device(
     )
 
     fun dispose(): Device = this.copy(
-        status = Device.Status.DISPOSAL,
+        status = Status.DISPOSAL,
         disposalDate = todayStr()
     )
 
