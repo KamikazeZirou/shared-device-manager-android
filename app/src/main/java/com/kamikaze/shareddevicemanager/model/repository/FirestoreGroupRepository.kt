@@ -24,9 +24,6 @@ class FirestoreGroupRepository @Inject constructor() : IGroupRepository {
 
                 snapshot.documents.firstOrNull()?.let { doc ->
                     group = doc.toObject(Group::class.java)
-                    group?.apply {
-                        id = doc.id
-                    }
                 }
 
                 deferred.complete(group)
@@ -46,7 +43,6 @@ class FirestoreGroupRepository @Inject constructor() : IGroupRepository {
         // Gropuが存在しないのでGroupを作る
         groupsReference.add(group)
             .addOnSuccessListener {
-                group.id = it.id
                 deferred.complete(Unit)
             }
             .addOnFailureListener {

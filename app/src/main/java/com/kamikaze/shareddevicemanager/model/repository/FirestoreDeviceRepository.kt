@@ -69,7 +69,6 @@ class FirestoreDeviceRepository @Inject constructor(val deviceBuilder: IMyDevice
         devicesReference.get()
             .addOnSuccessListener { snapshot ->
                 val device = snapshot.toObject(Device::class.java)!!
-                device.id = snapshot.id
                 deferred.complete(device)
             }
             .addOnFailureListener {
@@ -139,12 +138,10 @@ class FirestoreDeviceRepository @Inject constructor(val deviceBuilder: IMyDevice
             when (it.type) {
                 DocumentChange.Type.ADDED -> {
                     val device = it.document.toObject(Device::class.java)
-                    device.id = it.document.id
                     devices.add(it.newIndex, device)
                 }
                 DocumentChange.Type.MODIFIED -> {
                     val device = it.document.toObject(Device::class.java)
-                    device.id = it.document.id
 
                     if (it.newIndex == it.oldIndex) {
                         devices[it.newIndex] = device
@@ -172,8 +169,7 @@ class FirestoreDeviceRepository @Inject constructor(val deviceBuilder: IMyDevice
         documentSnapshots?.documentChanges?.forEach {
             when (it.type) {
                 DocumentChange.Type.ADDED, DocumentChange.Type.MODIFIED -> {
-                    device = it.document.toObject(Device::class.java)!!.copy(
-                        id = it.document.id,
+                    device = it.document.toObject(Device::class.java).copy(
                         model = localDevice.model,
                         manufacturer = localDevice.manufacturer,
                         isTablet = localDevice.isTablet,
@@ -182,7 +178,9 @@ class FirestoreDeviceRepository @Inject constructor(val deviceBuilder: IMyDevice
                     )
                 }
                 DocumentChange.Type.REMOVED -> {
-                    device = localDevice
+                    device = localDevice.copy(
+                        status = Device.Status.NOT_REGISTER
+                    )
                 }
             }
         }

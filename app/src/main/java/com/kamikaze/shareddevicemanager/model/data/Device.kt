@@ -1,12 +1,13 @@
 package com.kamikaze.shareddevicemanager.model.data
 
+import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.Exclude
 import com.google.firebase.firestore.IgnoreExtraProperties
 import com.kamikaze.shareddevicemanager.util.todayStr
 
 @IgnoreExtraProperties
 data class Device(
-    @get:Exclude var id: String = "",
+    @DocumentId val id: String = "",
     val instanceId: String = "ID of phone or tablet", // TODO
     val name: String = "",
     val model: String = "",
