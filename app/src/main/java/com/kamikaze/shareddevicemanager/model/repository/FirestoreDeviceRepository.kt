@@ -18,7 +18,8 @@ import javax.inject.Singleton
 @UseExperimental(kotlinx.coroutines.FlowPreview::class)
 @Singleton
 class FirestoreDeviceRepository @Inject constructor(val deviceBuilder: IMyDeviceBuilder) :
-    IDeviceRepository, EventListener<QuerySnapshot> {
+    IDeviceRepository {
+    private var myDeviceListenerRegistration: ListenerRegistration? = null
     private var listenerRegistration: ListenerRegistration? = null
     private val firestore = FirebaseFirestore.getInstance()
     private var group: Group? = null
@@ -29,80 +30,33 @@ class FirestoreDeviceRepository @Inject constructor(val deviceBuilder: IMyDevice
         stopListen()
 
         if (group != null) {
-            fetchMyDevice()
             startListen()
         }
     }
 
     private fun startListen() {
+        myDeviceListenerRegistration = firestore.collection("groups")
+            .document(group!!.id!!)
+            .collection("devices")
+            .whereEqualTo("instanceId", myDeviceChannel.value.instanceId)
+            .addSnapshotListener(myDeviceListener)
+
         listenerRegistration = firestore.collection("groups")
             .document(group!!.id!!)
             .collection("devices")
-            .addSnapshotListener(this)
+            .addSnapshotListener(devicesListener)
     }
 
     private fun stopListen() {
+        myDeviceListenerRegistration?.let {
+            it.remove()
+            myDeviceListenerRegistration = null
+        }
+
         listenerRegistration?.let {
             it.remove()
             listenerRegistration = null
         }
-    }
-
-    private suspend fun refreshDevices() {
-        val deferred = CompletableDeferred<List<Device>>()
-        val devicesReference = firestore.collection("groups")
-            .document(group!!.id!!)
-            .collection("devices")
-
-        devicesReference.get()
-            .addOnSuccessListener { snapshot ->
-                val devices = snapshot.map {
-                    val device = it.toObject(Device::class.java)
-                    device.id = it.id
-                    device
-                }
-                deferred.complete(devices)
-            }
-            .addOnFailureListener {
-                deferred.completeExceptionally(DataAccessException(cause = it))
-            }
-        val devices = deferred.await()
-
-        devicesChannel.send(devices)
-    }
-
-    private suspend fun fetchMyDevice() {
-        val deferred = CompletableDeferred<Device>()
-        val localDevice = deviceBuilder.build()
-
-        val devicesReference = firestore.collection("groups")
-            .document(group!!.id!!)
-            .collection("devices")
-            .whereEqualTo("instanceId", localDevice.instanceId)
-
-        devicesReference.get()
-            .addOnSuccessListener { snapshot ->
-                val doc = snapshot.documents.firstOrNull()
-                if (doc != null) {
-                    val device = doc.toObject(Device::class.java)!!.copy(
-                        id = doc.id,
-                        model = localDevice.model,
-                        manufacturer = localDevice.manufacturer,
-                        isTablet = localDevice.isTablet,
-                        os = localDevice.os,
-                        osVersion = localDevice.osVersion
-                    )
-                    deferred.complete(device)
-                } else {
-                    deferred.complete(localDevice)
-                }
-            }
-            .addOnFailureListener {
-                deferred.completeExceptionally(DataAccessException(cause = it))
-            }
-        val device = deferred.await()
-
-        myDeviceChannel.send(device)
     }
 
     override suspend fun get(deviceId: String): Device {
@@ -143,7 +97,6 @@ class FirestoreDeviceRepository @Inject constructor(val deviceBuilder: IMyDevice
                 deferred.completeExceptionally(DataAccessException(cause = it))
             }
         val res = deferred.await()
-        fetchMyDevice()
         return res
     }
 
@@ -163,7 +116,6 @@ class FirestoreDeviceRepository @Inject constructor(val deviceBuilder: IMyDevice
             }
 
         val res = deferred.await()
-        fetchMyDevice()
         return res
     }
 
@@ -180,7 +132,7 @@ class FirestoreDeviceRepository @Inject constructor(val deviceBuilder: IMyDevice
         }
     }
 
-    override fun onEvent(documentSnapshots: QuerySnapshot?, e: FirebaseFirestoreException?) {
+    private val devicesListener = EventListener<QuerySnapshot> { documentSnapshots, e ->
         val devices = devicesChannel.value.toMutableList()
 
         documentSnapshots?.documentChanges?.forEach {
@@ -211,6 +163,33 @@ class FirestoreDeviceRepository @Inject constructor(val deviceBuilder: IMyDevice
 
         GlobalScope.launch {
             devicesChannel.send(devices)
+        }
+    }
+
+    private val myDeviceListener = EventListener<QuerySnapshot> { documentSnapshots, e ->
+        val localDevice = myDeviceChannel.value
+        var device: Device = localDevice
+
+        documentSnapshots?.documentChanges?.forEach {
+            when (it.type) {
+                DocumentChange.Type.ADDED, DocumentChange.Type.MODIFIED -> {
+                    device = it.document.toObject(Device::class.java)!!.copy(
+                        id = it.document.id,
+                        model = localDevice.model,
+                        manufacturer = localDevice.manufacturer,
+                        isTablet = localDevice.isTablet,
+                        os = localDevice.os,
+                        osVersion = localDevice.osVersion
+                    )
+                }
+                DocumentChange.Type.REMOVED -> {
+                    device = localDevice
+                }
+            }
+        }
+
+        GlobalScope.launch {
+            myDeviceChannel.send(device)
         }
     }
 }
