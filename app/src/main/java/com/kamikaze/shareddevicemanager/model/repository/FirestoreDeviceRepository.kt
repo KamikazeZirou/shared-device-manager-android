@@ -20,7 +20,7 @@ import javax.inject.Singleton
 class FirestoreDeviceRepository @Inject constructor(val deviceBuilder: IMyDeviceBuilder) :
     IDeviceRepository {
     private var myDeviceListenerRegistration: ListenerRegistration? = null
-    private var listenerRegistration: ListenerRegistration? = null
+    private var devicesListenerRegistration: ListenerRegistration? = null
     private val firestore = FirebaseFirestore.getInstance()
     private var group: Group? = null
 
@@ -41,7 +41,7 @@ class FirestoreDeviceRepository @Inject constructor(val deviceBuilder: IMyDevice
             .whereEqualTo("instanceId", myDeviceChannel.value.instanceId)
             .addSnapshotListener(myDeviceListener)
 
-        listenerRegistration = firestore.collection("groups")
+        devicesListenerRegistration = firestore.collection("groups")
             .document(group!!.id!!)
             .collection("devices")
             .addSnapshotListener(devicesListener)
@@ -53,9 +53,9 @@ class FirestoreDeviceRepository @Inject constructor(val deviceBuilder: IMyDevice
             myDeviceListenerRegistration = null
         }
 
-        listenerRegistration?.let {
+        devicesListenerRegistration?.let {
             it.remove()
-            listenerRegistration = null
+            devicesListenerRegistration = null
         }
     }
 
@@ -146,9 +146,8 @@ class FirestoreDeviceRepository @Inject constructor(val deviceBuilder: IMyDevice
                     val device = it.document.toObject(Device::class.java)
                     device.id = it.document.id
 
-                    // eventType = if (it.newIndex == it.oldIndex) {
                     if (it.newIndex == it.oldIndex) {
-                        devices.set(it.newIndex, device)
+                        devices[it.newIndex] = device
                     } else {
                         devices.removeAt(it.oldIndex)
                         devices.add(it.newIndex, device)
