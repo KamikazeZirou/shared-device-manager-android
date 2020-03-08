@@ -5,12 +5,11 @@ import com.kamikaze.shareddevicemanager.model.data.Device
 import com.kamikaze.shareddevicemanager.model.data.Group
 import com.kamikaze.shareddevicemanager.model.data.IMyDeviceBuilder
 import com.kamikaze.shareddevicemanager.model.repository.IDeviceRepository
-import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -60,24 +59,12 @@ class FirestoreDeviceRepository @Inject constructor(val deviceBuilder: IMyDevice
         }
     }
 
-    override suspend fun get(deviceId: String): Device {
-        val deferred = CompletableDeferred<Device>()
-        val devicesReference = firestore.collection("groups")
-            .document(group!!.id!!)
-            .collection("devices")
-            .document(deviceId)
-
-        devicesReference.get()
-            .addOnSuccessListener { snapshot ->
-                val device = snapshot.toObject(Device::class.java)!!
-                deferred.complete(device)
-            }
-            .addOnFailureListener {
-                deferred.completeExceptionally(it)
-            }
-
-        return deferred.await()
-    }
+    override fun get(deviceId: String): Flow<Device?> =
+        devicesFlow.map { devices ->
+            devices.find { it.id == deviceId }
+        }
+        .distinctUntilChanged()
+        .flowOn(Dispatchers.Default)
 
     override suspend fun add(device: Device) {
         val devicesReference = firestore.collection("groups")

@@ -5,10 +5,6 @@ import com.kamikaze.shareddevicemanager.R
 import com.kamikaze.shareddevicemanager.model.data.Device
 import com.kamikaze.shareddevicemanager.model.repository.IDeviceRepository
 import com.kamikaze.shareddevicemanager.ui.util.toVisibleStr
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -30,13 +26,7 @@ class DeviceDetailViewModel @Inject constructor(private val deviceRepository: ID
             return
         }
 
-        device = deviceRepository.devicesFlow
-            .map { deviceList ->
-                deviceList.find { it.id == deviceId }
-            }
-            .filter { device.value != it }
-            .flowOn(Dispatchers.Default)
-            .asLiveData()
+        device = deviceRepository.get(deviceId).asLiveData()
 
         items = device.map {
             it ?: return@map listOf<DeviceDetailItem>()

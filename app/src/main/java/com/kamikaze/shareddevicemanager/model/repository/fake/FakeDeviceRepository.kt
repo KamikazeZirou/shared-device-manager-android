@@ -9,6 +9,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -59,9 +61,11 @@ class FakeDeviceRepository constructor(deviceBuilder: IMyDeviceBuilder) :
 
     }
 
-    override suspend fun get(deviceId: String): Device {
-        return devices.find { it.id == deviceId }!!
-    }
+    override fun get(deviceId: String): Flow<Device?> =
+        devicesFlow.map {
+            it.find { it.id == deviceId }
+        }
+        .distinctUntilChanged()
 
     override suspend fun add(device: Device) {
         // 使い方によっては、異なるデバイスに同じIDを振ってしまうが、Fake実装なので許容
