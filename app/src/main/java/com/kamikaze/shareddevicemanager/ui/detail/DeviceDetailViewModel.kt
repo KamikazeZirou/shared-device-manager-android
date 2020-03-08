@@ -21,22 +21,29 @@ class DeviceDetailViewModel @Inject constructor(private val deviceRepository: ID
         }
         val statusText = it.status.toString()
 
-        listOf(
-            DeviceDetailItem(R.string.device_name_label, it.name.toVisibleStr()),
-            DeviceDetailItem(R.string.device_model_label, it.model.toVisibleStr()),
-            DeviceDetailItem(R.string.device_manufacturer_label, it.manufacturer.toVisibleStr()),
-            DeviceDetailItem(R.string.device_os_label, it.readableOS),
-            DeviceDetailItem(R.string.device_type_label, deviceTypeText.toVisibleStr()),
-            DeviceDetailItem(R.string.device_status_label, statusText.toVisibleStr()),
-            DeviceDetailItem(R.string.device_user_label, it.user.toVisibleStr()),
-            DeviceDetailItem(R.string.device_issue_date_label, it.issueDate.toVisibleStr()),
-            DeviceDetailItem(
+        val list = mutableListOf<DeviceDetailItem>()
+        list.add(DeviceDetailItem(R.string.device_name_label, it.name.toVisibleStr()))
+        list.add(DeviceDetailItem(R.string.device_model_label, it.model.toVisibleStr()))
+        list.add(DeviceDetailItem(R.string.device_manufacturer_label, it.manufacturer.toVisibleStr()))
+        list.add(DeviceDetailItem(R.string.device_os_label, it.readableOS))
+        list.add(DeviceDetailItem(R.string.device_type_label, deviceTypeText.toVisibleStr()))
+        list.add(DeviceDetailItem(R.string.device_status_label, statusText.toVisibleStr()))
+        list.add(DeviceDetailItem(R.string.device_user_label, it.user.toVisibleStr()))
+
+        if (it.status != Device.Status.DISPOSAL) {
+            list.add(DeviceDetailItem(R.string.device_issue_date_label, it.issueDate.toVisibleStr()))
+            list.add(DeviceDetailItem(
                 R.string.device_estimated_return_date_label,
                 it.estimatedReturnDate.toVisibleStr()
-            ),
-            DeviceDetailItem(R.string.device_return_date_label, it.returnDate.toVisibleStr()),
-            DeviceDetailItem(R.string.device_register_date_label, it.registerDate.toVisibleStr())
-        )
+            ))
+            list.add(DeviceDetailItem(R.string.device_return_date_label, it.returnDate.toVisibleStr()))
+            list.add(DeviceDetailItem(R.string.device_register_date_label, it.registerDate.toVisibleStr()))
+        } else {
+            list.add(DeviceDetailItem(R.string.device_register_date_label, it.registerDate.toVisibleStr()))
+            list.add(DeviceDetailItem(R.string.device_disposal_date_label, it.disposalDate.toVisibleStr()))
+        }
+
+        list
     }
 
 

@@ -23,6 +23,7 @@
     <string name="device_return_date_label">返却日</string>
     <string name="device_estimated_return_date_label">返却予定日</string>
     <string name="device_issue_date_label">貸出日</string>
+    <string name="device_disposal_date_label">廃棄日</string>
     <string name="link_device">紐付ける</string>
     <string name="borrow_device_title">借りる</string>
     <string name="return_device_title">返す</string>
