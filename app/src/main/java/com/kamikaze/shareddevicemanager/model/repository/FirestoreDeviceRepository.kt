@@ -78,44 +78,19 @@ class FirestoreDeviceRepository @Inject constructor(val deviceBuilder: IMyDevice
         return deferred.await()
     }
 
-    override suspend fun add(device: Device): Device {
-        val deferred = CompletableDeferred<Device>()
+    override suspend fun add(device: Device) {
         val devicesReference = firestore.collection("groups")
             .document(group!!.id!!)
             .collection("devices")
-
         devicesReference.add(device)
-            .addOnSuccessListener { snapshot ->
-                deferred.complete(
-                    device.copy(
-                        id = snapshot.id
-                    )
-                )
-            }
-            .addOnFailureListener {
-                deferred.completeExceptionally(DataAccessException(cause = it))
-            }
-        val res = deferred.await()
-        return res
     }
 
-    override suspend fun update(device: Device): Device {
-        val deferred = CompletableDeferred<Device>()
+    override suspend fun update(device: Device) {
         val devicesReference = firestore.collection("groups")
             .document(group!!.id!!)
             .collection("devices")
             .document(device.id)
-
         devicesReference.set(device)
-            .addOnSuccessListener { snapshot ->
-                deferred.complete(device)
-            }
-            .addOnFailureListener {
-                deferred.completeExceptionally(DataAccessException(cause = it))
-            }
-
-        val res = deferred.await()
-        return res
     }
 
     private val devicesChannel = ConflatedBroadcastChannel<List<Device>>()

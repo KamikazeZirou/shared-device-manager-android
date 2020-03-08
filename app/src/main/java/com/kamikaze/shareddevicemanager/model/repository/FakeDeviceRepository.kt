@@ -61,7 +61,7 @@ class FakeDeviceRepository constructor(deviceBuilder: IMyDeviceBuilder) :
         return devices.find { it.id == deviceId }!!
     }
 
-    override suspend fun add(device: Device): Device {
+    override suspend fun add(device: Device) {
         // 使い方によっては、異なるデバイスに同じIDを振ってしまうが、Fake実装なので許容
         val registeredDevice = device.copy(
             id = (devices.size + 1).toString()
@@ -70,14 +70,11 @@ class FakeDeviceRepository constructor(deviceBuilder: IMyDeviceBuilder) :
 
         myDeviceChannel.send(registeredDevice)
         devicesChannel.send(devices.toList())
-
-        return registeredDevice
     }
 
-    override suspend fun update(device: Device): Device {
+    override suspend fun update(device: Device) {
         myDeviceChannel.send(device)
         updateDevice(device)
-        return device
     }
 
     private suspend fun updateDevice(device: Device) {
