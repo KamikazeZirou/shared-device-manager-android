@@ -3,7 +3,7 @@ package com.kamikaze.shareddevicemanager.model.data
 import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.Exclude
 import com.google.firebase.firestore.IgnoreExtraProperties
-import com.kamikaze.shareddevicemanager.util.todayStr
+import java.util.*
 
 @IgnoreExtraProperties
 data class Device(
@@ -17,28 +17,28 @@ data class Device(
     val osVersion: String = "",
     val status: Status = Status.UNKNOWN,
     val user: String = "",
-    val issueDate: String = "",
-    val estimatedReturnDate: String = "",
-    val returnDate: String = "",
-    val registerDate: String = "",
-    val disposalDate: String = ""
+    val issueDate: Date? = null,
+    val estimatedReturnDate: Date? = null,
+    val returnDate: Date? = null,
+    val registerDate: Date? = null,
+    val disposalDate: Date? = null
 ) {
     fun register(name: String): Device = this.copy(
         name = name,
         status = Status.FREE,
-        registerDate = todayStr()
+        registerDate = Date()
     )
 
-    fun borrow(user: String, estimatedReturnDate: String): Device = this.copy(
+    fun borrow(user: String, estimatedReturnDate: Date): Device = this.copy(
         user = user,
         estimatedReturnDate = estimatedReturnDate,
         status = Status.IN_USE,
-        issueDate = todayStr()
+        issueDate = Date()
     )
 
     fun `return`(): Device = this.copy(
         status = Status.FREE,
-        returnDate = todayStr()
+        returnDate = Date()
     )
 
     fun linkTo(device: Device): Device = device.copy(
@@ -50,7 +50,7 @@ data class Device(
 
     fun dispose(): Device = this.copy(
         status = Status.DISPOSAL,
-        disposalDate = todayStr()
+        disposalDate = Date()
     )
 
     @get:Exclude

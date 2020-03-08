@@ -56,7 +56,7 @@
                 android:inputType="date"
                 android:clickable="true"
                 android:focusable="false"
-                android:text="@={viewModel.estimatedReturnDate}" />
+                android:text="@{viewModel.estimatedReturnDate}" />
 
         </LinearLayout>
 

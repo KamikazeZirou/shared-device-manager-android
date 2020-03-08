@@ -10,6 +10,7 @@ import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.launch
+import java.util.*
 
 @ExperimentalCoroutinesApi
 @UseExperimental(kotlinx.coroutines.FlowPreview::class)
@@ -34,10 +35,10 @@ class FakeDeviceRepository constructor(deviceBuilder: IMyDeviceBuilder) :
                 osVersion = "8.0.0",
                 status = getDeviceStatus(it % 3),
                 user = "user $it",
-                issueDate = "2020/02/03",
-                estimatedReturnDate = "2020/02/04",
-                returnDate = "2020/02/03",
-                registerDate = "2020/02/01"
+                issueDate = Date(),
+                estimatedReturnDate = Date(),
+                returnDate = Date(),
+                registerDate = Date()
             )
         }
 
