@@ -84,5 +84,8 @@ lint/outputs/
 lint/tmp/
 # lint/reports/
 
+# Mac
+.DS_Store
+
 # Firebase Auth Json
 google-services.json
