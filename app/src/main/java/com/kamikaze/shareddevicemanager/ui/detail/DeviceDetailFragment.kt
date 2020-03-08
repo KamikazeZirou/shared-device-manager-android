@@ -36,7 +36,14 @@ class DeviceDetailFragment : DaggerFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.list.adapter = DeviceDetailAdapter()
 
-        viewModel.start(arguments!!.getString(EXTRA_DEVICE_ID, ""))
+        viewModel.initialize(arguments!!.getString(EXTRA_DEVICE_ID, ""))
+
+        viewModel.device.observe(viewLifecycleOwner, Observer {
+            if (it == null) {
+                activity!!.finish()
+            }
+        })
+
         viewModel.items.observe(viewLifecycleOwner, Observer {
             (binding.list.adapter as DeviceDetailAdapter).submitList(it)
         })

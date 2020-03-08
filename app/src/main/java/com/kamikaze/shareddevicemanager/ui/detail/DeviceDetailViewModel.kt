@@ -5,69 +5,84 @@ import com.kamikaze.shareddevicemanager.R
 import com.kamikaze.shareddevicemanager.model.data.Device
 import com.kamikaze.shareddevicemanager.model.repository.IDeviceRepository
 import com.kamikaze.shareddevicemanager.ui.util.toVisibleStr
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class DeviceDetailViewModel @Inject constructor(private val deviceRepository: IDeviceRepository) :
     ViewModel() {
-    private val device = MutableLiveData<Device>()
+    lateinit var device: LiveData<Device?>
 
-    val items: LiveData<List<DeviceDetailItem>> = device.map {
-        // FIXME Resouce IDを返すかIDから文字列を取れるようにする
-        val deviceTypeText = if (it.isTablet) {
-            "Tablet"
-        } else {
-            "Phone"
-        }
-        val statusText = it.status.toString()
-
-        val list = mutableListOf<DeviceDetailItem>()
-        list.add(DeviceDetailItem(R.string.device_name_label, it.name.toVisibleStr()))
-        list.add(DeviceDetailItem(R.string.device_model_label, it.model.toVisibleStr()))
-        list.add(DeviceDetailItem(R.string.device_manufacturer_label, it.manufacturer.toVisibleStr()))
-        list.add(DeviceDetailItem(R.string.device_os_label, it.readableOS))
-        list.add(DeviceDetailItem(R.string.device_type_label, deviceTypeText.toVisibleStr()))
-        list.add(DeviceDetailItem(R.string.device_status_label, statusText.toVisibleStr()))
-        list.add(DeviceDetailItem(R.string.device_user_label, it.user.toVisibleStr()))
-
-        if (it.status != Device.Status.DISPOSAL) {
-            list.add(DeviceDetailItem(R.string.device_issue_date_label, it.issueDate.toVisibleStr()))
-            list.add(DeviceDetailItem(
-                R.string.device_estimated_return_date_label,
-                it.estimatedReturnDate.toVisibleStr()
-            ))
-            list.add(DeviceDetailItem(R.string.device_return_date_label, it.returnDate.toVisibleStr()))
-            list.add(DeviceDetailItem(R.string.device_register_date_label, it.registerDate.toVisibleStr()))
-        } else {
-            list.add(DeviceDetailItem(R.string.device_register_date_label, it.registerDate.toVisibleStr()))
-            list.add(DeviceDetailItem(R.string.device_disposal_date_label, it.disposalDate.toVisibleStr()))
-        }
-
-        list
-    }
-
+    lateinit var items: LiveData<List<DeviceDetailItem>>
 
     private val myDevice = deviceRepository.myDeviceFlow.asLiveData()
 
     private val _canLink = MediatorLiveData<Boolean>()
     val canLink: LiveData<Boolean> = _canLink
 
-    init {
-        val observer = Observer<Device> {
+    private var initialized = false
+
+    fun initialize(deviceId: String) {
+        if (initialized) {
+            return
+        }
+
+        device = deviceRepository.devicesFlow
+            .map {
+                it.find { device -> device.id == deviceId }
+            }
+            .filter { device.value != it }
+            .flowOn(Dispatchers.Default)
+            .asLiveData()
+
+        items = device.map {
+            it ?: return@map listOf<DeviceDetailItem>()
+
+            // FIXME Resouce IDを返すかIDから文字列を取れるようにする
+            val deviceTypeText = if (it.isTablet) {
+                "Tablet"
+            } else {
+                "Phone"
+            }
+            val statusText = it.status.toString()
+
+            val list = mutableListOf<DeviceDetailItem>()
+            list.add(DeviceDetailItem(R.string.device_name_label, it.name.toVisibleStr()))
+            list.add(DeviceDetailItem(R.string.device_model_label, it.model.toVisibleStr()))
+            list.add(DeviceDetailItem(R.string.device_manufacturer_label, it.manufacturer.toVisibleStr()))
+            list.add(DeviceDetailItem(R.string.device_os_label, it.readableOS))
+            list.add(DeviceDetailItem(R.string.device_type_label, deviceTypeText.toVisibleStr()))
+            list.add(DeviceDetailItem(R.string.device_status_label, statusText.toVisibleStr()))
+            list.add(DeviceDetailItem(R.string.device_user_label, it.user.toVisibleStr()))
+
+            if (it.status != Device.Status.DISPOSAL) {
+                list.add(DeviceDetailItem(R.string.device_issue_date_label, it.issueDate.toVisibleStr()))
+                list.add(DeviceDetailItem(
+                    R.string.device_estimated_return_date_label,
+                    it.estimatedReturnDate.toVisibleStr()
+                ))
+                list.add(DeviceDetailItem(R.string.device_return_date_label, it.returnDate.toVisibleStr()))
+                list.add(DeviceDetailItem(R.string.device_register_date_label, it.registerDate.toVisibleStr()))
+            } else {
+                list.add(DeviceDetailItem(R.string.device_register_date_label, it.registerDate.toVisibleStr()))
+                list.add(DeviceDetailItem(R.string.device_disposal_date_label, it.disposalDate.toVisibleStr()))
+            }
+
+            list
+        }
+
+        val observer = Observer<Device?> {
             val shownDeviceStatus = device.value?.status ?: return@Observer
             val myDeviceStatus = myDevice.value?.status ?: return@Observer
             _canLink.value = shownDeviceStatus.canLink && !myDeviceStatus.isRegistered
-
         }
         _canLink.addSource(device, observer)
         _canLink.addSource(myDevice, observer)
-    }
 
-    fun start(deviceId: String) {
-        viewModelScope.launch {
-            val device = deviceRepository.get(deviceId)
-            this@DeviceDetailViewModel.device.postValue(device)
-        }
+        initialized = true
     }
 
     fun linkDevice() {
