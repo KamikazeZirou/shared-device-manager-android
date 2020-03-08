@@ -25,6 +25,7 @@ data class Device(
 ) {
     companion object {
         private const val NAME_MAX_LENGTH = 80
+        private const val USER_NAME_MAX_LENGTH = 40
 
         fun validateName(name: String): Boolean =
             when {
@@ -32,6 +33,23 @@ data class Device(
                 name.length > NAME_MAX_LENGTH -> false
                 else -> true
             }
+
+        fun validateUserName(userName: String): Boolean =
+            when {
+                userName.isEmpty() -> false
+                userName.length > USER_NAME_MAX_LENGTH -> false
+                else -> true
+            }
+
+        fun validateEstimatedReturnDate(date: Date): Boolean {
+            val calendar = Calendar.getInstance()
+            val year = calendar.get(Calendar.YEAR)
+            val month = calendar.get(Calendar.MONTH)
+            val day = calendar.get(Calendar.DAY_OF_MONTH)
+            calendar.clear()
+            calendar.set(year, month, day)
+            return date >= calendar.time
+        }
     }
 
     fun register(name: String): Device = this.copy(
