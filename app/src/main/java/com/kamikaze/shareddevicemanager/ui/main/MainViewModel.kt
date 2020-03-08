@@ -3,7 +3,6 @@ package com.kamikaze.shareddevicemanager.ui.main
 import androidx.lifecycle.*
 import com.kamikaze.shareddevicemanager.model.data.Group
 import com.kamikaze.shareddevicemanager.model.data.Member
-import com.kamikaze.shareddevicemanager.model.data.Role
 import com.kamikaze.shareddevicemanager.model.repository.IDeviceRepository
 import com.kamikaze.shareddevicemanager.model.repository.IGroupRepository
 import com.kamikaze.shareddevicemanager.model.repository.IMemberRepository
@@ -50,7 +49,7 @@ class MainViewModel @Inject constructor(private val auth: IAuthService,
                     group = groupRepository.get(user.id)
                     require(group != null)
 
-                    val member = Member(user.id, Role.OWNER)
+                    val member = Member(user.id, Member.Role.OWNER)
                     memberRepository.add(group.id!!, member)
                 }
 
