@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">共有端末管理</string>
+    <string name="device_list">端末一覧</string>
+    <string name="my_device">マイ端末</string>
+    <string name="title_activity_main">共有端末管理</string>
+    <string name="title_device_list">端末一覧</string>
+    <string name="title_my_device">マイ端末</string>
+    <string name="register">登録</string>
+    <string name="link">紐付ける</string>
+    <string name="device_name_label">端末名</string>
+    <string name="not_registered_device_text">あなたの端末は登録されていません。\n端末を登録するか既存の端末に紐付けてください。</string>
+    <string name="user_name_label">利用者名</string>
+    <string name="estimated_return_date_label">返却予定日</string>
+    <string name="borrow_device_dialog_title">端末を借りる</string>
+    <string name="device_os_label">OS</string>
+    <string name="device_os_version_label">バージョン</string>
+    <string name="device_user_label">利用者</string>
+    <string name="device_status_label">状態</string>
+    <string name="device_type_label">種類</string>
+    <string name="device_model_label">型番</string>
+    <string name="device_manufacturer_label">メーカー</string>
+    <string name="device_register_date_label">登録日</string>
+    <string name="device_return_date_label">返却日</string>
+    <string name="device_estimated_return_date_label">返却予定日</string>
+    <string name="device_issue_date_label">貸出日</string>
+    <string name="link_device">紐付ける</string>
+    <string name="borrow_device_title">借りる</string>
+    <string name="return_device_title">返す</string>
+    <string name="dispose_device_title">破棄する</string>
+    <string name="sign_out_title">サインアウト</string>
+</resources>
