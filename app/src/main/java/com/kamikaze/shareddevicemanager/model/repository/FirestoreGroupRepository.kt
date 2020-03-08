@@ -36,19 +36,7 @@ class FirestoreGroupRepository @Inject constructor() : IGroupRepository {
     }
 
     override suspend fun add(group: Group) {
-        val deferred = CompletableDeferred<Unit>()
-
-        val groupsReference = firestore.collection("groups")
-
-        // Gropuが存在しないのでGroupを作る
-        groupsReference.add(group)
-            .addOnSuccessListener {
-                deferred.complete(Unit)
-            }
-            .addOnFailureListener {
-                deferred.completeExceptionally(DataAccessException(cause = it))
-            }
-
-        deferred.await()
+        firestore.collection("groups")
+            .add(group)
     }
 }

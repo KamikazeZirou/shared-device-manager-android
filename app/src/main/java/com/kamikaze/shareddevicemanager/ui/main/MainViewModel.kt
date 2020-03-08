@@ -2,8 +2,11 @@ package com.kamikaze.shareddevicemanager.ui.main
 
 import androidx.lifecycle.*
 import com.kamikaze.shareddevicemanager.model.data.Group
+import com.kamikaze.shareddevicemanager.model.data.Member
+import com.kamikaze.shareddevicemanager.model.data.Role
 import com.kamikaze.shareddevicemanager.model.repository.IDeviceRepository
 import com.kamikaze.shareddevicemanager.model.repository.IGroupRepository
+import com.kamikaze.shareddevicemanager.model.repository.IMemberRepository
 import com.kamikaze.shareddevicemanager.model.service.AuthState
 import com.kamikaze.shareddevicemanager.model.service.IAuthService
 import kotlinx.coroutines.flow.collect
@@ -12,6 +15,7 @@ import javax.inject.Inject
 
 class MainViewModel @Inject constructor(private val auth: IAuthService,
                                         private val groupRepository: IGroupRepository,
+                                        private val memberRepository: IMemberRepository,
                                         private val deviceRepository: IDeviceRepository
 ): ViewModel() {
     val isSigningIn = MutableLiveData<Boolean>().apply {
@@ -36,16 +40,21 @@ class MainViewModel @Inject constructor(private val auth: IAuthService,
         })
 
         viewModelScope.launch {
+            // TODO サインアップ後の初期化処理はCloudFunctionに実行させる
             auth.userFlow.collect {
                 val user = it ?: return@collect
-                val group = groupRepository.get(user.id)
+                var group = groupRepository.get(user.id)
 
                 if (group == null) {
-                    val group = Group(owner = user.id, name = user.name, default = true)
-                    groupRepository.add(group)
+                    groupRepository.add(Group(owner = user.id, name = user.name, default = true))
+                    group = groupRepository.get(user.id)
+                    require(group != null)
+
+                    val member = Member(user.id, Role.OWNER)
+                    memberRepository.add(group.id!!, member)
                 }
 
-                deviceRepository.setGroup(group!!)
+                deviceRepository.setGroup(group)
             }
         }
     }
