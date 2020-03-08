@@ -34,6 +34,11 @@ class RegisterDeviceFragment : DaggerFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
+        binding.registerDeviceButton.setOnClickListener {
+            viewModel.registerDevice()
+            activity?.finish()
+        }
+
         return binding.root
     }
 
@@ -46,17 +51,11 @@ class RegisterDeviceFragment : DaggerFragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.register_device_menu, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
-                activity?.finish()
-                return true
-            }
-            R.id.register_device -> {
-                viewModel.registerDevice()
                 activity?.finish()
                 return true
             }

@@ -23,6 +23,17 @@ data class Device(
     val registerDate: Date? = null,
     val disposalDate: Date? = null
 ) {
+    companion object {
+        private const val NAME_MAX_LENGTH = 80
+
+        fun validateName(name: String): Boolean =
+            when {
+                name.isEmpty() -> false
+                name.length > NAME_MAX_LENGTH -> false
+                else -> true
+            }
+    }
+
     fun register(name: String): Device = this.copy(
         name = name,
         status = Status.FREE,
