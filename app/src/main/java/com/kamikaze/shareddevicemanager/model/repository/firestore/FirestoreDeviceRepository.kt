@@ -133,30 +133,30 @@ class FirestoreDeviceRepository @Inject constructor(val deviceBuilder: IMyDevice
     }
 
     private val myDeviceListener = EventListener<QuerySnapshot> { documentSnapshots, e ->
-        val localDevice = myDeviceChannel.value
-        var device: Device = localDevice
-
         documentSnapshots?.documentChanges?.forEach {
             when (it.type) {
                 DocumentChange.Type.ADDED, DocumentChange.Type.MODIFIED -> {
-                    device = it.document.toObject(Device::class.java).copy(
+                    val localDevice = myDeviceChannel.value
+                    val device = it.document.toObject(Device::class.java).copy(
                         model = localDevice.model,
                         manufacturer = localDevice.manufacturer,
                         isTablet = localDevice.isTablet,
                         os = localDevice.os,
                         osVersion = localDevice.osVersion
                     )
+
+                    GlobalScope.launch {
+                        myDeviceChannel.send(device)
+                    }
                 }
                 DocumentChange.Type.REMOVED -> {
-                    device = localDevice.copy(
-                        status = Device.Status.NOT_REGISTER
-                    )
+                    GlobalScope.launch {
+                        val device = deviceBuilder.build()
+                        myDeviceChannel.send(device)
+                    }
                 }
             }
         }
 
-        GlobalScope.launch {
-            myDeviceChannel.send(device)
-        }
     }
 }
