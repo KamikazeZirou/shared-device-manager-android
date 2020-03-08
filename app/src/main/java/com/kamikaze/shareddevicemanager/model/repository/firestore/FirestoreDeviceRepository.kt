@@ -84,6 +84,13 @@ class FirestoreDeviceRepository @Inject constructor(val deviceBuilder: IMyDevice
             .document(group!!.id!!)
             .collection("devices")
         devicesReference.add(device)
+
+        // devicesが空の時は、リスナーを作り直す
+        // Firestoreにdevicesが存在しない状態から新しく作られた時、リスナーが反応しないため
+        if (devicesChannel.value.isEmpty()) {
+            stopListen()
+            startListen()
+        }
     }
 
     override suspend fun update(device: Device) {
