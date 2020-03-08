@@ -1,7 +1,9 @@
-package com.kamikaze.shareddevicemanager.model.service
+package com.kamikaze.shareddevicemanager.model.service.firebase
 
 import com.google.firebase.auth.FirebaseAuth
 import com.kamikaze.shareddevicemanager.model.data.User
+import com.kamikaze.shareddevicemanager.model.service.AuthState
+import com.kamikaze.shareddevicemanager.model.service.IAuthService
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.Flow

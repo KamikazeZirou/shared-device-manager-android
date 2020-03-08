@@ -1,14 +1,16 @@
-package com.kamikaze.shareddevicemanager.model.repository
+package com.kamikaze.shareddevicemanager.model.repository.firestore
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.kamikaze.shareddevicemanager.model.data.Group
+import com.kamikaze.shareddevicemanager.model.repository.IGroupRepository
 import kotlinx.coroutines.CompletableDeferred
 import javax.inject.Inject
 import javax.inject.Singleton
 
 
 @Singleton
-class FirestoreGroupRepository @Inject constructor() : IGroupRepository {
+class FirestoreGroupRepository @Inject constructor() :
+    IGroupRepository {
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     override suspend fun get(ownerId: String): Group? {
@@ -29,7 +31,7 @@ class FirestoreGroupRepository @Inject constructor() : IGroupRepository {
                 deferred.complete(group)
             }
             .addOnFailureListener {
-                deferred.completeExceptionally(DataAccessException(cause = it))
+                deferred.completeExceptionally(it)
             }
 
         return deferred.await()

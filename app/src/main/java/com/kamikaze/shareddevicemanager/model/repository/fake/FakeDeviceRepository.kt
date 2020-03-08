@@ -1,8 +1,9 @@
-package com.kamikaze.shareddevicemanager.model.repository
+package com.kamikaze.shareddevicemanager.model.repository.fake
 
 import com.kamikaze.shareddevicemanager.model.data.Device
 import com.kamikaze.shareddevicemanager.model.data.Group
 import com.kamikaze.shareddevicemanager.model.data.IMyDeviceBuilder
+import com.kamikaze.shareddevicemanager.model.repository.IDeviceRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel

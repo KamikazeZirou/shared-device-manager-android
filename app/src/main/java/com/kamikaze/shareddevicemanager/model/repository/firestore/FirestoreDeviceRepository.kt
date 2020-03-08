@@ -1,9 +1,10 @@
-package com.kamikaze.shareddevicemanager.model.repository
+package com.kamikaze.shareddevicemanager.model.repository.firestore
 
 import com.google.firebase.firestore.*
 import com.kamikaze.shareddevicemanager.model.data.Device
 import com.kamikaze.shareddevicemanager.model.data.Group
 import com.kamikaze.shareddevicemanager.model.data.IMyDeviceBuilder
+import com.kamikaze.shareddevicemanager.model.repository.IDeviceRepository
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -72,7 +73,7 @@ class FirestoreDeviceRepository @Inject constructor(val deviceBuilder: IMyDevice
                 deferred.complete(device)
             }
             .addOnFailureListener {
-                deferred.completeExceptionally(DataAccessException(cause = it))
+                deferred.completeExceptionally(it)
             }
 
         return deferred.await()
