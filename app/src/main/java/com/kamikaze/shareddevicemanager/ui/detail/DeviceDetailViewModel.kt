@@ -31,8 +31,8 @@ class DeviceDetailViewModel @Inject constructor(private val deviceRepository: ID
         }
 
         device = deviceRepository.devicesFlow
-            .map {
-                it.find { device -> device.id == deviceId }
+            .map { deviceList ->
+                deviceList.find { it.id == deviceId }
             }
             .filter { device.value != it }
             .flowOn(Dispatchers.Default)
