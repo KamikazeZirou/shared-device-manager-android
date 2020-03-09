@@ -2,21 +2,19 @@ package com.kamikaze.shareddevicemanager.ui.main
 
 import androidx.lifecycle.*
 import com.kamikaze.shareddevicemanager.model.data.Group
-import com.kamikaze.shareddevicemanager.model.data.Member
 import com.kamikaze.shareddevicemanager.model.repository.IDeviceRepository
 import com.kamikaze.shareddevicemanager.model.repository.IGroupRepository
-import com.kamikaze.shareddevicemanager.model.repository.IMemberRepository
 import com.kamikaze.shareddevicemanager.model.service.AuthState
 import com.kamikaze.shareddevicemanager.model.service.IAuthService
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class MainViewModel @Inject constructor(private val auth: IAuthService,
-                                        private val groupRepository: IGroupRepository,
-                                        private val memberRepository: IMemberRepository,
-                                        private val deviceRepository: IDeviceRepository
-): ViewModel() {
+class MainViewModel @Inject constructor(
+    private val auth: IAuthService,
+    private val groupRepository: IGroupRepository,
+    private val deviceRepository: IDeviceRepository
+) : ViewModel() {
     val isSigningIn = MutableLiveData<Boolean>().apply {
         value = false
     }
@@ -32,10 +30,12 @@ class MainViewModel @Inject constructor(private val auth: IAuthService,
 
     init {
         _shouldSignIn.addSource(isSigningIn, Observer {
-            _shouldSignIn.value = (isSigningIn.value == false && _authState.value == AuthState.SIGN_OUT)
+            _shouldSignIn.value =
+                (isSigningIn.value == false && _authState.value == AuthState.SIGN_OUT)
         })
         _shouldSignIn.addSource(_authState, Observer {
-            _shouldSignIn.value = (isSigningIn.value == false && _authState.value == AuthState.SIGN_OUT)
+            _shouldSignIn.value =
+                (isSigningIn.value == false && _authState.value == AuthState.SIGN_OUT)
         })
 
         viewModelScope.launch {
@@ -45,12 +45,16 @@ class MainViewModel @Inject constructor(private val auth: IAuthService,
                 var group = groupRepository.get(user.id)
 
                 if (group == null) {
-                    groupRepository.add(Group(owner = user.id, name = user.name, default = true))
+                    groupRepository.add(
+                        Group(
+                            name = user.name,
+                            owner = user.id,
+                            default = true,
+                            members = listOf(user.id)
+                        )
+                    )
                     group = groupRepository.get(user.id)
                     require(group != null)
-
-                    val member = Member(user.id, Member.Role.OWNER)
-                    memberRepository.add(group.id!!, member)
                 }
 
                 deviceRepository.setGroup(group)
