@@ -49,8 +49,7 @@ class MainViewModel @Inject constructor(
                         Group(
                             name = user.name,
                             owner = user.id,
-                            default = true,
-                            members = listOf(user.id)
+                            default = true
                         )
                     )
                     group = groupRepository.get(user.id)
