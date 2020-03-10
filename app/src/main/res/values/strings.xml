@@ -25,8 +25,11 @@
     <string name="device_issue_date_label">Issue Date</string>
     <string name="device_disposal_date_label">Disposal Date</string>
     <string name="link_device">Link</string>
-    <string name="borrow_device_title">Borrow</string>
-    <string name="return_device_title">Return</string>
-    <string name="dispose_device_title">Dispose</string>
+    <string name="register_device_title">Register Device</string>
+    <string name="borrow_device_title">Borrow Device</string>
+    <string name="device_detail_title">Device Detail</string>
+    <string name="borrow_device_menu_title">Borrow</string>
+    <string name="return_device_menu_title">Return</string>
+    <string name="dispose_device_menu_title">Dispose</string>
     <string name="sign_out_title">Sign Out</string>
 </resources>

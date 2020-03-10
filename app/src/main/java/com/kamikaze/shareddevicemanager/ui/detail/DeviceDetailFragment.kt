@@ -2,6 +2,7 @@ package com.kamikaze.shareddevicemanager.ui.detail
 
 import android.os.Bundle
 import android.view.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.kamikaze.shareddevicemanager.R
 import com.kamikaze.shareddevicemanager.databinding.FragmentDeviceDetailBinding
@@ -58,6 +59,10 @@ class DeviceDetailFragment : DaggerFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setHasOptionsMenu(true)
+        (activity as? AppCompatActivity)?.supportActionBar?.apply {
+            setTitle(R.string.device_detail_title)
+            setDisplayHomeAsUpEnabled(true)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -68,6 +73,10 @@ class DeviceDetailFragment : DaggerFragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            android.R.id.home -> {
+                activity?.finish()
+                return true
+            }
             R.id.link_device -> {
                 viewModel.linkDevice()
                 true

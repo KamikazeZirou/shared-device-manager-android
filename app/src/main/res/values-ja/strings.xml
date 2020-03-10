@@ -25,8 +25,11 @@
     <string name="device_issue_date_label">貸出日</string>
     <string name="device_disposal_date_label">廃棄日</string>
     <string name="link_device">紐付ける</string>
-    <string name="borrow_device_title">借りる</string>
-    <string name="return_device_title">返す</string>
-    <string name="dispose_device_title">破棄する</string>
+    <string name="register_device_title">端末登録</string>
+    <string name="device_detail_title">端末詳細</string>
+    <string name="borrow_device_title">端末借用</string>
+    <string name="borrow_device_menu_title">借りる</string>
+    <string name="return_device_menu_title">返す</string>
+    <string name="dispose_device_menu_title">破棄する</string>
     <string name="sign_out_title">サインアウト</string>
 </resources>

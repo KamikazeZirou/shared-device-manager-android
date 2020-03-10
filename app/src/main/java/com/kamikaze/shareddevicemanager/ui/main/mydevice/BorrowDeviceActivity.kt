@@ -3,6 +3,7 @@ package com.kamikaze.shareddevicemanager.ui.main.mydevice
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.os.Bundle
+import android.view.MenuItem
 import android.widget.DatePicker
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
@@ -22,6 +23,9 @@ class BorrowDeviceActivity : DaggerAppCompatActivity(), DatePickerDialog.OnDateS
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setTitle(R.string.borrow_device_title)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_borrow_device)
         binding.lifecycleOwner = this
@@ -43,6 +47,16 @@ class BorrowDeviceActivity : DaggerAppCompatActivity(), DatePickerDialog.OnDateS
         binding.cancelButton.setOnClickListener {
             finish()
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onDateSet(picker: DatePicker?, year: Int, month: Int, day: Int) {
