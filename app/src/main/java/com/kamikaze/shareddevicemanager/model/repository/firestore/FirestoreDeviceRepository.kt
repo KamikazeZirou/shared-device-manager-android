@@ -25,8 +25,13 @@ class FirestoreDeviceRepository @Inject constructor(val deviceBuilder: IMyDevice
     private var group: Group? = null
 
     override suspend fun setGroup(group: Group?) {
+        if (this.group == group) {
+            return
+        }
+
         this.group = group
         devicesChannel.send(listOf())
+        myDeviceChannel.send(deviceBuilder.build())
         stopListen()
 
         if (group != null) {

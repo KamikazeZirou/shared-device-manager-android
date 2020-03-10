@@ -20,7 +20,7 @@ class FirebaseAuthService @Inject constructor():
     private val userChannel = ConflatedBroadcastChannel<User?>(null)
     override val userFlow = userChannel.asFlow()
 
-    private val authStateChannel = ConflatedBroadcastChannel<AuthState>(
+    private val authStateChannel = ConflatedBroadcastChannel(
         AuthState.UNKNOWN
     )
     override val authStateFlow: Flow<AuthState> = authStateChannel.asFlow()

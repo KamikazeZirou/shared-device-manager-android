@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
-    private val auth: IAuthService,
+    private val authService: IAuthService,
     private val groupRepository: IGroupRepository,
     private val deviceRepository: IDeviceRepository
 ) : ViewModel() {
@@ -25,22 +25,30 @@ class MainViewModel @Inject constructor(
 
     val shouldSignIn: LiveData<Boolean> = _shouldSignIn
 
-    private val _authState = auth.authStateFlow.asLiveData()
-    private val _user = auth.userFlow.asLiveData()
+    private val _authState = authService.authStateFlow.asLiveData()
+    private val _user = authService.userFlow.asLiveData()
 
     init {
-        _shouldSignIn.addSource(isSigningIn, Observer {
+        _shouldSignIn.addSource(isSigningIn) {
             _shouldSignIn.value =
                 (isSigningIn.value == false && _authState.value == AuthState.SIGN_OUT)
-        })
-        _shouldSignIn.addSource(_authState, Observer {
+        }
+        _shouldSignIn.addSource(_authState) {
             _shouldSignIn.value =
                 (isSigningIn.value == false && _authState.value == AuthState.SIGN_OUT)
-        })
+        }
+
+        viewModelScope.launch {
+            authService.authStateFlow.collect {
+                if (it == AuthState.SIGN_OUT) {
+                    deviceRepository.setGroup(null)
+                }
+            }
+        }
 
         viewModelScope.launch {
             // TODO サインアップ後の初期化処理はCloudFunctionに実行させる
-            auth.userFlow.collect {
+            authService.userFlow.collect {
                 val user = it ?: return@collect
                 var group = groupRepository.get(user.id)
 
