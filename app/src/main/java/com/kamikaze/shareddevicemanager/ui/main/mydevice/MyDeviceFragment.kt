@@ -1,5 +1,6 @@
 package com.kamikaze.shareddevicemanager.ui.main.mydevice
 
+import android.content.DialogInterface.BUTTON_POSITIVE
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
@@ -8,12 +9,16 @@ import androidx.lifecycle.Observer
 import com.kamikaze.shareddevicemanager.R
 import com.kamikaze.shareddevicemanager.databinding.FragmentMyDeviceBinding
 import com.kamikaze.shareddevicemanager.model.data.Device
+import com.kamikaze.shareddevicemanager.ui.common.AlertDialogFragment
 import com.kamikaze.shareddevicemanager.ui.detail.DeviceDetailAdapter
 import com.kamikaze.shareddevicemanager.ui.register.RegisterDeviceActivity
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
-class MyDeviceFragment : DaggerFragment() {
+class MyDeviceFragment : DaggerFragment(), AlertDialogFragment.AlertDialogListener {
+    companion object {
+        private const val CONFIRM_DISPOSAL_DIALOG_TAG = "ConfirmDisposalDialog"
+    }
 
     private lateinit var binding: FragmentMyDeviceBinding
 
@@ -77,7 +82,9 @@ class MyDeviceFragment : DaggerFragment() {
                 true
             }
             R.id.dispose_device -> {
-                viewModel.disposeDevice()
+                AlertDialogFragment
+                    .newInstance(this, getString(R.string.confirm_disposal_msg))
+                    .show(parentFragmentManager, "ConfirmDisposalDialog")
                 true
             }
             R.id.sign_out -> {
@@ -86,6 +93,14 @@ class MyDeviceFragment : DaggerFragment() {
             }
             else -> {
                 super.onOptionsItemSelected(item)
+            }
+        }
+    }
+
+    override fun onClickListener(tag: String?, which: Int) {
+        if (tag == CONFIRM_DISPOSAL_DIALOG_TAG) {
+            if (which == BUTTON_POSITIVE) {
+                viewModel.disposeDevice()
             }
         }
     }

@@ -32,4 +32,5 @@
     <string name="return_device_menu_title">返す</string>
     <string name="dispose_device_menu_title">破棄する</string>
     <string name="sign_out_title">サインアウト</string>
+    <string name="confirm_disposal_msg">端末を廃棄してもよろしいですか?\nこの操作はやり直しできません。</string>
 </resources>
