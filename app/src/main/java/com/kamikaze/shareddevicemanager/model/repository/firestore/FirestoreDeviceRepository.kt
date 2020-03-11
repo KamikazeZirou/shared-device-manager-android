@@ -2,7 +2,6 @@ package com.kamikaze.shareddevicemanager.model.repository.firestore
 
 import com.google.firebase.firestore.*
 import com.kamikaze.shareddevicemanager.model.data.Device
-import com.kamikaze.shareddevicemanager.model.data.Group
 import com.kamikaze.shareddevicemanager.model.data.IMyDeviceBuilder
 import com.kamikaze.shareddevicemanager.model.repository.IDeviceRepository
 import kotlinx.coroutines.Dispatchers
@@ -22,33 +21,34 @@ class FirestoreDeviceRepository @Inject constructor(val deviceBuilder: IMyDevice
     private var myDeviceListenerRegistration: ListenerRegistration? = null
     private var devicesListenerRegistration: ListenerRegistration? = null
     private val firestore = FirebaseFirestore.getInstance()
-    private var group: Group? = null
+    private var groupId: String? = null
 
-    override suspend fun setGroup(group: Group?) {
-        if (this.group == group) {
+    override suspend fun setGroupId(groupId: String?) {
+        if (this.groupId == groupId) {
             return
         }
 
-        this.group = group
+        this.groupId = groupId
         devicesChannel.send(listOf())
         myDeviceChannel.send(deviceBuilder.build())
         stopListen()
 
-        if (group != null) {
+        if (groupId != null) {
             startListen()
         }
     }
 
     private fun startListen() {
         myDeviceListenerRegistration = firestore.collection("groups")
-            .document(group!!.id!!)
+            .document(groupId!!)
             .collection("devices")
             .whereEqualTo("instanceId", myDeviceChannel.value.instanceId)
             .addSnapshotListener(myDeviceListener)
 
         devicesListenerRegistration = firestore.collection("groups")
-            .document(group!!.id!!)
+            .document(groupId!!)
             .collection("devices")
+            .orderBy("registerDate", Query.Direction.DESCENDING)
             .addSnapshotListener(devicesListener)
     }
 
@@ -73,7 +73,7 @@ class FirestoreDeviceRepository @Inject constructor(val deviceBuilder: IMyDevice
 
     override suspend fun add(device: Device) {
         val devicesReference = firestore.collection("groups")
-            .document(group!!.id!!)
+            .document(groupId!!)
             .collection("devices")
         devicesReference.add(device)
 
@@ -87,7 +87,7 @@ class FirestoreDeviceRepository @Inject constructor(val deviceBuilder: IMyDevice
 
     override suspend fun update(device: Device) {
         val devicesReference = firestore.collection("groups")
-            .document(group!!.id!!)
+            .document(groupId!!)
             .collection("devices")
             .document(device.id)
         devicesReference.set(device)

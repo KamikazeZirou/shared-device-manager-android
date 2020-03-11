@@ -41,7 +41,7 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             authService.authStateFlow.collect {
                 if (it == AuthState.SIGN_OUT) {
-                    deviceRepository.setGroup(null)
+                    deviceRepository.setGroupId(null)
                 }
             }
         }
@@ -64,7 +64,7 @@ class MainViewModel @Inject constructor(
                     require(group != null)
                 }
 
-                deviceRepository.setGroup(group)
+                deviceRepository.setGroupId(group.id)
             }
         }
     }

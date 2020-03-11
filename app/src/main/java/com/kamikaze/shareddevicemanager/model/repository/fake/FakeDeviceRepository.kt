@@ -1,7 +1,6 @@
 package com.kamikaze.shareddevicemanager.model.repository.fake
 
 import com.kamikaze.shareddevicemanager.model.data.Device
-import com.kamikaze.shareddevicemanager.model.data.Group
 import com.kamikaze.shareddevicemanager.model.data.IMyDeviceBuilder
 import com.kamikaze.shareddevicemanager.model.repository.IDeviceRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -93,5 +92,5 @@ class FakeDeviceRepository constructor(deviceBuilder: IMyDeviceBuilder) :
             }
     }
 
-    override suspend fun setGroup(group: Group?) {}
+    override suspend fun setGroupId(groupId: String?) {}
 }
