@@ -16,7 +16,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="64dp"
+        android:layout_height="72dp"
         android:clickable="true"
         android:foreground="?android:attr/selectableItemBackground"
         android:gravity="center"
@@ -51,6 +51,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{device.os + ' ' + device.osVersion}"
+                android:textAppearance="?attr/textAppearanceListItemSecondary" />
+
+            <TextView
+                android:id="@+id/device_user_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{device.user}"
                 android:textAppearance="?attr/textAppearanceListItemSecondary" />
 
         </LinearLayout>
