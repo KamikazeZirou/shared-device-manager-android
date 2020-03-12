@@ -35,6 +35,6 @@
             android:maxLines="1"
             android:ellipsize="end"
             android:text="@{item.content}"
-            android:textAppearance="?attr/textAppearanceListItemSmall" />
+            android:textAppearance="?attr/textAppearanceListItemSecondary" />
     </LinearLayout>
 </layout>
