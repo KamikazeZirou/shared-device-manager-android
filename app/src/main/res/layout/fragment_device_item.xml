@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="com.kamikaze.shareddevicemanager.ui.util.StringExtKt"/>
+
         <variable
             name="device"
             type="com.kamikaze.shareddevicemanager.model.data.Device" />
@@ -50,14 +52,14 @@
                 android:id="@+id/device_os_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{device.os + ' ' + device.osVersion}"
+                android:text="@{device.readableOS}"
                 android:textAppearance="?attr/textAppearanceListItemSecondary" />
 
             <TextView
                 android:id="@+id/device_user_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{device.user}"
+                android:text="@{StringExtKt.toVisibleStr(device.user)}"
                 android:textAppearance="?attr/textAppearanceListItemSecondary" />
 
         </LinearLayout>
