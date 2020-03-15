@@ -5,6 +5,7 @@ import com.kamikaze.shareddevicemanager.model.data.Device
 import com.kamikaze.shareddevicemanager.model.repository.IDeviceRepository
 import com.kamikaze.shareddevicemanager.ui.util.toVisibleStr
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
@@ -39,6 +40,7 @@ class BorrowDeviceViewModel @Inject constructor(
 
         viewModelScope.launch {
             deviceRepository.myDeviceFlow
+                .filter { it.status.isRegistered }
                 .take(1)
                 .collect {
                     userName.value = it.user
