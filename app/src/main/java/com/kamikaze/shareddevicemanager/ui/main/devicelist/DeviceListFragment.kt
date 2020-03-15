@@ -7,6 +7,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kamikaze.shareddevicemanager.R
 import com.kamikaze.shareddevicemanager.databinding.FragmentDeviceItemListBinding
+import com.kamikaze.shareddevicemanager.ui.common.openPrivacyPolicy
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_device_item_list.*
 import javax.inject.Inject
@@ -60,6 +61,10 @@ class DeviceListFragment : DaggerFragment() {
         return when (item.itemId) {
             R.id.sign_out -> {
                 viewModel.signOut()
+                true
+            }
+            R.id.privacy_policy -> {
+                openPrivacyPolicy()
                 true
             }
             else -> {

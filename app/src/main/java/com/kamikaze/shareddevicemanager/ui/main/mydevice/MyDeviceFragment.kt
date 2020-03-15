@@ -10,6 +10,7 @@ import com.kamikaze.shareddevicemanager.R
 import com.kamikaze.shareddevicemanager.databinding.FragmentMyDeviceBinding
 import com.kamikaze.shareddevicemanager.model.data.Device
 import com.kamikaze.shareddevicemanager.ui.common.AlertDialogFragment
+import com.kamikaze.shareddevicemanager.ui.common.openPrivacyPolicy
 import com.kamikaze.shareddevicemanager.ui.detail.DeviceDetailAdapter
 import com.kamikaze.shareddevicemanager.ui.register.RegisterDeviceActivity
 import dagger.android.support.DaggerFragment
@@ -89,6 +90,10 @@ class MyDeviceFragment : DaggerFragment(), AlertDialogFragment.AlertDialogListen
             }
             R.id.sign_out -> {
                 viewModel.signOut()
+                true
+            }
+            R.id.privacy_policy -> {
+                openPrivacyPolicy()
                 true
             }
             else -> {

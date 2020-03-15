@@ -34,4 +34,5 @@
     <string name="sign_out_title">サインアウト</string>
     <string name="confirm_disposal_msg">端末を廃棄してもよろしいですか?\nこの操作はやり直しできません。</string>
     <string name="device_list_empty_text">管理対象の端末がありません。\nマイ端末から管理対象の端末を登録してください。</string>
+    <string name="privacy_policy_title">プライバシーポリシー</string>
 </resources>
