@@ -13,6 +13,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="google_analytics_adid_collection_enabled"
+            android:value="false" />
+
         <activity android:name=".ui.detail.DeviceDetailActivity"></activity>
         <activity android:name=".ui.main.mydevice.BorrowDeviceActivity" />
         <activity android:name=".ui.register.RegisterDeviceActivity" />
