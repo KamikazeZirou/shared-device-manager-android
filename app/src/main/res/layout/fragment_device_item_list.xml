@@ -31,6 +31,7 @@
             android:name="com.kamikaze.shareddevicemanager.ui.main.devicelist.DeviceListFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:visibility="@{viewModel.devices.empty ? View.GONE : View.VISIBLE}"
             app:layoutManager="LinearLayoutManager"
             tools:context=".ui.main.devicelist.DeviceListFragment"
             tools:listitem="@layout/fragment_device_item" />
