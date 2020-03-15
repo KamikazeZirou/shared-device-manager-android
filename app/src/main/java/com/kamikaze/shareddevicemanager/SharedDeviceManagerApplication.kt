@@ -1,5 +1,8 @@
 package com.kamikaze.shareddevicemanager
 
+import android.content.Context
+import android.os.Build
+import androidx.multidex.MultiDex
 import com.kamikaze.shareddevicemanager.di.DaggerApplicationComponent
 import com.kamikaze.shareddevicemanager.model.data.Group
 import com.kamikaze.shareddevicemanager.model.repository.IDeviceRepository
@@ -22,9 +25,15 @@ class SharedDeviceManagerApplication: DaggerApplication() {
     lateinit var deviceRepository: IDeviceRepository
 
 
+    override fun attachBaseContext(base: Context?) {
+        super.attachBaseContext(base)
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            MultiDex.install(this)
+        }
+    }
+
     override fun onCreate() {
         super.onCreate()
-
 
         // TODO アプリケーションクラスの外に出す(MainViewModelあたり)
         GlobalScope.launch {
