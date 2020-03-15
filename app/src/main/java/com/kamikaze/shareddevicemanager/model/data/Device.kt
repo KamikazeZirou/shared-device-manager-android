@@ -12,7 +12,7 @@ data class Device(
     val name: String = "",
     val model: String = "",
     val manufacturer: String = "",
-    val isTablet: Boolean = false,
+    @field:JvmField val isTablet: Boolean = false,
     val os: String = "Android",
     val osVersion: String = "",
     val status: Status = Status.UNKNOWN,
