@@ -33,4 +33,5 @@
     <string name="dispose_device_menu_title">Dispose</string>
     <string name="sign_out_title">Sign Out</string>
     <string name="confirm_disposal_msg">Are you sure you want to dispose the device?\nThis action cannot be undone.</string>
+    <string name="device_list_empty_text">There are no devices to manage.\nRegister the device to be managed from My Device.</string>
 </resources>

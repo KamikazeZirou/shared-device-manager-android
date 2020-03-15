@@ -5,13 +5,15 @@ import android.view.*
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.kamikaze.shareddevicemanager.R
+import com.kamikaze.shareddevicemanager.databinding.FragmentDeviceItemListBinding
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_device_item_list.*
 import javax.inject.Inject
 
 class DeviceListFragment : DaggerFragment() {
+    private lateinit var binding: FragmentDeviceItemListBinding
+
     @Inject
     lateinit var viewModel: DeviceListViewModel
 
@@ -26,14 +28,14 @@ class DeviceListFragment : DaggerFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_device_item_list, container, false)
+        binding = FragmentDeviceItemListBinding.inflate(inflater, container, false)
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
 
         // Set the adapter
-        if (view is RecyclerView) {
-            with(view) {
-                layoutManager = LinearLayoutManager(context)
-                adapter = DeviceListAdapter(viewModel)
-            }
+        binding.list.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = DeviceListAdapter(viewModel)
         }
 
         viewModel.devices.observe(viewLifecycleOwner, Observer {
@@ -46,7 +48,7 @@ class DeviceListFragment : DaggerFragment() {
             findNavController().navigate(action)
         })
 
-        return view
+        return binding.root
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
