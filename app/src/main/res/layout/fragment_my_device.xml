@@ -58,8 +58,6 @@
             android:id="@+id/registered_device_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
             android:visibility="@{viewModel.deviceStatus.registered ? View.VISIBLE : View.GONE}"
             app:layoutManager="LinearLayoutManager"
             tools:listitem="@layout/fragment_device_detail_item" />
