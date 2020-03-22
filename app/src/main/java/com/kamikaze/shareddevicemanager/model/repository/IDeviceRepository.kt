@@ -7,6 +7,6 @@ interface IDeviceRepository {
     fun add(groupId: String, device: Device)
     fun get(groupId: String) : Flow<List<Device>?>
     fun getByInstanceId(groupId: String, instanceId: String): Flow<Device?>
-    fun getById(deviceId: String, id: String) : Flow<Device?>
+    fun getById(groupId: String, deviceId: String) : Flow<Device?>
     fun update(groupId: String, device: Device)
 }

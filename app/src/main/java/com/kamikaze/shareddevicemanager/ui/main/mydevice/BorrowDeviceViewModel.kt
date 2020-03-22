@@ -4,6 +4,8 @@ import androidx.lifecycle.*
 import com.kamikaze.shareddevicemanager.model.data.Device
 import com.kamikaze.shareddevicemanager.model.service.DeviceService
 import com.kamikaze.shareddevicemanager.ui.util.toVisibleStr
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.take
@@ -11,6 +13,8 @@ import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 
+@ExperimentalCoroutinesApi
+@FlowPreview
 class BorrowDeviceViewModel @Inject constructor(
     private val deviceService: DeviceService
 ) :
@@ -50,7 +54,7 @@ class BorrowDeviceViewModel @Inject constructor(
 
     fun getRawEstimatedReturnDate(): List<Int> {
         val calendar = Calendar.getInstance()
-        calendar.time = _estimatedReturnDate.value
+        calendar.time = _estimatedReturnDate.value!!
 
         return listOf(
             calendar.get(Calendar.YEAR),

@@ -10,8 +10,12 @@ import com.kamikaze.shareddevicemanager.databinding.FragmentDeviceItemListBindin
 import com.kamikaze.shareddevicemanager.ui.common.openPrivacyPolicy
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_device_item_list.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
 
+@FlowPreview
+@ExperimentalCoroutinesApi
 class DeviceListFragment : DaggerFragment() {
     private lateinit var binding: FragmentDeviceItemListBinding
 

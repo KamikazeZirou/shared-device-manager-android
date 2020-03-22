@@ -7,10 +7,14 @@ import com.kamikaze.shareddevicemanager.di.DaggerApplicationComponent
 import com.kamikaze.shareddevicemanager.model.service.DeviceService
 import dagger.android.AndroidInjector
 import dagger.android.support.DaggerApplication
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@ExperimentalCoroutinesApi
+@FlowPreview
 class SharedDeviceManagerApplication: DaggerApplication() {
     @Inject
     lateinit var deviceService: DeviceService

@@ -6,7 +6,9 @@ import com.kamikaze.shareddevicemanager.model.repository.IDeviceRepository
 import com.kamikaze.shareddevicemanager.model.repository.firestore.FirestoreDeviceRepository
 import dagger.Binds
 import dagger.Module
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@ExperimentalCoroutinesApi
 @Module
 abstract class DeviceModule {
     @Binds

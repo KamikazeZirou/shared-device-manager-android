@@ -7,9 +7,13 @@ import com.kamikaze.shareddevicemanager.model.service.DeviceService
 import com.kamikaze.shareddevicemanager.model.service.IAuthService
 import com.kamikaze.shareddevicemanager.ui.detail.DeviceDetailItem
 import com.kamikaze.shareddevicemanager.ui.util.toVisibleStr
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@ExperimentalCoroutinesApi
+@FlowPreview
 class MyDeviceViewModel @Inject constructor(
     private var deviceService: DeviceService,
     private val auth: IAuthService

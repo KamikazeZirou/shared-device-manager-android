@@ -15,7 +15,6 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @ExperimentalCoroutinesApi
-@UseExperimental(kotlinx.coroutines.FlowPreview::class)
 @Singleton
 class FirestoreDeviceRepository @Inject constructor() : IDeviceRepository {
     private val firestore: FirebaseFirestore by lazy {
@@ -37,7 +36,7 @@ class FirestoreDeviceRepository @Inject constructor() : IDeviceRepository {
             .document(groupId)
             .collection("devices")
             .orderBy("registerDate", Query.Direction.DESCENDING)
-            .addSnapshotListener { documentSnapshots, e ->
+            .addSnapshotListener { documentSnapshots, _ ->
                 documentSnapshots?.documentChanges?.forEach {
                     when (it.type) {
                         DocumentChange.Type.ADDED -> {
@@ -72,7 +71,7 @@ class FirestoreDeviceRepository @Inject constructor() : IDeviceRepository {
             .document(groupId)
             .collection("devices")
             .document(deviceId)
-            .addSnapshotListener { documentSnapshots, e ->
+            .addSnapshotListener { documentSnapshots, _ ->
                 val device = documentSnapshots?.toObject(Device::class.java)
                 offer(device)
             }
@@ -84,7 +83,7 @@ class FirestoreDeviceRepository @Inject constructor() : IDeviceRepository {
             .document(groupId)
             .collection("devices")
             .whereEqualTo("instanceId", instanceId)
-            .addSnapshotListener { documentSnapshots, e ->
+            .addSnapshotListener { documentSnapshots, _ ->
                 documentSnapshots?.documentChanges?.forEach {
                     when (it.type) {
                         DocumentChange.Type.ADDED, DocumentChange.Type.MODIFIED -> {

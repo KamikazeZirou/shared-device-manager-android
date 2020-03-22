@@ -11,10 +11,14 @@ import androidx.lifecycle.lifecycleScope
 import com.kamikaze.shareddevicemanager.R
 import com.kamikaze.shareddevicemanager.databinding.ActivityBorrowDeviceBinding
 import dagger.android.support.DaggerAppCompatActivity
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
+@FlowPreview
+@ExperimentalCoroutinesApi
 class BorrowDeviceActivity : DaggerAppCompatActivity(), DatePickerDialog.OnDateSetListener {
     private lateinit var binding: ActivityBorrowDeviceBinding
 

@@ -7,8 +7,12 @@ import androidx.lifecycle.asLiveData
 import com.kamikaze.shareddevicemanager.model.service.DeviceService
 import com.kamikaze.shareddevicemanager.model.service.IAuthService
 import com.kamikaze.shareddevicemanager.ui.util.Event
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
 
+@ExperimentalCoroutinesApi
+@FlowPreview
 class DeviceListViewModel @Inject constructor(
     private val deviceService: DeviceService,
     private val auth: IAuthService

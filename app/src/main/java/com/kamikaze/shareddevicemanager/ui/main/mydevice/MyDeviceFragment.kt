@@ -14,8 +14,12 @@ import com.kamikaze.shareddevicemanager.ui.common.openPrivacyPolicy
 import com.kamikaze.shareddevicemanager.ui.detail.DeviceDetailAdapter
 import com.kamikaze.shareddevicemanager.ui.register.RegisterDeviceActivity
 import dagger.android.support.DaggerFragment
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
 
+@FlowPreview
+@ExperimentalCoroutinesApi
 class MyDeviceFragment : DaggerFragment(), AlertDialogFragment.AlertDialogListener {
     companion object {
         private const val CONFIRM_DISPOSAL_DIALOG_TAG = "ConfirmDisposalDialog"
