@@ -21,8 +21,8 @@ class DeviceService @Inject constructor(
     private val deviceRepository: IDeviceRepository,
     private val deviceBuilder: IMyDeviceBuilder
 ) {
-    private val _groupIdChannel = ConflatedBroadcastChannel<String>()
-    private val groupIdFlow: Flow<String> = _groupIdChannel.asFlow().distinctUntilChanged()
+    private val _groupIdChannel = ConflatedBroadcastChannel<String?>()
+    private val groupIdFlow: Flow<String?> = _groupIdChannel.asFlow().distinctUntilChanged()
 
     private val myDeviceChannel = ConflatedBroadcastChannel<Device>()
     val myDeviceFlow: Flow<Device> = myDeviceChannel.asFlow()
@@ -35,10 +35,10 @@ class DeviceService @Inject constructor(
         coroutineScope {
             launch {
                 val authStateFlow = authService.authStateFlow
-                    .filter { it != AuthState.UNKNOWN }
+                    .filter { it != AuthState.UNKNOWN}
 
-                authService.userFlow.combine(authStateFlow) { user, _ ->
-                    if (user != null) {
+                authService.userFlow.combine(authStateFlow) { user, state ->
+                    if (user != null && state == AuthState.SIGN_IN) {
                         var group = groupRepository.get(user.id)
 
                         // TODO サインアップ後の初期化処理はCloudFunctionに実行させる
@@ -58,10 +58,8 @@ class DeviceService @Inject constructor(
                     } else {
                         null
                     }
-                }.filter {
-                    it != null
                 }.collect {
-                    _groupIdChannel.send(it!!)
+                    _groupIdChannel.send(it)
                 }
             }
 
@@ -72,7 +70,7 @@ class DeviceService @Inject constructor(
 
                 groupIdFlow
                     .flatMapLatest { groupId ->
-                        if (groupId.isNotEmpty()) {
+                        if (!groupId.isNullOrEmpty()) {
                             deviceRepository.getByInstanceId(groupId, localMyDevice.instanceId)
                         } else {
                             flowOf(null)
@@ -99,7 +97,7 @@ class DeviceService @Inject constructor(
             launch {
                 groupIdFlow
                     .flatMapLatest { groupId ->
-                        if (groupId.isNotEmpty()) {
+                        if (!groupId.isNullOrEmpty()) {
                             deviceRepository.get(groupId)
                         } else {
                             flowOf(null)
@@ -120,31 +118,31 @@ class DeviceService @Inject constructor(
         .flowOn(Dispatchers.Default)
 
     suspend fun register(name: String) {
-        val groupId = groupIdFlow.first()
+        val groupId = groupIdFlow.first() ?: return
         val myDevice = myDeviceFlow.first()
         deviceRepository.add(groupId, myDevice.register(name))
     }
 
     suspend fun link(targetDevice: Device) {
-        val groupId = groupIdFlow.first()
+        val groupId = groupIdFlow.first() ?: return
         val myDevice = myDeviceFlow.first()
         deviceRepository.update(groupId, myDevice.linkTo(targetDevice))
     }
 
     suspend fun borrow(user: String, estimatedReturnDate: Date) {
-        val groupId = groupIdFlow.first()
+        val groupId = groupIdFlow.first() ?: return
         val myDevice = myDeviceFlow.first()
         deviceRepository.update(groupId, myDevice.borrow(user, estimatedReturnDate))
     }
 
     suspend fun `return`() {
-        val groupId = groupIdFlow.first()
+        val groupId = groupIdFlow.first() ?: return
         val myDevice = myDeviceFlow.first()
         deviceRepository.update(groupId, myDevice.`return`())
     }
 
     suspend fun dispose() {
-        val groupId = groupIdFlow.first()
+        val groupId = groupIdFlow.first() ?: return
         val myDevice = myDeviceFlow.first()
         deviceRepository.update(groupId, myDevice.dispose())
     }

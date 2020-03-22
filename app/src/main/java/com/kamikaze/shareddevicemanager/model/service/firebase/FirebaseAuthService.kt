@@ -8,6 +8,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -19,11 +20,13 @@ class FirebaseAuthService @Inject constructor():
 
     private val userChannel = ConflatedBroadcastChannel<User?>(null)
     override val userFlow = userChannel.asFlow()
+        .distinctUntilChanged()
 
     private val authStateChannel = ConflatedBroadcastChannel(
         AuthState.UNKNOWN
     )
     override val authStateFlow: Flow<AuthState> = authStateChannel.asFlow()
+        .distinctUntilChanged()
 
     init {
 
