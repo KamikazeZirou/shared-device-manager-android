@@ -3,18 +3,20 @@ package com.kamikaze.shareddevicemanager.ui.detail
 import androidx.lifecycle.*
 import com.kamikaze.shareddevicemanager.R
 import com.kamikaze.shareddevicemanager.model.data.Device
-import com.kamikaze.shareddevicemanager.model.repository.IDeviceRepository
+import com.kamikaze.shareddevicemanager.model.service.DeviceService
 import com.kamikaze.shareddevicemanager.ui.util.toVisibleStr
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class DeviceDetailViewModel @Inject constructor(private val deviceRepository: IDeviceRepository) :
+class DeviceDetailViewModel @Inject constructor(
+    private val deviceService: DeviceService
+) :
     ViewModel() {
     lateinit var device: LiveData<Device?>
 
     lateinit var items: LiveData<List<DeviceDetailItem>>
 
-    private val myDevice = deviceRepository.myDeviceFlow.asLiveData()
+    private val myDevice = deviceService.myDeviceFlow.asLiveData()
 
     private val _canLink = MediatorLiveData<Boolean>()
     val canLink: LiveData<Boolean> = _canLink
@@ -26,7 +28,7 @@ class DeviceDetailViewModel @Inject constructor(private val deviceRepository: ID
             return
         }
 
-        device = deviceRepository.get(deviceId).asLiveData()
+        device = deviceService.getDeviceFlow(deviceId).asLiveData()
 
         items = device.map {
             it ?: return@map listOf<DeviceDetailItem>()
@@ -42,23 +44,55 @@ class DeviceDetailViewModel @Inject constructor(private val deviceRepository: ID
             val list = mutableListOf<DeviceDetailItem>()
             list.add(DeviceDetailItem(R.string.device_name_label, it.name.toVisibleStr()))
             list.add(DeviceDetailItem(R.string.device_model_label, it.model.toVisibleStr()))
-            list.add(DeviceDetailItem(R.string.device_manufacturer_label, it.manufacturer.toVisibleStr()))
+            list.add(
+                DeviceDetailItem(
+                    R.string.device_manufacturer_label,
+                    it.manufacturer.toVisibleStr()
+                )
+            )
             list.add(DeviceDetailItem(R.string.device_os_label, it.readableOS))
             list.add(DeviceDetailItem(R.string.device_type_label, deviceTypeText.toVisibleStr()))
             list.add(DeviceDetailItem(R.string.device_status_label, statusText.toVisibleStr()))
             list.add(DeviceDetailItem(R.string.device_user_label, it.user.toVisibleStr()))
 
             if (it.status != Device.Status.DISPOSAL) {
-                list.add(DeviceDetailItem(R.string.device_issue_date_label, it.issueDate.toVisibleStr()))
-                list.add(DeviceDetailItem(
-                    R.string.device_estimated_return_date_label,
-                    it.estimatedReturnDate.toVisibleStr()
-                ))
-                list.add(DeviceDetailItem(R.string.device_return_date_label, it.returnDate.toVisibleStr()))
-                list.add(DeviceDetailItem(R.string.device_register_date_label, it.registerDate.toVisibleStr()))
+                list.add(
+                    DeviceDetailItem(
+                        R.string.device_issue_date_label,
+                        it.issueDate.toVisibleStr()
+                    )
+                )
+                list.add(
+                    DeviceDetailItem(
+                        R.string.device_estimated_return_date_label,
+                        it.estimatedReturnDate.toVisibleStr()
+                    )
+                )
+                list.add(
+                    DeviceDetailItem(
+                        R.string.device_return_date_label,
+                        it.returnDate.toVisibleStr()
+                    )
+                )
+                list.add(
+                    DeviceDetailItem(
+                        R.string.device_register_date_label,
+                        it.registerDate.toVisibleStr()
+                    )
+                )
             } else {
-                list.add(DeviceDetailItem(R.string.device_register_date_label, it.registerDate.toVisibleStr()))
-                list.add(DeviceDetailItem(R.string.device_disposal_date_label, it.disposalDate.toVisibleStr()))
+                list.add(
+                    DeviceDetailItem(
+                        R.string.device_register_date_label,
+                        it.registerDate.toVisibleStr()
+                    )
+                )
+                list.add(
+                    DeviceDetailItem(
+                        R.string.device_disposal_date_label,
+                        it.disposalDate.toVisibleStr()
+                    )
+                )
             }
 
             list
@@ -78,7 +112,7 @@ class DeviceDetailViewModel @Inject constructor(private val deviceRepository: ID
     fun linkDevice() {
         viewModelScope.launch {
             device.value?.let {
-                deviceRepository.update(myDevice.value!!.linkTo(it))
+                deviceService.link(it)
             }
         }
     }

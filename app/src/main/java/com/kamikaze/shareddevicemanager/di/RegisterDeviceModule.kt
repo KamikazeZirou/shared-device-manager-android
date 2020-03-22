@@ -7,6 +7,8 @@ import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 
 @Module
 abstract class RegisterDeviceModule {
@@ -15,6 +17,8 @@ abstract class RegisterDeviceModule {
     ])
     internal abstract fun registerDeviceFragment(): RegisterDeviceFragment
 
+    @FlowPreview
+    @ExperimentalCoroutinesApi
     @Binds
     @IntoMap
     @ViewModelKey(RegisterDeviceViewModel::class)

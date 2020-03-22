@@ -4,11 +4,9 @@ import com.kamikaze.shareddevicemanager.model.data.Device
 import kotlinx.coroutines.flow.Flow
 
 interface IDeviceRepository {
-    suspend fun setGroupId(groupId: String?)
-    suspend fun add(device: Device)
-    fun get(deviceId: String) : Flow<Device?>
-    suspend fun update(device: Device)
-
-    val myDeviceFlow: Flow<Device>
-    val devicesFlow: Flow<List<Device>>
+    fun add(groupId: String, device: Device)
+    fun get(groupId: String) : Flow<List<Device>?>
+    fun getByInstanceId(groupId: String, instanceId: String): Flow<Device?>
+    fun getById(deviceId: String, id: String) : Flow<Device?>
+    fun update(groupId: String, device: Device)
 }

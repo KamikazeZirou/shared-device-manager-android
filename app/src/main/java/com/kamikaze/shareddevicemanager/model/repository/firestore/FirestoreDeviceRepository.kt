@@ -1,167 +1,110 @@
 package com.kamikaze.shareddevicemanager.model.repository.firestore
 
-import com.google.firebase.firestore.*
+import com.google.firebase.firestore.DocumentChange
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.kamikaze.shareddevicemanager.model.data.Device
-import com.kamikaze.shareddevicemanager.model.data.IMyDeviceBuilder
 import com.kamikaze.shareddevicemanager.model.repository.IDeviceRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.channels.ConflatedBroadcastChannel
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.buffer
+import kotlinx.coroutines.flow.callbackFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @ExperimentalCoroutinesApi
 @UseExperimental(kotlinx.coroutines.FlowPreview::class)
 @Singleton
-class FirestoreDeviceRepository @Inject constructor(val deviceBuilder: IMyDeviceBuilder) :
-    IDeviceRepository {
-    private var myDeviceListenerRegistration: ListenerRegistration? = null
-    private var devicesListenerRegistration: ListenerRegistration? = null
-    private val firestore = FirebaseFirestore.getInstance()
-    private var groupId: String? = null
-
-    override suspend fun setGroupId(groupId: String?) {
-        if (this.groupId == groupId) {
-            return
-        }
-
-        this.groupId = groupId
-        devicesChannel.send(listOf())
-        myDeviceChannel.send(deviceBuilder.build())
-        stopListen()
-
-        if (groupId != null) {
-            startListen()
-        }
+class FirestoreDeviceRepository @Inject constructor() : IDeviceRepository {
+    private val firestore: FirebaseFirestore by lazy {
+        FirebaseFirestore.getInstance()
     }
 
-    private fun startListen() {
-        myDeviceListenerRegistration = firestore.collection("groups")
-            .document(groupId!!)
-            .collection("devices")
-            .whereEqualTo("instanceId", myDeviceChannel.value.instanceId)
-            .addSnapshotListener(myDeviceListener)
-
-        devicesListenerRegistration = firestore.collection("groups")
-            .document(groupId!!)
-            .collection("devices")
-            .orderBy("registerDate", Query.Direction.DESCENDING)
-            .addSnapshotListener(devicesListener)
-    }
-
-    private fun stopListen() {
-        myDeviceListenerRegistration?.let {
-            it.remove()
-            myDeviceListenerRegistration = null
-        }
-
-        devicesListenerRegistration?.let {
-            it.remove()
-            devicesListenerRegistration = null
-        }
-    }
-
-    override fun get(deviceId: String): Flow<Device?> =
-        devicesFlow.map { devices ->
-            devices.find { it.id == deviceId }
-        }
-        .distinctUntilChanged()
-        .flowOn(Dispatchers.Default)
-
-    override suspend fun add(device: Device) {
+    override fun add(groupId: String, device: Device) {
         val devicesReference = firestore.collection("groups")
-            .document(groupId!!)
+            .document(groupId)
             .collection("devices")
         devicesReference.add(device)
-
-        // devicesが空の時は、リスナーを作り直す
-        // Firestoreにdevicesが存在しない状態から新しく作られた時、リスナーが反応しないため
-        if (devicesChannel.value.isEmpty()) {
-            stopListen()
-            startListen()
-        }
     }
 
-    override suspend fun update(device: Device) {
+    override fun get(groupId: String): Flow<List<Device>?> = callbackFlow {
+        offer(null)
+
+        val devices = mutableListOf<Device>()
+        val listenerRegistration = firestore.collection("groups")
+            .document(groupId)
+            .collection("devices")
+            .orderBy("registerDate", Query.Direction.DESCENDING)
+            .addSnapshotListener { documentSnapshots, e ->
+                documentSnapshots?.documentChanges?.forEach {
+                    when (it.type) {
+                        DocumentChange.Type.ADDED -> {
+                            val device = it.document.toObject(Device::class.java)
+                            devices.add(it.newIndex, device)
+                        }
+                        DocumentChange.Type.MODIFIED -> {
+                            val device = it.document.toObject(Device::class.java)
+
+                            if (it.newIndex == it.oldIndex) {
+                                devices[it.newIndex] = device
+                            } else {
+                                devices.removeAt(it.oldIndex)
+                                devices.add(it.newIndex, device)
+                            }
+
+                        }
+                        DocumentChange.Type.REMOVED -> {
+                            devices.removeAt(it.oldIndex)
+                        }
+                    }
+                    offer(devices)
+                }
+            }
+
+        awaitClose { listenerRegistration.remove() }
+
+    }.buffer(Channel.CONFLATED)
+
+    override fun getById(groupId: String, deviceId: String): Flow<Device?> = callbackFlow {
+        val listenerRegistration = firestore.collection("groups")
+            .document(groupId)
+            .collection("devices")
+            .document(deviceId)
+            .addSnapshotListener { documentSnapshots, e ->
+                val device = documentSnapshots?.toObject(Device::class.java)
+                offer(device)
+            }
+        awaitClose { listenerRegistration.remove() }
+    }.buffer(Channel.CONFLATED)
+
+    override fun getByInstanceId(groupId: String, instanceId: String) = callbackFlow {
+        val listenerRegistration = firestore.collection("groups")
+            .document(groupId)
+            .collection("devices")
+            .whereEqualTo("instanceId", instanceId)
+            .addSnapshotListener { documentSnapshots, e ->
+                documentSnapshots?.documentChanges?.forEach {
+                    when (it.type) {
+                        DocumentChange.Type.ADDED, DocumentChange.Type.MODIFIED -> {
+                            val device = it.document.toObject(Device::class.java)
+                            offer(device)
+                        }
+                        DocumentChange.Type.REMOVED -> {
+                            offer(null)
+                        }
+                    }
+                }
+            }
+        awaitClose { listenerRegistration.remove() }
+    }.buffer(Channel.CONFLATED)
+
+    override fun update(groupId: String, device: Device) {
         val devicesReference = firestore.collection("groups")
-            .document(groupId!!)
+            .document(groupId)
             .collection("devices")
             .document(device.id)
         devicesReference.set(device)
-    }
-
-    private val devicesChannel = ConflatedBroadcastChannel<List<Device>>()
-    override val devicesFlow: Flow<List<Device>> = devicesChannel.asFlow()
-
-    private val myDeviceChannel = ConflatedBroadcastChannel<Device>()
-    override val myDeviceFlow: Flow<Device> = myDeviceChannel.asFlow()
-
-    init {
-        GlobalScope.launch {
-            val device = deviceBuilder.build()
-            myDeviceChannel.send(device)
-        }
-    }
-
-    private val devicesListener = EventListener<QuerySnapshot> { documentSnapshots, e ->
-        val devices = devicesChannel.value.toMutableList()
-
-        documentSnapshots?.documentChanges?.forEach {
-            when (it.type) {
-                DocumentChange.Type.ADDED -> {
-                    val device = it.document.toObject(Device::class.java)
-                    devices.add(it.newIndex, device)
-                }
-                DocumentChange.Type.MODIFIED -> {
-                    val device = it.document.toObject(Device::class.java)
-
-                    if (it.newIndex == it.oldIndex) {
-                        devices[it.newIndex] = device
-                    } else {
-                        devices.removeAt(it.oldIndex)
-                        devices.add(it.newIndex, device)
-                    }
-
-                }
-                DocumentChange.Type.REMOVED -> {
-                    devices.removeAt(it.oldIndex)
-                }
-            }
-        }
-
-        GlobalScope.launch {
-            devicesChannel.send(devices)
-        }
-    }
-
-    private val myDeviceListener = EventListener<QuerySnapshot> { documentSnapshots, e ->
-        documentSnapshots?.documentChanges?.forEach {
-            when (it.type) {
-                DocumentChange.Type.ADDED, DocumentChange.Type.MODIFIED -> {
-                    val localDevice = myDeviceChannel.value
-                    val device = it.document.toObject(Device::class.java).copy(
-                        model = localDevice.model,
-                        manufacturer = localDevice.manufacturer,
-                        isTablet = localDevice.isTablet,
-                        os = localDevice.os,
-                        osVersion = localDevice.osVersion
-                    )
-
-                    GlobalScope.launch {
-                        myDeviceChannel.send(device)
-                    }
-                }
-                DocumentChange.Type.REMOVED -> {
-                    GlobalScope.launch {
-                        val device = deviceBuilder.build()
-                        myDeviceChannel.send(device)
-                    }
-                }
-            }
-        }
-
     }
 }
