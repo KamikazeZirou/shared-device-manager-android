@@ -58,8 +58,8 @@ class FirestoreDeviceRepository @Inject constructor() : IDeviceRepository {
                             devices.removeAt(it.oldIndex)
                         }
                     }
-                    offer(devices)
                 }
+                offer(devices.toList())
             }
 
         awaitClose { listenerRegistration.remove() }
