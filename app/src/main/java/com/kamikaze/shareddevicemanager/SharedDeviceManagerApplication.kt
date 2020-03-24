@@ -1,21 +1,24 @@
 package com.kamikaze.shareddevicemanager
 
+import android.app.Activity
 import android.content.Context
 import android.os.Build
+import android.os.Bundle
 import androidx.multidex.MultiDex
 import com.kamikaze.shareddevicemanager.di.DaggerApplicationComponent
 import com.kamikaze.shareddevicemanager.model.service.DeviceService
+import com.kamikaze.shareddevicemanager.model.service.IAuthService
 import dagger.android.AndroidInjector
 import dagger.android.support.DaggerApplication
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
 @FlowPreview
-class SharedDeviceManagerApplication: DaggerApplication() {
+class SharedDeviceManagerApplication : DaggerApplication() {
+    @Inject
+    lateinit var authService: IAuthService
+
     @Inject
     lateinit var deviceService: DeviceService
 
@@ -29,12 +32,43 @@ class SharedDeviceManagerApplication: DaggerApplication() {
     override fun onCreate() {
         super.onCreate()
 
-        GlobalScope.launch {
-            deviceService.initialize()
-        }
+        registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
+            private lateinit var applicationScope: CoroutineScope
+            private var counter = 0
+
+            override fun onActivityCreated(p0: Activity, p1: Bundle?) {
+                counter++
+                if (counter == 1) {
+                    applicationScope = MainScope()
+                    applicationScope.launch {
+                        authService.initialize()
+                    }
+                    applicationScope.launch {
+                        deviceService.initialize()
+                    }
+                }
+            }
+
+            override fun onActivityDestroyed(p0: Activity) {
+                counter--
+                if (counter == 0) {
+                    applicationScope.cancel()
+                } else if (counter < 0) {
+                    throw IllegalStateException()
+                }
+            }
+
+            override fun onActivityPaused(p0: Activity) {}
+            override fun onActivityStarted(p0: Activity) {}
+            override fun onActivitySaveInstanceState(p0: Activity, p1: Bundle) {}
+            override fun onActivityStopped(p0: Activity) {}
+            override fun onActivityResumed(p0: Activity) {}
+
+        })
     }
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
         return DaggerApplicationComponent.factory().create(applicationContext)
     }
 }
+
