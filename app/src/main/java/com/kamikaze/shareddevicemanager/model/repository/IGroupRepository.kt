@@ -1,8 +1,8 @@
 package com.kamikaze.shareddevicemanager.model.repository
 
 import com.kamikaze.shareddevicemanager.model.data.Group
+import kotlinx.coroutines.flow.Flow
 
 interface IGroupRepository {
-    suspend fun get(ownerId: String): Group?
-    suspend fun add(group: Group)
+    fun get(ownerId: String): Flow<Group?>
 }

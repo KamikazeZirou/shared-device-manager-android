@@ -1,7 +1,6 @@
 package com.kamikaze.shareddevicemanager.model.service
 
 import com.kamikaze.shareddevicemanager.model.data.Device
-import com.kamikaze.shareddevicemanager.model.data.Group
 import com.kamikaze.shareddevicemanager.model.data.IMyDeviceBuilder
 import com.kamikaze.shareddevicemanager.model.repository.IDeviceRepository
 import com.kamikaze.shareddevicemanager.model.repository.IGroupRepository
@@ -39,27 +38,18 @@ class DeviceService @Inject constructor(
 
                 authService.userFlow.combine(authStateFlow) { user, state ->
                     if (user != null && state == AuthState.SIGN_IN) {
-                        var group = groupRepository.get(user.id)
-
-                        // TODO サインアップ後の初期化処理はCloudFunctionに実行させる
-                        if (group == null) {
-                            groupRepository.add(
-                                Group(
-                                    name = user.name,
-                                    owner = user.id,
-                                    default = true
-                                )
-                            )
-                            group = groupRepository.get(user.id)
-                            require(group != null)
-                        }
-
-                        group.id
+                        user.id
                     } else {
                         null
                     }
+                }.flatMapLatest {
+                    if (it != null) {
+                        groupRepository.get(it)
+                    } else {
+                        flowOf(null)
+                    }
                 }.collect {
-                    _groupIdChannel.send(it)
+                    _groupIdChannel.send(it?.id)
                 }
             }
 
