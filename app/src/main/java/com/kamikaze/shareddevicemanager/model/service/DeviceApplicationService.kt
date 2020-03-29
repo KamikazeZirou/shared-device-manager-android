@@ -13,7 +13,7 @@ import javax.inject.Singleton
 @FlowPreview
 @ExperimentalCoroutinesApi
 @Singleton
-class DeviceService @Inject constructor(
+class DeviceApplicationService @Inject constructor(
     private val authService: IAuthService,
     private val groupRepository: IGroupRepository,
     private val deviceRepository: IDeviceRepository,

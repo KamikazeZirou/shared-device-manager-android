@@ -2,7 +2,7 @@ package com.kamikaze.shareddevicemanager.ui.register
 
 import androidx.lifecycle.*
 import com.kamikaze.shareddevicemanager.model.data.Device
-import com.kamikaze.shareddevicemanager.model.service.DeviceService
+import com.kamikaze.shareddevicemanager.model.service.DeviceApplicationService
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.first
@@ -13,7 +13,7 @@ import javax.inject.Inject
 @ExperimentalCoroutinesApi
 class RegisterDeviceViewModel
 @Inject constructor(
-    private val deviceService: DeviceService
+    private val deviceApplicationService: DeviceApplicationService
 ) : ViewModel() {
     val deviceName = MutableLiveData<String>().apply { value = "" }
 
@@ -23,15 +23,15 @@ class RegisterDeviceViewModel
 
     init {
         viewModelScope.launch {
-            val device = deviceService.myDeviceFlow.first()
+            val device = deviceApplicationService.myDeviceFlow.first()
             deviceName.value = device.model
         }
     }
 
     fun registerDevice() {
         viewModelScope.launch {
-            val device = deviceService.myDeviceFlow.first()
-            deviceService.add(device.register(deviceName.value!!))
+            val device = deviceApplicationService.myDeviceFlow.first()
+            deviceApplicationService.add(device.register(deviceName.value!!))
         }
     }
 }

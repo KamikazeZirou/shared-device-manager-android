@@ -3,7 +3,7 @@ package com.kamikaze.shareddevicemanager.ui.detail
 import androidx.lifecycle.*
 import com.kamikaze.shareddevicemanager.R
 import com.kamikaze.shareddevicemanager.model.data.Device
-import com.kamikaze.shareddevicemanager.model.service.DeviceService
+import com.kamikaze.shareddevicemanager.model.service.DeviceApplicationService
 import com.kamikaze.shareddevicemanager.ui.util.toVisibleStr
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -13,14 +13,14 @@ import javax.inject.Inject
 @ExperimentalCoroutinesApi
 @FlowPreview
 class DeviceDetailViewModel @Inject constructor(
-    private val deviceService: DeviceService
+    private val deviceApplicationService: DeviceApplicationService
 ) :
     ViewModel() {
     lateinit var device: LiveData<Device?>
 
     lateinit var items: LiveData<List<DeviceDetailItem>>
 
-    private val myDevice = deviceService.myDeviceFlow.asLiveData()
+    private val myDevice = deviceApplicationService.myDeviceFlow.asLiveData()
 
     private val _canLink = MediatorLiveData<Boolean>()
     val canLink: LiveData<Boolean> = _canLink
@@ -32,7 +32,7 @@ class DeviceDetailViewModel @Inject constructor(
             return
         }
 
-        device = deviceService.getDeviceFlow(deviceId).asLiveData()
+        device = deviceApplicationService.getDeviceFlow(deviceId).asLiveData()
 
         items = device.map {
             it ?: return@map listOf<DeviceDetailItem>()
@@ -116,7 +116,7 @@ class DeviceDetailViewModel @Inject constructor(
     fun linkDevice() {
         viewModelScope.launch {
             device.value?.let {
-                deviceService.update(myDevice.value!!.linkTo(it))
+                deviceApplicationService.update(myDevice.value!!.linkTo(it))
             }
         }
     }

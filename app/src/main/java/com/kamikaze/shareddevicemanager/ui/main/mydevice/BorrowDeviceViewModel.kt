@@ -2,7 +2,7 @@ package com.kamikaze.shareddevicemanager.ui.main.mydevice
 
 import androidx.lifecycle.*
 import com.kamikaze.shareddevicemanager.model.data.Device
-import com.kamikaze.shareddevicemanager.model.service.DeviceService
+import com.kamikaze.shareddevicemanager.model.service.DeviceApplicationService
 import com.kamikaze.shareddevicemanager.ui.util.toVisibleStr
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -17,7 +17,7 @@ import javax.inject.Inject
 @ExperimentalCoroutinesApi
 @FlowPreview
 class BorrowDeviceViewModel @Inject constructor(
-    private val deviceService: DeviceService
+    private val deviceApplicationService: DeviceApplicationService
 ) :
     ViewModel() {
     val userName = MutableLiveData<String>().apply {
@@ -43,7 +43,7 @@ class BorrowDeviceViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            deviceService.myDeviceFlow
+            deviceApplicationService.myDeviceFlow
                 .filter { it.status.isRegistered }
                 .take(1)
                 .collect {
@@ -71,7 +71,7 @@ class BorrowDeviceViewModel @Inject constructor(
     }
 
     suspend fun borrowDevice() {
-        val device = deviceService.myDeviceFlow.first()
-        deviceService.update(device.borrow(userName.value!!, _estimatedReturnDate.value!!))
+        val device = deviceApplicationService.myDeviceFlow.first()
+        deviceApplicationService.update(device.borrow(userName.value!!, _estimatedReturnDate.value!!))
     }
 }

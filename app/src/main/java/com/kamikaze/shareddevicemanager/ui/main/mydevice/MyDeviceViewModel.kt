@@ -3,7 +3,7 @@ package com.kamikaze.shareddevicemanager.ui.main.mydevice
 import androidx.lifecycle.*
 import com.kamikaze.shareddevicemanager.R
 import com.kamikaze.shareddevicemanager.model.data.Device
-import com.kamikaze.shareddevicemanager.model.service.DeviceService
+import com.kamikaze.shareddevicemanager.model.service.DeviceApplicationService
 import com.kamikaze.shareddevicemanager.model.service.IAuthService
 import com.kamikaze.shareddevicemanager.ui.detail.DeviceDetailItem
 import com.kamikaze.shareddevicemanager.ui.util.toVisibleStr
@@ -15,11 +15,11 @@ import javax.inject.Inject
 @ExperimentalCoroutinesApi
 @FlowPreview
 class MyDeviceViewModel @Inject constructor(
-    private var deviceService: DeviceService,
+    private var deviceApplicationService: DeviceApplicationService,
     private val auth: IAuthService
 ) :
     ViewModel() {
-    private val myDevice: LiveData<Device> = deviceService.myDeviceFlow.asLiveData()
+    private val myDevice: LiveData<Device> = deviceApplicationService.myDeviceFlow.asLiveData()
 
     val items: LiveData<List<DeviceDetailItem>> = myDevice.map {
         val statusText = it.status.toString()
@@ -43,13 +43,13 @@ class MyDeviceViewModel @Inject constructor(
 
     fun disposeDevice() {
         viewModelScope.launch {
-            deviceService.update(myDevice.value!!.dispose())
+            deviceApplicationService.update(myDevice.value!!.dispose())
         }
     }
 
     fun returnDevice() {
         viewModelScope.launch {
-            deviceService.update(myDevice.value!!.`return`())
+            deviceApplicationService.update(myDevice.value!!.`return`())
         }
     }
 

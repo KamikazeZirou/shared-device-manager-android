@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import com.kamikaze.shareddevicemanager.model.service.DeviceService
+import com.kamikaze.shareddevicemanager.model.service.DeviceApplicationService
 import com.kamikaze.shareddevicemanager.model.service.IAuthService
 import com.kamikaze.shareddevicemanager.ui.util.Event
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -14,12 +14,12 @@ import javax.inject.Inject
 @ExperimentalCoroutinesApi
 @FlowPreview
 class DeviceListViewModel @Inject constructor(
-    private val deviceService: DeviceService,
+    private val deviceApplicationService: DeviceApplicationService,
     private val auth: IAuthService
 ) :
     ViewModel() {
 
-    val devices = deviceService.devicesFlow.asLiveData()
+    val devices = deviceApplicationService.devicesFlow.asLiveData()
 
     private val _openDeviceEvent = MutableLiveData<Event<String>>()
     val openDeviceEvent: LiveData<Event<String>> = _openDeviceEvent
