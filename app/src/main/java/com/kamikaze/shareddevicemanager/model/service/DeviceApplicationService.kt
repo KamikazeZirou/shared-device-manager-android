@@ -19,8 +19,8 @@ class DeviceApplicationService @Inject constructor(
     private val deviceRepository: IDeviceRepository,
     private val deviceBuilder: IMyDeviceBuilder
 ) {
-    private val _groupIdChannel = ConflatedBroadcastChannel<String?>()
-    private val groupIdFlow: Flow<String?> = _groupIdChannel.asFlow().distinctUntilChanged()
+    private val groupIdChannel = ConflatedBroadcastChannel<String?>()
+    private val groupIdFlow: Flow<String?> = groupIdChannel.asFlow().distinctUntilChanged()
 
     private val myDeviceChannel = ConflatedBroadcastChannel<Device>()
     val myDeviceFlow: Flow<Device> = myDeviceChannel.asFlow()
@@ -48,7 +48,7 @@ class DeviceApplicationService @Inject constructor(
                         flowOf(null)
                     }
                 }.collect {
-                    _groupIdChannel.send(it?.id)
+                    groupIdChannel.send(it?.id)
                 }
             }
 
