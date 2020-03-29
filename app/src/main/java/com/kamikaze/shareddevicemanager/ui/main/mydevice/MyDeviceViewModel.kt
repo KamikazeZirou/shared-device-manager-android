@@ -43,13 +43,13 @@ class MyDeviceViewModel @Inject constructor(
 
     fun disposeDevice() {
         viewModelScope.launch {
-            deviceService.dispose()
+            deviceService.update(myDevice.value!!.dispose())
         }
     }
 
     fun returnDevice() {
         viewModelScope.launch {
-            deviceService.`return`()
+            deviceService.update(myDevice.value!!.`return`())
         }
     }
 

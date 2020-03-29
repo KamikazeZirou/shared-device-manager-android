@@ -7,7 +7,6 @@ import com.kamikaze.shareddevicemanager.model.repository.IGroupRepository
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.*
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -107,33 +106,13 @@ class DeviceService @Inject constructor(
         .distinctUntilChanged()
         .flowOn(Dispatchers.Default)
 
-    suspend fun register(name: String) {
+    suspend fun add(device: Device) {
         val groupId = groupIdFlow.first() ?: return
-        val myDevice = myDeviceFlow.first()
-        deviceRepository.add(groupId, myDevice.register(name))
+        deviceRepository.add(groupId, device)
     }
 
-    suspend fun link(targetDevice: Device) {
+    suspend fun update(device: Device) {
         val groupId = groupIdFlow.first() ?: return
-        val myDevice = myDeviceFlow.first()
-        deviceRepository.update(groupId, myDevice.linkTo(targetDevice))
-    }
-
-    suspend fun borrow(user: String, estimatedReturnDate: Date) {
-        val groupId = groupIdFlow.first() ?: return
-        val myDevice = myDeviceFlow.first()
-        deviceRepository.update(groupId, myDevice.borrow(user, estimatedReturnDate))
-    }
-
-    suspend fun `return`() {
-        val groupId = groupIdFlow.first() ?: return
-        val myDevice = myDeviceFlow.first()
-        deviceRepository.update(groupId, myDevice.`return`())
-    }
-
-    suspend fun dispose() {
-        val groupId = groupIdFlow.first() ?: return
-        val myDevice = myDeviceFlow.first()
-        deviceRepository.update(groupId, myDevice.dispose())
+        deviceRepository.update(groupId, device)
     }
 }

@@ -116,7 +116,7 @@ class DeviceDetailViewModel @Inject constructor(
     fun linkDevice() {
         viewModelScope.launch {
             device.value?.let {
-                deviceService.link(it)
+                deviceService.update(myDevice.value!!.linkTo(it))
             }
         }
     }

@@ -30,9 +30,8 @@ class RegisterDeviceViewModel
 
     fun registerDevice() {
         viewModelScope.launch {
-            deviceService.register(
-                name = deviceName.value!!
-            )
+            val device = deviceService.myDeviceFlow.first()
+            deviceService.add(device.register(deviceName.value!!))
         }
     }
 }

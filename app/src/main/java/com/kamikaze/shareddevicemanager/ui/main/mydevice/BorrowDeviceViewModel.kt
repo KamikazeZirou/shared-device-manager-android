@@ -8,6 +8,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import java.util.*
@@ -70,9 +71,7 @@ class BorrowDeviceViewModel @Inject constructor(
     }
 
     suspend fun borrowDevice() {
-        deviceService.borrow(
-            user = userName.value!!,
-            estimatedReturnDate = _estimatedReturnDate.value!!
-        )
+        val device = deviceService.myDeviceFlow.first()
+        deviceService.update(device.borrow(userName.value!!, _estimatedReturnDate.value!!))
     }
 }
