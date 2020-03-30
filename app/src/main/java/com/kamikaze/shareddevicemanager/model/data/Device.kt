@@ -1,5 +1,6 @@
 package com.kamikaze.shareddevicemanager.model.data
 
+import androidx.annotation.VisibleForTesting
 import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.Exclude
 import com.google.firebase.firestore.IgnoreExtraProperties
@@ -24,8 +25,11 @@ data class Device(
     val disposalDate: Date? = null
 ) {
     companion object {
-        private const val NAME_MAX_LENGTH = 80
-        private const val USER_NAME_MAX_LENGTH = 40
+        @VisibleForTesting
+        const val NAME_MAX_LENGTH = 80
+
+        @VisibleForTesting
+        const val USER_NAME_MAX_LENGTH = 40
 
         fun validateName(name: String): Boolean =
             when {
