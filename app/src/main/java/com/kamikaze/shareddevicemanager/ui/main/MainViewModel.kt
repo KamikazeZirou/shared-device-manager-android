@@ -19,16 +19,18 @@ class MainViewModel @Inject constructor(
     val shouldSignIn: LiveData<Boolean> = _shouldSignIn
 
     private val _authState = authService.authStateFlow.asLiveData()
-    private val _user = authService.userFlow.asLiveData()
 
     init {
         _shouldSignIn.addSource(isSigningIn) {
-            _shouldSignIn.value =
-                (isSigningIn.value == false && _authState.value == AuthState.SIGN_OUT)
+            updateShouldSignIn()
         }
         _shouldSignIn.addSource(_authState) {
-            _shouldSignIn.value =
-                (isSigningIn.value == false && _authState.value == AuthState.SIGN_OUT)
+            updateShouldSignIn()
         }
+    }
+
+    private fun updateShouldSignIn() {
+        _shouldSignIn.value =
+            (isSigningIn.value == false && _authState.value == AuthState.SIGN_OUT)
     }
 }
