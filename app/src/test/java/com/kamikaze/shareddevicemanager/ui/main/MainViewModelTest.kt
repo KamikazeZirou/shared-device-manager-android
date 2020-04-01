@@ -55,7 +55,7 @@ class MainViewModelTest {
      * サインイン中でない かつ サインアウトしているときのみ、trueになること。
      */
     @Test
-    fun testShouldSignInWhenSigningIn() {
+    fun shouldSignIn_isSigning_returnTrueWhenSignout() {
         viewModel.isSigningIn.value = false
         assertThat(viewModel.shouldSignIn.value).isFalse()
         coroutineDispatcher.advanceTimeBy(STATE_TRANSITION_INTERVAL)
@@ -65,7 +65,7 @@ class MainViewModelTest {
     }
 
     @Test
-    fun testShouldSignInWhenNotSigningIn() {
+    fun shouldSignIn_isNotSigning_returnAlwaysFalse() {
         viewModel.isSigningIn.value = true
         assertThat(viewModel.shouldSignIn.value).isFalse()
         coroutineDispatcher.advanceTimeBy(STATE_TRANSITION_INTERVAL)

@@ -163,15 +163,28 @@ class DeviceTest {
 
     // 端末名の最大長は80文字
     @Test
-    fun testNameMaxLength() {
+    fun nameMaxLength() {
         assertThat(Device.NAME_MAX_LENGTH).isEqualTo(80)
     }
 
     // 端末名は0文字より大きく80文字以下
     @Test
-    fun testValidateName() {
+    fun validateName_emptyString_returnFalse() {
         assertThat(Device.validateName("")).isFalse()
+    }
+
+    @Test
+    fun validateName_oneString_returnTrue() {
+        assertThat(Device.validateName("1")).isTrue()
+    }
+
+    @Test
+    fun validateName_maxLengthString_returnTrue() {
         assertThat(Device.validateName("1".repeat(Device.NAME_MAX_LENGTH))).isTrue()
+    }
+
+    @Test
+    fun validateName_overLengthString_returnFalse() {
         assertThat(Device.validateName("1".repeat(Device.NAME_MAX_LENGTH + 1))).isFalse()
     }
 
