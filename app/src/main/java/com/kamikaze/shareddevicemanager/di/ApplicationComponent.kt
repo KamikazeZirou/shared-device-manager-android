@@ -24,7 +24,8 @@ import javax.inject.Singleton
         DeviceDetailModule::class,
         MyDeviceModule::class,
         RegisterDeviceModule::class,
-        BorrowDeviceModule::class
+        BorrowDeviceModule::class,
+        CoroutineModule::class
     ])
 interface ApplicationComponent : AndroidInjector<SharedDeviceManagerApplication> {
     @Component.Factory

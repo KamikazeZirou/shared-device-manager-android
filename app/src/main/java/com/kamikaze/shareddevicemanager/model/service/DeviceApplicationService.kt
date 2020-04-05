@@ -4,9 +4,13 @@ import com.kamikaze.shareddevicemanager.model.data.Device
 import com.kamikaze.shareddevicemanager.model.data.IMyDeviceBuilder
 import com.kamikaze.shareddevicemanager.model.repository.IDeviceRepository
 import com.kamikaze.shareddevicemanager.model.repository.IGroupRepository
-import kotlinx.coroutines.*
+import com.kamikaze.shareddevicemanager.util.ICoroutineContexts
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -17,7 +21,8 @@ class DeviceApplicationService @Inject constructor(
     private val authService: IAuthService,
     private val groupRepository: IGroupRepository,
     private val deviceRepository: IDeviceRepository,
-    private val deviceBuilder: IMyDeviceBuilder
+    private val deviceBuilder: IMyDeviceBuilder,
+    private val coroutineContexts: ICoroutineContexts
 ) {
     private val groupIdChannel = ConflatedBroadcastChannel<String?>()
     private val groupIdFlow: Flow<String?> = groupIdChannel.asFlow().distinctUntilChanged()
@@ -104,7 +109,7 @@ class DeviceApplicationService @Inject constructor(
             devices?.find { it.id == deviceId }
         }
         .distinctUntilChanged()
-        .flowOn(Dispatchers.Default)
+        .flowOn(coroutineContexts.default)
 
     suspend fun add(device: Device) {
         val groupId = groupIdFlow.first() ?: return
