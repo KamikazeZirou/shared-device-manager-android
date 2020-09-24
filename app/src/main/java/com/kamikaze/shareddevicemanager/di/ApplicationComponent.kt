@@ -21,12 +21,14 @@ import javax.inject.Singleton
         DeviceModule::class,
         MainModule::class,
         DeviceListModule::class,
+        MemberListModule::class,
         DeviceDetailModule::class,
         MyDeviceModule::class,
         RegisterDeviceModule::class,
         BorrowDeviceModule::class,
         CoroutineModule::class
-    ])
+    ]
+)
 interface ApplicationComponent : AndroidInjector<SharedDeviceManagerApplication> {
     @Component.Factory
     interface Factory {
