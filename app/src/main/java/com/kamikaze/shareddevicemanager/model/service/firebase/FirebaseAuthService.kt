@@ -7,7 +7,6 @@ import com.kamikaze.shareddevicemanager.model.service.IAuthService
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.*
@@ -24,15 +23,11 @@ class FirebaseAuthService @Inject constructor() :
         FirebaseAuth.getInstance()
     }
 
-    private val userChannel = ConflatedBroadcastChannel<User?>(null)
-    override val userFlow = userChannel.asFlow()
-        .distinctUntilChanged()
+    private val _userFlow = MutableStateFlow<User?>(null)
+    override val userFlow: StateFlow<User?> = _userFlow
 
-    private val authStateChannel = ConflatedBroadcastChannel(
-        AuthState.UNKNOWN
-    )
-    override val authStateFlow: Flow<AuthState> = authStateChannel.asFlow()
-        .distinctUntilChanged()
+    private val _authStateFlow = MutableStateFlow(AuthState.UNKNOWN)
+    override val authStateFlow: Flow<AuthState> = _authStateFlow
 
     override suspend fun initialize() {
         val flow: Flow<User?> = callbackFlow {
@@ -52,12 +47,12 @@ class FirebaseAuthService @Inject constructor() :
         coroutineScope {
             launch {
                 flow.collect {
-                    userChannel.send(it)
+                    _userFlow.value = it
 
-                    if (it != null) {
-                        authStateChannel.send(AuthState.SIGN_IN)
+                    _authStateFlow.value = if (it != null) {
+                        AuthState.SIGN_IN
                     } else {
-                        authStateChannel.send(AuthState.SIGN_OUT)
+                        AuthState.SIGN_OUT
                     }
                 }
             }
