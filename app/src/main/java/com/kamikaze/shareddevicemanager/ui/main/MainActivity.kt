@@ -34,7 +34,9 @@ class MainActivity : DaggerAppCompatActivity() {
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_device_list, R.id.navigation_my_device
+                R.id.navigation_device_list,
+                R.id.navigation_my_device,
+                R.id.navigation_member_list,
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)

@@ -24,10 +24,15 @@
         android:id="@+id/device_detail_dest"
         android:name="com.kamikaze.shareddevicemanager.ui.detail.DeviceDetailActivity"
         android:label="activity_device_detail"
-        tools:layout="@layout/activity_device_detail" >
+        tools:layout="@layout/activity_device_detail">
         <argument
             android:name="id"
             app:argType="string" />
     </activity>
+    <fragment
+        android:id="@+id/navigation_member_list"
+        android:name="com.kamikaze.shareddevicemanager.ui.main.memberlist.MemberListFragment"
+        android:label="@string/title_members"
+        tools:layout="@layout/fragment_member_list" />
 
 </navigation>

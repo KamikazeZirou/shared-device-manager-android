@@ -5,6 +5,7 @@
     <string name="title_activity_main">共有端末管理</string>
     <string name="title_device_list">端末一覧</string>
     <string name="title_my_device">マイ端末</string>
+    <string name="title_members">メンバー</string>
     <string name="register">登録</string>
     <string name="link">紐付ける</string>
     <string name="device_name_label">端末名</string>
