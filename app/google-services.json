@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "888687495894",
+    "firebase_url": "https://shared-device-manager-dde3b.firebaseio.com",
+    "project_id": "shared-device-manager-dde3b",
+    "storage_bucket": "shared-device-manager-dde3b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:888687495894:android:1faba36a34f317cc7b1777",
+        "android_client_info": {
+          "package_name": "com.kamikaze.shareddevicemanager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "888687495894-t362gboh069r4olq8pg6e2ml60ueo0hs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDAsz0l3aaps-70kIHfA7eAN4Wv5xrxZfE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "888687495894-t362gboh069r4olq8pg6e2ml60ueo0hs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

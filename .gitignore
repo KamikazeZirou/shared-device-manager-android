@@ -88,4 +88,4 @@ lint/tmp/
 .DS_Store
 
 # Firebase Auth Json
-google-services.json
+# google-services.json
