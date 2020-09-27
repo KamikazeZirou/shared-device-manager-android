@@ -14,10 +14,12 @@ import javax.inject.Singleton
 class FirestoreMemberRepository @Inject constructor() :
     IMemberRepository {
 
-    private val members = mutableListOf<Member>(
+    private val members = mutableListOf(
         Member("1", "owner@gmail.com", Member.Role.OWNER),
         Member("2", "general@gmail.com", Member.Role.GENERAL),
     )
+
+    private var lastId = members.size
 
     private val membersFlow = MutableStateFlow(members.toList())
 
@@ -26,12 +28,18 @@ class FirestoreMemberRepository @Inject constructor() :
     }
 
     override fun add(groupId: String, member: Member) {
-        members.add(member)
-        membersFlow.value = members
+        lastId += 1
+        members.add(
+            member.copy(
+                id = lastId.toString(),
+                role = Member.Role.GENERAL
+            )
+        )
+        membersFlow.value = members.toList()
     }
 
     override fun remove(groupId: String, memberId: String) {
         members.removeAll { it.id == memberId }
-        membersFlow.value = members
+        membersFlow.value = members.toList()
     }
 }

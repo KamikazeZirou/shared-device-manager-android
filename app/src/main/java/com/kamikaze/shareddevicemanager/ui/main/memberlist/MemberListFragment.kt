@@ -1,13 +1,22 @@
 package com.kamikaze.shareddevicemanager.ui.main.memberlist
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.*
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.kamikaze.shareddevicemanager.R
+import com.kamikaze.shareddevicemanager.databinding.FragmentMemberListBinding
+import com.kamikaze.shareddevicemanager.ui.common.AlertDialogFragment
 import com.kamikaze.shareddevicemanager.ui.common.openPrivacyPolicy
 import dagger.android.support.DaggerFragment
+import kotlinx.android.synthetic.main.fragment_device_item_list.*
 import javax.inject.Inject
 
-class MemberListFragment : DaggerFragment() {
+class MemberListFragment : DaggerFragment(),
+    InputEmailDialogFragment.InputEmailDialogListener,
+    AlertDialogFragment.AlertDialogListener {
+    private lateinit var binding: FragmentMemberListBinding
+
     @Inject
     lateinit var viewModel: MemberListViewModel
 
@@ -19,8 +28,39 @@ class MemberListFragment : DaggerFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_member_list, container, false)
+        binding = FragmentMemberListBinding.inflate(inflater, container, false)
+
+        // Set the adapter
+        binding.list.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = MemberListAdapter(viewModel)
+        }
+
+        binding.fab.setOnClickListener {
+            InputEmailDialogFragment.newInstance(this, getString(R.string.add_member))
+                .show(parentFragmentManager, "InputEmailDialog")
+        }
+
+        viewModel.members.observe(viewLifecycleOwner) {
+            (list.adapter as MemberListAdapter).submitList(it)
+        }
+
+        viewModel.requestRemoveMember.observe(viewLifecycleOwner) {
+            val member = it.getContentIfNotHandled() ?: return@observe
+
+            val data = Bundle().apply {
+                putString("member_id", member.id)
+            }
+
+            AlertDialogFragment.newInstance(
+                this,
+                getString(R.string.remove_member, member.email),
+                data
+            )
+                .show(parentFragmentManager, "ConfirmRemoveMemberDialog")
+        }
+
+        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -48,4 +88,17 @@ class MemberListFragment : DaggerFragment() {
             }
         }
     }
+
+    override fun onClickListener(tag: String?, which: Int, email: String) {
+        if (which == DialogInterface.BUTTON_POSITIVE) {
+            viewModel.add(email)
+        }
+    }
+
+    override fun onClickListener(tag: String?, which: Int, data: Bundle) {
+        if (which == DialogInterface.BUTTON_POSITIVE) {
+            viewModel.remove(data.getString("member_id")!!)
+        }
+    }
 }
+
