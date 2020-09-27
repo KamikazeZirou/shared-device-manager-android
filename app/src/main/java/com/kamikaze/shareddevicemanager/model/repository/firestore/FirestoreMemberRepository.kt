@@ -4,6 +4,7 @@ import com.kamikaze.shareddevicemanager.model.data.Member
 import com.kamikaze.shareddevicemanager.model.repository.IMemberRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -12,15 +13,25 @@ import javax.inject.Singleton
 @Singleton
 class FirestoreMemberRepository @Inject constructor() :
     IMemberRepository {
+
+    private val members = mutableListOf<Member>(
+        Member("1", "owner@gmail.com", Member.Role.OWNER),
+        Member("2", "general@gmail.com", Member.Role.GENERAL),
+    )
+
+    private val membersFlow = MutableStateFlow(members.toList())
+
     override fun get(groupId: String): Flow<List<Member>> {
-        TODO("Not yet implemented")
+        return membersFlow
     }
 
     override fun add(groupId: String, member: Member) {
-        TODO("Not yet implemented")
+        members.add(member)
+        membersFlow.value = members
     }
 
     override fun remove(groupId: String, memberId: String) {
-        TODO("Not yet implemented")
+        members.removeAll { it.id == memberId }
+        membersFlow.value = members
     }
 }
