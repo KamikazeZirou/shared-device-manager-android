@@ -1,6 +1,6 @@
 package com.kamikaze.shareddevicemanager.model.data
 
-import org.assertj.core.api.Assertions.assertThat
+import com.google.common.truth.Truth.assertThat
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test

@@ -106,7 +106,7 @@ class MyDeviceFragment : DaggerFragment(), AlertDialogFragment.AlertDialogListen
         }
     }
 
-    override fun onClickListener(tag: String?, which: Int) {
+    override fun onClickListener(tag: String?, which: Int, data: Bundle) {
         if (tag == CONFIRM_DISPOSAL_DIALOG_TAG) {
             if (which == BUTTON_POSITIVE) {
                 viewModel.disposeDevice()

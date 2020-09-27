@@ -2,6 +2,7 @@ package com.kamikaze.shareddevicemanager.ui.main
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
+import com.google.common.truth.Truth.assertThat
 import com.kamikaze.shareddevicemanager.helper.TestLifecycleOwner
 import com.kamikaze.shareddevicemanager.model.service.AuthState
 import com.kamikaze.shareddevicemanager.model.service.IAuthService
@@ -12,7 +13,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.setMain
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test

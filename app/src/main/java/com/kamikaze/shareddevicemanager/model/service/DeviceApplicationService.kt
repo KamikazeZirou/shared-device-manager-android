@@ -108,12 +108,12 @@ class DeviceApplicationService @Inject constructor(
             .flowOn(coroutineContexts.default)
 
     suspend fun add(device: Device) {
-        val groupId = groupIdFlow.first() ?: return
+        val groupId = groupIdFlow.first()
         deviceRepository.add(groupId, device)
     }
 
     suspend fun update(device: Device) {
-        val groupId = groupIdFlow.first() ?: return
+        val groupId = groupIdFlow.first()
         deviceRepository.update(groupId, device)
     }
 }

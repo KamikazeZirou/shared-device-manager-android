@@ -1,6 +1,7 @@
 package com.kamikaze.shareddevicemanager.model.service
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.google.common.truth.Truth.assertThat
 import com.kamikaze.shareddevicemanager.helper.MainCoroutineRule
 import com.kamikaze.shareddevicemanager.model.data.Device
 import com.kamikaze.shareddevicemanager.model.data.Group
@@ -18,7 +19,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runBlockingTest
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -28,8 +28,7 @@ import java.util.*
 @FlowPreview
 class DeviceApplicationServiceTest {
     @get:Rule
-    val mainCoroutineRule =
-        MainCoroutineRule()
+    val mainCoroutineRule = MainCoroutineRule()
 
     @get: Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
@@ -78,7 +77,12 @@ class DeviceApplicationServiceTest {
         }
 
         mockDeviceRepository = mock<IDeviceRepository> {
-            onBlocking { getByInstanceId("testGroupId", "testInstanceId") } doReturn flowOf<Device?>(testDevice)
+            onBlocking {
+                getByInstanceId(
+                    "testGroupId",
+                    "testInstanceId"
+                )
+            } doReturn flowOf<Device?>(testDevice)
             onBlocking { get("testGroupId") } doReturn flowOf<List<Device>?>(listOf(testDevice))
         }
 
@@ -101,14 +105,15 @@ class DeviceApplicationServiceTest {
 
     // TODO 自分の端末が未登録の時のテスト
     @Test
-    fun getMyDeviceFlow_returnExistingDevice_whenMyDeviceIsRegistered() =  mainCoroutineRule.runBlockingTest {
-        val flow = deviceApplicationService.myDeviceFlow
-        val myDevice = flow.first()
-        assertThat(myDevice).isEqualTo(testDevice)
-    }
+    fun getMyDeviceFlow_returnExistingDevice_whenMyDeviceIsRegistered() =
+        mainCoroutineRule.runBlockingTest {
+            val flow = deviceApplicationService.myDeviceFlow
+            val myDevice = flow.first()
+            assertThat(myDevice).isEqualTo(testDevice)
+        }
 
     @Test
-    fun getDevicesFlow() =  mainCoroutineRule.runBlockingTest {
+    fun getDevicesFlow() = mainCoroutineRule.runBlockingTest {
         val flow = deviceApplicationService.devicesFlow
         val devices = flow.first()
         assertThat(devices).isEqualTo(listOf(testDevice))
