@@ -10,7 +10,7 @@ import dagger.Binds
 import dagger.Module
 
 @Module
-abstract class RepositoryModule {
+abstract class FirestoreRepositoryModule {
     @Binds
     abstract fun bindGroupRepository(repo: FirestoreGroupRepository): IGroupRepository
 
