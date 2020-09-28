@@ -7,9 +7,12 @@ import com.kamikaze.shareddevicemanager.helper.TestLifecycleOwner
 import com.kamikaze.shareddevicemanager.model.data.Member
 import com.kamikaze.shareddevicemanager.model.repository.IMemberRepository
 import com.kamikaze.shareddevicemanager.model.service.IAuthService
+import com.kamikaze.shareddevicemanager.model.service.IGroupService
 import com.kamikaze.shareddevicemanager.ui.main.memberlist.MemberListViewModel
 import com.nhaarman.mockitokotlin2.*
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -24,19 +27,23 @@ class MemberListViewModelTest {
     private lateinit var viewModel: MemberListViewModel
     private lateinit var mockMemberRepository: IMemberRepository
     private lateinit var mockAuthService: IAuthService
+    private lateinit var mockGroupService: IGroupService
 
     @Before
     fun setUp() {
         mockAuthService = mock()
+        mockGroupService = mock() {
+            on { currentIdFlow } doReturn MutableStateFlow("1")
+        }
         mockMemberRepository = mock()
-        viewModel = MemberListViewModel(mockAuthService, mockMemberRepository)
+        viewModel = MemberListViewModel(mockAuthService, mockGroupService, mockMemberRepository)
     }
 
     @Test
     fun get() {
         // GroupIDを設定する
         mockMemberRepository.stub {
-            on { get(any()) } doReturn flowOf(
+            on { get("1") } doReturn flowOf(
                 listOf(
                     Member(
                         id = "1",
@@ -72,18 +79,17 @@ class MemberListViewModelTest {
     }
 
     @Test
-    fun add() {
+    fun add() = mainCoroutineRule.runBlockingTest {
         viewModel.add("new-comer@gmail.com")
         verify(mockMemberRepository, times(1))
-            .add(any(), eq(Member(email = "new-comer@gmail.com")))
-
+            .add(eq("1"), eq(Member(email = "new-comer@gmail.com")))
     }
 
     @Test
     fun remove() {
         viewModel.remove("remove-member-id")
         verify(mockMemberRepository, times(1))
-            .remove(any(), eq("remove-member-id"))
+            .remove(eq("1"), eq("remove-member-id"))
     }
 
     @Test

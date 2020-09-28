@@ -16,7 +16,7 @@ import javax.inject.Singleton
 @Component(
     modules = [
         AndroidSupportInjectionModule::class,
-        AuthModule::class,
+        FirebaseServiceModule::class,
         DeviceModule::class,
         MainModule::class,
         DeviceListModule::class,
