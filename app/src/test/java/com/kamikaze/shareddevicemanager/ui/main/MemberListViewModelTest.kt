@@ -6,11 +6,10 @@ import com.kamikaze.shareddevicemanager.helper.MainCoroutineRule
 import com.kamikaze.shareddevicemanager.helper.TestLifecycleOwner
 import com.kamikaze.shareddevicemanager.model.data.Member
 import com.kamikaze.shareddevicemanager.model.repository.IMemberRepository
+import com.kamikaze.shareddevicemanager.model.service.GroupApplicationService
 import com.kamikaze.shareddevicemanager.model.service.IAuthService
-import com.kamikaze.shareddevicemanager.model.service.IGroupService
 import com.kamikaze.shareddevicemanager.ui.main.memberlist.MemberListViewModel
 import com.nhaarman.mockitokotlin2.*
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
@@ -27,16 +26,17 @@ class MemberListViewModelTest {
     private lateinit var viewModel: MemberListViewModel
     private lateinit var mockMemberRepository: IMemberRepository
     private lateinit var mockAuthService: IAuthService
-    private lateinit var mockGroupService: IGroupService
+    private lateinit var groupApplicationService: GroupApplicationService
 
     @Before
     fun setUp() {
         mockAuthService = mock()
-        mockGroupService = mock() {
-            on { currentIdFlow } doReturn MutableStateFlow("1")
+        groupApplicationService = GroupApplicationService().apply {
+            currentGroupId = "1"
         }
         mockMemberRepository = mock()
-        viewModel = MemberListViewModel(mockAuthService, mockGroupService, mockMemberRepository)
+        viewModel =
+            MemberListViewModel(mockAuthService, groupApplicationService, mockMemberRepository)
     }
 
     @Test
