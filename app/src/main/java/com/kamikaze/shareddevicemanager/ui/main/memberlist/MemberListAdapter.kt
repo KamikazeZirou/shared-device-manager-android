@@ -2,33 +2,42 @@ package com.kamikaze.shareddevicemanager.ui.main.memberlist
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.kamikaze.shareddevicemanager.databinding.FragmentMemberListItemBinding
 import com.kamikaze.shareddevicemanager.model.data.Member
 
 class MemberListAdapter(private val viewModel: MemberListViewModel) :
     ListAdapter<Member, MemberListAdapter.MemberViewHolder>(MemberDiffCallback()) {
 
-    class MemberViewHolder(val textView: TextView) : RecyclerView.ViewHolder(textView)
+    class MemberViewHolder(val binding: FragmentMemberListItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(viewModel: MemberListViewModel, member: Member) {
+            binding.viewModel = viewModel
+            binding.member = member
+            binding.executePendingBindings()
+        }
+
+        companion object {
+            fun from(parent: ViewGroup): MemberViewHolder {
+                val layoutInflater = LayoutInflater.from(parent.context)
+                val binding = FragmentMemberListItemBinding.inflate(layoutInflater, parent, false)
+                return MemberViewHolder(binding)
+            }
+        }
+    }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
     ): MemberViewHolder {
-        val textView = LayoutInflater.from(parent.context)
-            .inflate(android.R.layout.simple_list_item_1, parent, false) as TextView
-        return MemberViewHolder(textView)
+        return MemberViewHolder.from(parent)
     }
 
     override fun onBindViewHolder(holder: MemberViewHolder, position: Int) {
         val member = getItem(position)
-        holder.textView.text = member.email
-        holder.textView.setOnLongClickListener {
-            viewModel.requestRemove(member)
-            true
-        }
+        holder.bind(viewModel, member)
     }
 }
 
