@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.kamikaze.shareddevicemanager.model.service.DeviceApplicationService
 import com.kamikaze.shareddevicemanager.model.service.IAuthService
-import com.kamikaze.shareddevicemanager.ui.util.Event
+import com.kamikaze.shareddevicemanager.util.Event
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject

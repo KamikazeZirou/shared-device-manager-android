@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.kamikaze.shareddevicemanager.ui.util
+package com.kamikaze.shareddevicemanager.util
 
 import androidx.lifecycle.Observer
 

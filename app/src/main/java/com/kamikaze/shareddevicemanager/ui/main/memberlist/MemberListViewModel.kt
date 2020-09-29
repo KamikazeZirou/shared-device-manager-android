@@ -5,7 +5,7 @@ import com.kamikaze.shareddevicemanager.model.data.Member
 import com.kamikaze.shareddevicemanager.model.repository.IMemberRepository
 import com.kamikaze.shareddevicemanager.model.service.GroupApplicationService
 import com.kamikaze.shareddevicemanager.model.service.IAuthService
-import com.kamikaze.shareddevicemanager.ui.util.Event
+import com.kamikaze.shareddevicemanager.util.Event
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
