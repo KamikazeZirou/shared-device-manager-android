@@ -9,6 +9,9 @@ data class Member(
     val role: Role? = null
 ) {
 
+    val canDelete: Boolean
+        get() = (role != Role.OWNER)
+
     enum class Role {
         OWNER,
         ADMIN,

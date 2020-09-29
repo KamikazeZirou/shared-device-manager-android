@@ -1,5 +1,6 @@
 package com.kamikaze.shareddevicemanager.ui.util
 
+import android.view.View
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import com.kamikaze.shareddevicemanager.model.data.Device
@@ -13,7 +14,18 @@ private val Device.Status.iconRes: Int
         Device.Status.NOT_REGISTER -> throw IllegalStateException()
     }
 
-@BindingAdapter("app:device_status")
+@BindingAdapter("device_status")
 fun setDeviceStatusIcon(imageView: ImageView, status: Device.Status) {
     imageView.setImageResource(status.iconRes)
+}
+
+// FIXME ViewExtなどのファイルに置くとViewExtKtがないエラー発生。仕方なくここにおいている。
+@BindingAdapter("goneUnless")
+fun goneUnless(view: View, visible: Boolean) {
+    view.visibility = if (visible) View.VISIBLE else View.GONE
+}
+
+@BindingAdapter("invisibleUnless")
+fun invisibleUnless(view: View, visible: Boolean) {
+    view.visibility = if (visible) View.VISIBLE else View.INVISIBLE
 }

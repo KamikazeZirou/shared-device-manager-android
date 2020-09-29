@@ -39,6 +39,7 @@
 
         <ImageView
             android:id="@+id/imageButton"
+            invisibleUnless="@{member.canDelete}"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginTop="8dp"
