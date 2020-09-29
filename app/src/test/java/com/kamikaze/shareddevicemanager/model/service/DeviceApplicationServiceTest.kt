@@ -90,13 +90,17 @@ class DeviceApplicationServiceTest {
             onBlocking { build() } doReturn testMyDevice
         }
 
+        val groupApplicationService = GroupApplicationService(mockAuthService, mockGroupRepository)
         deviceApplicationService = DeviceApplicationService(
-            authService = mockAuthService,
-            groupRepository = mockGroupRepository,
+            groupApplicationService = groupApplicationService,
             deviceRepository = mockDeviceRepository,
             deviceBuilder = mockDeviceBuilder,
             coroutineContexts = mainCoroutineRule
         )
+
+        mainCoroutineRule.launch {
+            groupApplicationService.initialize()
+        }
 
         mainCoroutineRule.launch {
             deviceApplicationService.initialize()

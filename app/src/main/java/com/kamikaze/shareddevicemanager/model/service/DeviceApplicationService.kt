@@ -3,7 +3,6 @@ package com.kamikaze.shareddevicemanager.model.service
 import com.kamikaze.shareddevicemanager.model.data.Device
 import com.kamikaze.shareddevicemanager.model.data.IMyDeviceBuilder
 import com.kamikaze.shareddevicemanager.model.repository.IDeviceRepository
-import com.kamikaze.shareddevicemanager.model.repository.IGroupRepository
 import com.kamikaze.shareddevicemanager.util.ICoroutineContexts
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -17,14 +16,11 @@ import javax.inject.Singleton
 @ExperimentalCoroutinesApi
 @Singleton
 class DeviceApplicationService @Inject constructor(
-    private val authService: IAuthService,
-    private val groupRepository: IGroupRepository,
+    private val groupApplicationService: GroupApplicationService,
     private val deviceRepository: IDeviceRepository,
     private val deviceBuilder: IMyDeviceBuilder,
     private val coroutineContexts: ICoroutineContexts
 ) {
-    private val groupIdFlow = MutableStateFlow("")
-
     private val _myDeviceFlow = MutableStateFlow(Device())
     val myDeviceFlow: Flow<Device> = _myDeviceFlow
 
@@ -32,35 +28,13 @@ class DeviceApplicationService @Inject constructor(
     val devicesFlow: Flow<List<Device>?> = _devicesFlow
 
     suspend fun initialize() {
-        // 認証情報の監視
         coroutineScope {
-            launch {
-                val authStateFlow = authService.authStateFlow
-                    .filter { it != AuthState.UNKNOWN }
-
-                authService.userFlow.combine(authStateFlow) { user, state ->
-                    if (user != null && state == AuthState.SIGN_IN) {
-                        user.id
-                    } else {
-                        null
-                    }
-                }.flatMapLatest {
-                    if (it != null) {
-                        groupRepository.get(it)
-                    } else {
-                        flowOf(null)
-                    }
-                }.collect {
-                    groupIdFlow.value = it?.id ?: ""
-                }
-            }
-
             // My端末の情報の監視
             launch {
                 val localMyDevice = deviceBuilder.build()
                 _myDeviceFlow.value = localMyDevice
 
-                groupIdFlow
+                groupApplicationService.groupIdFlow
                     .flatMapLatest { groupId ->
                         if (groupId.isNotEmpty()) {
                             deviceRepository.getByInstanceId(groupId, localMyDevice.instanceId)
@@ -85,7 +59,7 @@ class DeviceApplicationService @Inject constructor(
 
             // 端末一覧の監視
             launch {
-                groupIdFlow
+                groupApplicationService.groupIdFlow
                     .flatMapLatest { groupId ->
                         if (groupId.isNotEmpty()) {
                             deviceRepository.get(groupId)
@@ -108,12 +82,12 @@ class DeviceApplicationService @Inject constructor(
             .flowOn(coroutineContexts.default)
 
     fun add(device: Device) {
-        val groupId = groupIdFlow.value
+        val groupId = groupApplicationService.groupId
         deviceRepository.add(groupId, device)
     }
 
     fun update(device: Device) {
-        val groupId = groupIdFlow.value
+        val groupId = groupApplicationService.groupId
         deviceRepository.update(groupId, device)
     }
 }

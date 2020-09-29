@@ -7,6 +7,7 @@ import android.os.Bundle
 import androidx.multidex.MultiDex
 import com.kamikaze.shareddevicemanager.di.DaggerApplicationComponent
 import com.kamikaze.shareddevicemanager.model.service.DeviceApplicationService
+import com.kamikaze.shareddevicemanager.model.service.GroupApplicationService
 import com.kamikaze.shareddevicemanager.model.service.IAuthService
 import dagger.android.AndroidInjector
 import dagger.android.support.DaggerApplication
@@ -18,6 +19,9 @@ import javax.inject.Inject
 class SharedDeviceManagerApplication : DaggerApplication() {
     @Inject
     lateinit var authService: IAuthService
+
+    @Inject
+    lateinit var groupApplicationService: GroupApplicationService
 
     @Inject
     lateinit var deviceApplicationService: DeviceApplicationService
@@ -43,6 +47,11 @@ class SharedDeviceManagerApplication : DaggerApplication() {
                     applicationScope.launch {
                         authService.initialize()
                     }
+
+                    applicationScope.launch {
+                        groupApplicationService.initialize()
+                    }
+
                     applicationScope.launch {
                         deviceApplicationService.initialize()
                     }

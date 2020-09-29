@@ -19,7 +19,7 @@ class MemberListViewModel
 ) : ViewModel() {
 
     val members: LiveData<List<Member>> by lazy {
-        groupService.currentGroupIdFlow
+        groupService.groupIdFlow
             .flatMapLatest {
                 memberRepository.get(it)
             }
@@ -32,7 +32,7 @@ class MemberListViewModel
 
     fun add(email: String) {
         viewModelScope.launch {
-            groupService.currentGroupIdFlow
+            groupService.groupIdFlow
                 .collect {
                     memberRepository.add(it, Member(email = email))
                 }
@@ -41,7 +41,7 @@ class MemberListViewModel
 
     fun remove(id: String) {
         viewModelScope.launch {
-            groupService.currentGroupIdFlow
+            groupService.groupIdFlow
                 .collect {
                     memberRepository.remove(it, id)
                 }

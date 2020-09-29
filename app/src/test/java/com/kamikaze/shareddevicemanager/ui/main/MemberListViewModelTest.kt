@@ -31,8 +31,8 @@ class MemberListViewModelTest {
     @Before
     fun setUp() {
         mockAuthService = mock()
-        groupApplicationService = GroupApplicationService().apply {
-            currentGroupId = "1"
+        groupApplicationService = GroupApplicationService(mock(), mock()).apply {
+            groupId = "testGroupId"
         }
         mockMemberRepository = mock()
         viewModel =
@@ -43,10 +43,10 @@ class MemberListViewModelTest {
     fun get() {
         // GroupIDを設定する
         mockMemberRepository.stub {
-            on { get("1") } doReturn flowOf(
+            on { get("testGroupId") } doReturn flowOf(
                 listOf(
                     Member(
-                        id = "1",
+                        id = "testGroupId",
                         email = "owner@gmail.com",
                         role = Member.Role.OWNER
                     ),
@@ -65,7 +65,7 @@ class MemberListViewModelTest {
         assertThat(viewModel.members.value).isEqualTo(
             listOf(
                 Member(
-                    id = "1",
+                    id = "testGroupId",
                     email = "owner@gmail.com",
                     role = Member.Role.OWNER
                 ),
@@ -82,14 +82,14 @@ class MemberListViewModelTest {
     fun add() = mainCoroutineRule.runBlockingTest {
         viewModel.add("new-comer@gmail.com")
         verify(mockMemberRepository, times(1))
-            .add(eq("1"), eq(Member(email = "new-comer@gmail.com")))
+            .add(eq("testGroupId"), eq(Member(email = "new-comer@gmail.com")))
     }
 
     @Test
     fun remove() {
         viewModel.remove("remove-member-id")
         verify(mockMemberRepository, times(1))
-            .remove(eq("1"), eq("remove-member-id"))
+            .remove(eq("testGroupId"), eq("remove-member-id"))
     }
 
     @Test
