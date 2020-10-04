@@ -43,17 +43,13 @@ class DeviceApplicationService @Inject constructor(
                         }
                     }
                     .collect {
-                        if (it != null) {
-                            _myDeviceFlow.value = it.copy(
-                                model = localMyDevice.model,
-                                manufacturer = localMyDevice.manufacturer,
-                                isTablet = localMyDevice.isTablet,
-                                os = localMyDevice.os,
-                                osVersion = localMyDevice.osVersion
-                            )
-                        } else {
-                            _myDeviceFlow.value = localMyDevice
-                        }
+                        _myDeviceFlow.value = it?.copy(
+                            model = localMyDevice.model,
+                            manufacturer = localMyDevice.manufacturer,
+                            isTablet = localMyDevice.isTablet,
+                            os = localMyDevice.os,
+                            osVersion = localMyDevice.osVersion
+                        ) ?: localMyDevice
                     }
             }
 
