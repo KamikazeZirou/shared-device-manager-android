@@ -1,5 +1,7 @@
 package com.kamikaze.shareddevicemanager.model.repository.firestore
 
+import com.google.firebase.firestore.FirebaseFirestore
+import com.kamikaze.shareddevicemanager.model.data.Invite
 import com.kamikaze.shareddevicemanager.model.data.Member
 import com.kamikaze.shareddevicemanager.model.repository.IMemberRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -13,13 +15,14 @@ import javax.inject.Singleton
 @Singleton
 class FirestoreMemberRepository @Inject constructor() :
     IMemberRepository {
+    private val firestore: FirebaseFirestore by lazy {
+        FirebaseFirestore.getInstance()
+    }
 
     private val members = mutableListOf(
         Member("1", "owner@gmail.com", Member.Role.OWNER),
         Member("2", "general@gmail.com", Member.Role.GENERAL),
     )
-
-    private var lastId = members.size
 
     private val membersFlow = MutableStateFlow(members.toList())
 
@@ -27,15 +30,11 @@ class FirestoreMemberRepository @Inject constructor() :
         return membersFlow
     }
 
-    override fun add(groupId: String, member: Member) {
-        lastId += 1
-        members.add(
-            member.copy(
-                id = lastId.toString(),
-                role = Member.Role.GENERAL
-            )
-        )
-        membersFlow.value = members.toList()
+    override fun invite(groupId: String, email: String) {
+        val invitesReference = firestore.collection("groups")
+            .document(groupId)
+            .collection("invites")
+        invitesReference.add(Invite(email))
     }
 
     override fun remove(groupId: String, memberId: String) {

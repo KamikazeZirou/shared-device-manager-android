@@ -34,7 +34,7 @@ class MemberListViewModel
         viewModelScope.launch {
             groupService.groupIdFlow
                 .collect {
-                    memberRepository.add(it, Member(email = email))
+                    memberRepository.invite(it, email)
                 }
         }
     }

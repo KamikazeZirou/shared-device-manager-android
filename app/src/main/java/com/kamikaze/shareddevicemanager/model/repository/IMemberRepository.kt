@@ -5,6 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface IMemberRepository {
     fun get(groupId: String): Flow<List<Member>>
-    fun add(groupId: String, member: Member)
+    fun invite(groupId: String, email: String)
     fun remove(groupId: String, memberId: String)
 }
