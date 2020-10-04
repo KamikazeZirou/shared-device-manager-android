@@ -27,11 +27,12 @@ class FirestoreMemberRepository @Inject constructor() :
         return membersFlow
     }
 
-    override fun add(groupId: String, member: Member) {
+    override fun invite(groupId: String, email: String) {
         lastId += 1
         members.add(
-            member.copy(
+            Member(
                 id = lastId.toString(),
+                email = email,
                 role = Member.Role.GENERAL
             )
         )

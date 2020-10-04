@@ -79,10 +79,10 @@ class MemberListViewModelTest {
     }
 
     @Test
-    fun add() = mainCoroutineRule.runBlockingTest {
+    fun invite() = mainCoroutineRule.runBlockingTest {
         viewModel.add("new-comer@gmail.com")
         verify(mockMemberRepository, times(1))
-            .add(eq("testGroupId"), eq(Member(email = "new-comer@gmail.com")))
+            .invite(eq("testGroupId"), eq("new-comer@gmail.com"))
     }
 
     @Test
