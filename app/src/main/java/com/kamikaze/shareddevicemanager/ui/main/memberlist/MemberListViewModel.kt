@@ -1,18 +1,18 @@
 package com.kamikaze.shareddevicemanager.ui.main.memberlist
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import com.kamikaze.shareddevicemanager.model.data.Member
 import com.kamikaze.shareddevicemanager.model.repository.IMemberRepository
 import com.kamikaze.shareddevicemanager.model.service.GroupApplicationService
 import com.kamikaze.shareddevicemanager.model.service.IAuthService
 import com.kamikaze.shareddevicemanager.util.Event
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class MemberListViewModel
-@Inject constructor(
+class MemberListViewModel @Inject constructor(
     private val authService: IAuthService,
     private val groupService: GroupApplicationService,
     private val memberRepository: IMemberRepository
@@ -31,21 +31,11 @@ class MemberListViewModel
     }
 
     fun add(email: String) {
-        viewModelScope.launch {
-            groupService.groupIdFlow
-                .collect {
-                    memberRepository.invite(it, email)
-                }
-        }
+        memberRepository.invite(groupService.groupId, email)
     }
 
     fun remove(id: String) {
-        viewModelScope.launch {
-            groupService.groupIdFlow
-                .collect {
-                    memberRepository.remove(it, id)
-                }
-        }
+        memberRepository.remove(groupService.groupId, id)
     }
 
     private val _requestRemoveMember = MutableLiveData<Event<Member>>()
