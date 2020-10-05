@@ -1,7 +1,9 @@
 package com.kamikaze.shareddevicemanager.model.data
 
 import com.google.firebase.firestore.DocumentId
+import com.google.firebase.firestore.IgnoreExtraProperties
 
+@IgnoreExtraProperties
 data class Member(
     @DocumentId
     val id: String = "",
