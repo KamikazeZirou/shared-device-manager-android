@@ -67,6 +67,10 @@ class FirestoreMemberRepository @Inject constructor() :
     }
 
     override fun remove(groupId: String, memberId: String) {
-        TODO()
+        val memberReference = firestore.collection("groups")
+            .document(groupId)
+            .collection("members")
+            .document(memberId)
+        memberReference.delete()
     }
 }
