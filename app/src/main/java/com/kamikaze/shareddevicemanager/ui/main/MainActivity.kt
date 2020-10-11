@@ -41,6 +41,7 @@ class MainActivity : DaggerAppCompatActivity() {
         setSupportActionBar(toolbar)
 
         toolbar.setOnClickListener {
+            navController.navigate(R.id.navigation_groups)
         }
 
 
