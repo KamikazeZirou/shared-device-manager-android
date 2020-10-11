@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -13,7 +12,6 @@ import com.firebase.ui.auth.AuthUI
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.kamikaze.shareddevicemanager.R
 import dagger.android.support.DaggerAppCompatActivity
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivity() {
@@ -47,9 +45,6 @@ class MainActivity : DaggerAppCompatActivity() {
                 startSignIn()
             }
         })
-
-        lifecycleScope.launch {
-        }
     }
 
     private fun startSignIn() {
