@@ -34,5 +34,9 @@
         android:name="com.kamikaze.shareddevicemanager.ui.main.memberlist.MemberListFragment"
         android:label="@string/title_members"
         tools:layout="@layout/fragment_member_list" />
+    <activity
+        android:id="@+id/navigation_groups"
+        android:name="com.kamikaze.shareddevicemanager.ui.groups.GroupsActivity"
+        android:label="@string/title_groups" />
 
 </navigation>

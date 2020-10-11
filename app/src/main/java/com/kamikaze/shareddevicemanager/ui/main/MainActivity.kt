@@ -4,16 +4,14 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.firebase.ui.auth.AuthUI
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.kamikaze.shareddevicemanager.R
 import dagger.android.support.DaggerAppCompatActivity
-import kotlinx.coroutines.launch
+import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivity() {
@@ -27,11 +25,11 @@ class MainActivity : DaggerAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val navView: BottomNavigationView = findViewById(R.id.nav_view)
 
         val navController = findNavController(R.id.nav_host_fragment)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
+        val navView: BottomNavigationView = findViewById(R.id.nav_view)
+        navView.setupWithNavController(navController)
+
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.navigation_device_list,
@@ -39,17 +37,19 @@ class MainActivity : DaggerAppCompatActivity() {
                 R.id.navigation_member_list,
             )
         )
-        setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
+        toolbar.setupWithNavController(navController, appBarConfiguration)
+        setSupportActionBar(toolbar)
+
+        toolbar.setOnClickListener {
+            navController.navigate(R.id.navigation_groups)
+        }
+
 
         mainViewModel.shouldSignIn.observe(this, Observer {
             if (it) {
                 startSignIn()
             }
         })
-
-        lifecycleScope.launch {
-        }
     }
 
     private fun startSignIn() {
@@ -57,9 +57,11 @@ class MainActivity : DaggerAppCompatActivity() {
         AuthUI.getInstance().signOut(this)
 
         val intent = AuthUI.getInstance().createSignInIntentBuilder()
-            .setAvailableProviders(listOf(
-                AuthUI.IdpConfig.GoogleBuilder().build()
-            ))
+            .setAvailableProviders(
+                listOf(
+                    AuthUI.IdpConfig.GoogleBuilder().build()
+                )
+            )
             .setIsSmartLockEnabled(false)
             .build()
 

@@ -39,4 +39,5 @@
     <string name="email" translatable="false">Email</string>
     <string name="add_member">Add Member</string>
     <string name="remove_member">Are you sure you want to remove %1$s from the team?</string>
+    <string name="title_groups">Groups</string>
 </resources>
