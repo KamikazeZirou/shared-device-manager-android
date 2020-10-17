@@ -22,6 +22,7 @@ import javax.inject.Singleton
         DevicesModule::class,
         FirestoreRepositoryModule::class,
         MembersModule::class,
+        GroupsModule::class,
         DeviceDetailModule::class,
         MyDeviceModule::class,
         RegisterDeviceModule::class,

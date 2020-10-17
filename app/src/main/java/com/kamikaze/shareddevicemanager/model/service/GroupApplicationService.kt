@@ -28,7 +28,7 @@ open class GroupApplicationService @Inject constructor(
                     }
                 }.flatMapLatest {
                     if (it != null) {
-                        groupRepository.get(it)
+                        groupRepository.getMyGroup(it)
                     } else {
                         flowOf(null)
                     }
