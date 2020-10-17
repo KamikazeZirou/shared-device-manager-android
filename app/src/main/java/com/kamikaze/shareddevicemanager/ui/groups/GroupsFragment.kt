@@ -1,7 +1,9 @@
 package com.kamikaze.shareddevicemanager.ui.groups
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -37,18 +39,11 @@ class GroupsFragment : Fragment() {
             layoutManager = LinearLayoutManager(context)
             adapter = GroupsAdapter(viewModel).apply {
                 submitList(
-                    listOf(
-                        Group("1", "group1"),
-                        Group("2", "group2"),
-                        Group("3", "group3"),
-                    )
+                    (1..30).map {
+                        Group("$it", "group${it}")
+                    }
                 )
             }
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.groups_menu, menu)
     }
 }
