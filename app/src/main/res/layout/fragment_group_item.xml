@@ -2,9 +2,22 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <data></data>
+    <data>
+
+        <import type="android.text.TextUtils" />
+
+        <variable
+            name="group"
+            type="com.kamikaze.shareddevicemanager.model.data.Group" />
+
+        <variable
+            name="viewModel"
+            type="com.kamikaze.shareddevicemanager.ui.groups.GroupsViewModel" />
+
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        invisibleUnless="@{!TextUtils.isEmpty(group.id)}"
         android:layout_width="match_parent"
         android:layout_height="72dp"
         android:clickable="true"
@@ -31,7 +44,7 @@
             android:layout_marginEnd="8dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="TextView"
+            android:text="@{group.name}"
             android:textAppearance="?attr/textAppearanceListItem"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/edit_group_button"
@@ -43,9 +56,9 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginEnd="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:focusable="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
             android:padding="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -58,9 +71,9 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginEnd="4dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:focusable="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
             android:padding="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/delete_group_button"

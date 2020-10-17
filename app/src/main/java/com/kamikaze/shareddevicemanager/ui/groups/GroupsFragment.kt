@@ -39,9 +39,12 @@ class GroupsFragment : Fragment() {
             layoutManager = LinearLayoutManager(context)
             adapter = GroupsAdapter(viewModel).apply {
                 submitList(
-                    (1..30).map {
-                        Group("$it", "group${it}")
-                    }
+                    (1..30)
+                        .map {
+                            Group("$it", "group${it}")
+                        }
+                        .toMutableList()
+                        .apply { add(Group("", "")) }
                 )
             }
         }

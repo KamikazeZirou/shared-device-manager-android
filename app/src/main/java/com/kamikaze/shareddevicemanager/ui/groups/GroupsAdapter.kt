@@ -10,31 +10,29 @@ import com.kamikaze.shareddevicemanager.model.data.Group
 
 class GroupsAdapter(
     private val viewModel: GroupsViewModel
-) : ListAdapter<Group, GroupsAdapter.ViewHolder>(GroupDiffCallback()) {
+) : ListAdapter<Group, GroupsAdapter.ContentViewHolder>(GroupDiffCallback()) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder.from(parent)
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContentViewHolder =
+        ContentViewHolder.from(parent)
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(contentHolder: ContentViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(viewModel, item)
+        contentHolder.bind(viewModel, item)
     }
 
-    class ViewHolder(val binding: FragmentGroupItemBinding) :
+    class ContentViewHolder(val binding: FragmentGroupItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(viewModel: GroupsViewModel, item: Group) {
-//            binding.viewModel = viewModel
-//            binding.device = item
-            binding.groupNameView.text = item.name
+            binding.viewModel = viewModel
+            binding.group = item
             binding.executePendingBindings()
         }
 
         companion object {
-            fun from(parent: ViewGroup): ViewHolder {
+            fun from(parent: ViewGroup): ContentViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
                 val binding = FragmentGroupItemBinding.inflate(layoutInflater, parent, false)
-                return ViewHolder(binding)
+                return ContentViewHolder(binding)
             }
         }
     }
