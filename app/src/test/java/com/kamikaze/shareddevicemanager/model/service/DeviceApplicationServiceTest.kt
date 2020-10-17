@@ -66,7 +66,7 @@ class DeviceApplicationServiceTest {
             on { userFlow } doReturn flowOf<User?>(User("testUserId", "testUserName"))
         }
         val mockGroupRepository = mock<IGroupRepository> {
-            on { get("testUserId") } doReturn flowOf<Group?>(
+            on { getMyGroup("testUserId") } doReturn flowOf<Group?>(
                 Group(
                     id = "testGroupId",
                     name = "testGroupName",

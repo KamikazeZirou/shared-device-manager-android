@@ -36,7 +36,7 @@ class GroupApplicationServiceTest {
         }
 
         mockGroupRepository = mock {
-            on { get("testUserId") } doReturn flowOf<Group?>(
+            on { getMyGroup("testUserId") } doReturn flowOf<Group?>(
                 Group(
                     id = "testGroupId",
                     name = "testGroupName",
