@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/navigation_device_list"
-        android:name="com.kamikaze.shareddevicemanager.ui.main.devicelist.DeviceListFragment"
+        android:name="com.kamikaze.shareddevicemanager.ui.main.devices.DevicesFragment"
         android:label="@string/title_device_list"
-        tools:layout="@layout/fragment_device_item_list" >
+        tools:layout="@layout/fragment_devices">
         <action
             android:id="@+id/action_show_device_detail"
             app:destination="@+id/device_detail_dest" />
@@ -31,9 +31,9 @@
     </activity>
     <fragment
         android:id="@+id/navigation_member_list"
-        android:name="com.kamikaze.shareddevicemanager.ui.main.memberlist.MemberListFragment"
+        android:name="com.kamikaze.shareddevicemanager.ui.main.members.MembersFragment"
         android:label="@string/title_members"
-        tools:layout="@layout/fragment_member_list" />
+        tools:layout="@layout/fragment_members" />
     <activity
         android:id="@+id/navigation_groups"
         android:name="com.kamikaze.shareddevicemanager.ui.groups.GroupsActivity"

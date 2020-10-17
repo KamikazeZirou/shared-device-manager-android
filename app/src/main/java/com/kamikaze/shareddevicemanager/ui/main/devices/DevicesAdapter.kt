@@ -1,20 +1,20 @@
-package com.kamikaze.shareddevicemanager.ui.main.devicelist
+package com.kamikaze.shareddevicemanager.ui.main.devices
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.kamikaze.shareddevicemanager.databinding.FragmentDeviceItemBinding
+import com.kamikaze.shareddevicemanager.databinding.FragmentDevicesItemBinding
 import com.kamikaze.shareddevicemanager.model.data.Device
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 
 @FlowPreview
 @ExperimentalCoroutinesApi
-class DeviceListAdapter(
-    private val viewModel: DeviceListViewModel
-) : ListAdapter<Device, DeviceListAdapter.ViewHolder>(DeviceDiffCallback()) {
+class DevicesAdapter(
+    private val viewModel: DevicesViewModel
+) : ListAdapter<Device, DevicesAdapter.ViewHolder>(DeviceDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.from(parent)
@@ -25,9 +25,9 @@ class DeviceListAdapter(
         holder.bind(viewModel, item)
     }
 
-    class ViewHolder(val binding: FragmentDeviceItemBinding) :
+    class ViewHolder(val binding: FragmentDevicesItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(viewModel: DeviceListViewModel, item: Device) {
+        fun bind(viewModel: DevicesViewModel, item: Device) {
             binding.viewModel = viewModel
             binding.device = item
             binding.executePendingBindings()
@@ -36,7 +36,7 @@ class DeviceListAdapter(
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = FragmentDeviceItemBinding.inflate(layoutInflater, parent, false)
+                val binding = FragmentDevicesItemBinding.inflate(layoutInflater, parent, false)
                 return ViewHolder(binding)
             }
         }

@@ -1,4 +1,4 @@
-package com.kamikaze.shareddevicemanager.ui.main.devicelist
+package com.kamikaze.shareddevicemanager.ui.main.devices
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
 @FlowPreview
-class DeviceListViewModel @Inject constructor(
+class DevicesViewModel @Inject constructor(
     private val deviceApplicationService: DeviceApplicationService,
     private val auth: IAuthService
 ) :

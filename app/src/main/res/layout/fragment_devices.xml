@@ -10,7 +10,7 @@
 
         <variable
             name="viewModel"
-            type="com.kamikaze.shareddevicemanager.ui.main.devicelist.DeviceListViewModel" />
+            type="com.kamikaze.shareddevicemanager.ui.main.devices.DevicesViewModel" />
     </data>
 
     <FrameLayout
@@ -33,7 +33,7 @@
             android:layout_height="match_parent"
             android:visibility="@{viewModel.devices.empty ? View.GONE : View.VISIBLE}"
             app:layoutManager="LinearLayoutManager"
-            tools:context=".ui.main.devicelist.DeviceListFragment"
-            tools:listitem="@layout/fragment_device_item" />
+            tools:context=".ui.main.devices.DevicesFragment"
+            tools:listitem="@layout/fragment_devices_item" />
     </FrameLayout>
 </layout>

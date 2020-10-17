@@ -8,7 +8,7 @@ import com.kamikaze.shareddevicemanager.model.data.Member
 import com.kamikaze.shareddevicemanager.model.repository.IMemberRepository
 import com.kamikaze.shareddevicemanager.model.service.GroupApplicationService
 import com.kamikaze.shareddevicemanager.model.service.IAuthService
-import com.kamikaze.shareddevicemanager.ui.main.memberlist.MemberListViewModel
+import com.kamikaze.shareddevicemanager.ui.main.members.MembersViewModel
 import com.nhaarman.mockitokotlin2.*
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
@@ -16,14 +16,14 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-class MemberListViewModelTest {
+class MembersViewModelTest {
     @get:Rule
     val mainCoroutineRule = MainCoroutineRule()
 
     @get: Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private lateinit var viewModel: MemberListViewModel
+    private lateinit var viewModel: MembersViewModel
     private lateinit var mockMemberRepository: IMemberRepository
     private lateinit var mockAuthService: IAuthService
     private lateinit var groupApplicationService: GroupApplicationService
@@ -36,7 +36,7 @@ class MemberListViewModelTest {
         }
         mockMemberRepository = mock()
         viewModel =
-            MemberListViewModel(mockAuthService, groupApplicationService, mockMemberRepository)
+            MembersViewModel(mockAuthService, groupApplicationService, mockMemberRepository)
     }
 
     @Test

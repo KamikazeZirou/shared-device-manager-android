@@ -1,19 +1,19 @@
-package com.kamikaze.shareddevicemanager.ui.main.memberlist
+package com.kamikaze.shareddevicemanager.ui.main.members
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.kamikaze.shareddevicemanager.databinding.FragmentMemberListItemBinding
+import com.kamikaze.shareddevicemanager.databinding.FragmentMembersItemBinding
 import com.kamikaze.shareddevicemanager.model.data.Member
 
-class MemberListAdapter(private val viewModel: MemberListViewModel) :
-    ListAdapter<Member, MemberListAdapter.MemberViewHolder>(MemberDiffCallback()) {
+class MembersAdapter(private val viewModel: MembersViewModel) :
+    ListAdapter<Member, MembersAdapter.MemberViewHolder>(MemberDiffCallback()) {
 
-    class MemberViewHolder(val binding: FragmentMemberListItemBinding) :
+    class MemberViewHolder(val binding: FragmentMembersItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(viewModel: MemberListViewModel, member: Member) {
+        fun bind(viewModel: MembersViewModel, member: Member) {
             binding.viewModel = viewModel
             binding.member = member
             binding.executePendingBindings()
@@ -22,7 +22,7 @@ class MemberListAdapter(private val viewModel: MemberListViewModel) :
         companion object {
             fun from(parent: ViewGroup): MemberViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = FragmentMemberListItemBinding.inflate(layoutInflater, parent, false)
+                val binding = FragmentMembersItemBinding.inflate(layoutInflater, parent, false)
                 return MemberViewHolder(binding)
             }
         }

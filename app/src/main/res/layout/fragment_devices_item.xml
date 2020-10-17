@@ -12,7 +12,7 @@
 
         <variable
             name="viewModel"
-            type="com.kamikaze.shareddevicemanager.ui.main.devicelist.DeviceListViewModel" />
+            type="com.kamikaze.shareddevicemanager.ui.main.devices.DevicesViewModel" />
     </data>
 
     <LinearLayout

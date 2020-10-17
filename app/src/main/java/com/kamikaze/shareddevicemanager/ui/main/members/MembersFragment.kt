@@ -1,24 +1,23 @@
-package com.kamikaze.shareddevicemanager.ui.main.memberlist
+package com.kamikaze.shareddevicemanager.ui.main.members
 
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kamikaze.shareddevicemanager.R
-import com.kamikaze.shareddevicemanager.databinding.FragmentMemberListBinding
+import com.kamikaze.shareddevicemanager.databinding.FragmentMembersBinding
 import com.kamikaze.shareddevicemanager.ui.common.AlertDialogFragment
 import com.kamikaze.shareddevicemanager.ui.common.openPrivacyPolicy
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.fragment_device_item_list.*
 import javax.inject.Inject
 
-class MemberListFragment : DaggerFragment(),
+class MembersFragment : DaggerFragment(),
     InputEmailDialogFragment.InputEmailDialogListener,
     AlertDialogFragment.AlertDialogListener {
-    private lateinit var binding: FragmentMemberListBinding
+    private lateinit var binding: FragmentMembersBinding
 
     @Inject
-    lateinit var viewModel: MemberListViewModel
+    lateinit var viewModel: MembersViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,12 +27,12 @@ class MemberListFragment : DaggerFragment(),
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentMemberListBinding.inflate(inflater, container, false)
+        binding = FragmentMembersBinding.inflate(inflater, container, false)
 
         // Set the adapter
         binding.list.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = MemberListAdapter(viewModel)
+            adapter = MembersAdapter(viewModel)
         }
 
         binding.fab.setOnClickListener {
@@ -42,7 +41,7 @@ class MemberListFragment : DaggerFragment(),
         }
 
         viewModel.members.observe(viewLifecycleOwner) {
-            (list.adapter as MemberListAdapter).submitList(it)
+            (binding.list.adapter as MembersAdapter).submitList(it)
         }
 
         viewModel.requestRemoveMember.observe(viewLifecycleOwner) {
@@ -70,7 +69,7 @@ class MemberListFragment : DaggerFragment(),
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.member_list_menu, menu)
+        inflater.inflate(R.menu.members_menu, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

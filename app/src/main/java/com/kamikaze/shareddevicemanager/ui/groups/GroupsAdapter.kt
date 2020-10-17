@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.kamikaze.shareddevicemanager.databinding.FragmentGroupItemBinding
+import com.kamikaze.shareddevicemanager.databinding.FragmentGroupsItemBinding
 import com.kamikaze.shareddevicemanager.model.data.Group
 
 class GroupsAdapter(
@@ -20,7 +20,7 @@ class GroupsAdapter(
         contentHolder.bind(viewModel, item)
     }
 
-    class ContentViewHolder(val binding: FragmentGroupItemBinding) :
+    class ContentViewHolder(val binding: FragmentGroupsItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(viewModel: GroupsViewModel, item: Group) {
             binding.viewModel = viewModel
@@ -31,7 +31,7 @@ class GroupsAdapter(
         companion object {
             fun from(parent: ViewGroup): ContentViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = FragmentGroupItemBinding.inflate(layoutInflater, parent, false)
+                val binding = FragmentGroupsItemBinding.inflate(layoutInflater, parent, false)
                 return ContentViewHolder(binding)
             }
         }

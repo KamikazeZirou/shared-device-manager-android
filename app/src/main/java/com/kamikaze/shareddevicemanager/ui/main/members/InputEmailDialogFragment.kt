@@ -1,4 +1,4 @@
-package com.kamikaze.shareddevicemanager.ui.main.memberlist
+package com.kamikaze.shareddevicemanager.ui.main.members
 
 import android.app.Dialog
 import android.content.Context

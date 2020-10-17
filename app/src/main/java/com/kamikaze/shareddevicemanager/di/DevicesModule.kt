@@ -1,8 +1,8 @@
 package com.kamikaze.shareddevicemanager.di
 
 import androidx.lifecycle.ViewModel
-import com.kamikaze.shareddevicemanager.ui.main.memberlist.MemberListFragment
-import com.kamikaze.shareddevicemanager.ui.main.memberlist.MemberListViewModel
+import com.kamikaze.shareddevicemanager.ui.main.devices.DevicesFragment
+import com.kamikaze.shareddevicemanager.ui.main.devices.DevicesViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -13,16 +13,16 @@ import kotlinx.coroutines.FlowPreview
 @FlowPreview
 @ExperimentalCoroutinesApi
 @Module
-abstract class MemberListModule {
+abstract class DevicesModule {
     @ContributesAndroidInjector(
         modules = [
             ViewModelBuilder::class
         ]
     )
-    internal abstract fun memberListFragment(): MemberListFragment
+    internal abstract fun devicesFragment(): DevicesFragment
 
     @Binds
     @IntoMap
-    @ViewModelKey(MemberListViewModel::class)
-    abstract fun bindViewModel(viewModel: MemberListViewModel): ViewModel
+    @ViewModelKey(DevicesViewModel::class)
+    abstract fun bindViewModel(viewModel: DevicesViewModel): ViewModel
 }

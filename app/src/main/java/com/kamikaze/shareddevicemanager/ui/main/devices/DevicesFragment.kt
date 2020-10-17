@@ -1,4 +1,4 @@
-package com.kamikaze.shareddevicemanager.ui.main.devicelist
+package com.kamikaze.shareddevicemanager.ui.main.devices
 
 import android.os.Bundle
 import android.view.*
@@ -6,21 +6,20 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kamikaze.shareddevicemanager.R
-import com.kamikaze.shareddevicemanager.databinding.FragmentDeviceItemListBinding
+import com.kamikaze.shareddevicemanager.databinding.FragmentDevicesBinding
 import com.kamikaze.shareddevicemanager.ui.common.openPrivacyPolicy
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.fragment_device_item_list.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
 
 @FlowPreview
 @ExperimentalCoroutinesApi
-class DeviceListFragment : DaggerFragment() {
-    private lateinit var binding: FragmentDeviceItemListBinding
+class DevicesFragment : DaggerFragment() {
+    private lateinit var binding: FragmentDevicesBinding
 
     @Inject
-    lateinit var viewModel: DeviceListViewModel
+    lateinit var viewModel: DevicesViewModel
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -33,23 +32,23 @@ class DeviceListFragment : DaggerFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentDeviceItemListBinding.inflate(inflater, container, false)
+        binding = FragmentDevicesBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
         // Set the adapter
         binding.list.apply {
             layoutManager = LinearLayoutManager(context)
-            adapter = DeviceListAdapter(viewModel)
+            adapter = DevicesAdapter(viewModel)
         }
 
         viewModel.devices.observe(viewLifecycleOwner, Observer {
-            (list.adapter as DeviceListAdapter).submitList(it)
+            (binding.list.adapter as DevicesAdapter).submitList(it)
         })
 
         viewModel.openDeviceEvent.observe(viewLifecycleOwner, Observer {
             val deviceId = it.getContentIfNotHandled() ?: return@Observer
-            val action = DeviceListFragmentDirections.actionShowDeviceDetail(deviceId)
+            val action = DevicesFragmentDirections.actionShowDeviceDetail(deviceId)
             findNavController().navigate(action)
         })
 
@@ -58,7 +57,7 @@ class DeviceListFragment : DaggerFragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.device_list_menu, menu)
+        inflater.inflate(R.menu.devices_menu, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -79,6 +78,6 @@ class DeviceListFragment : DaggerFragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance() = DeviceListFragment()
+        fun newInstance() = DevicesFragment()
     }
 }

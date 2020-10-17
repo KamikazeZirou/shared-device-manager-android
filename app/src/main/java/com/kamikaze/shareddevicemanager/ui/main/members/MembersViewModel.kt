@@ -1,4 +1,4 @@
-package com.kamikaze.shareddevicemanager.ui.main.memberlist
+package com.kamikaze.shareddevicemanager.ui.main.members
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,7 +12,7 @@ import com.kamikaze.shareddevicemanager.util.Event
 import kotlinx.coroutines.flow.flatMapLatest
 import javax.inject.Inject
 
-class MemberListViewModel @Inject constructor(
+class MembersViewModel @Inject constructor(
     private val authService: IAuthService,
     private val groupService: GroupApplicationService,
     private val memberRepository: IMemberRepository

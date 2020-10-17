@@ -11,7 +11,7 @@
 
         <variable
             name="viewModel"
-            type="com.kamikaze.shareddevicemanager.ui.main.memberlist.MemberListViewModel" />
+            type="com.kamikaze.shareddevicemanager.ui.main.members.MembersViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
