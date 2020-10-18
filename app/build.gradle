@@ -10,6 +10,8 @@ apply plugin: 'androidx.navigation.safeargs.kotlin'
 
 apply plugin: 'com.google.gms.google-services'
 
+apply plugin: 'dagger.hilt.android.plugin'
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
@@ -20,6 +22,7 @@ android {
         versionCode 4
         versionName "0.1.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        javaCompileOptions.annotationProcessorOptions.arguments['dagger.hilt.disableModulesHaveInstallInCheck'] = 'true'
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
     }
@@ -79,10 +82,25 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation 'com.google.android.material:material:1.2.1'
 
+    // Firebase
     implementation 'com.google.android.gms:play-services-auth:18.1.0'
     implementation 'com.google.firebase:firebase-analytics:17.6.0'
     implementation 'com.google.firebase:firebase-firestore:21.7.1'
     implementation 'com.google.firebase:firebase-auth:19.4.0'
     implementation 'com.google.firebase:firebase-iid:20.3.0'
     implementation 'com.firebaseui:firebase-ui-auth:6.2.0'
+
+    // Hilt dependencies
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+
+    // Hilt ViewModel extension
+    def hilt_jetpack_version = "1.0.0-alpha02"
+    implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hilt_jetpack_version"
+    kapt "androidx.hilt:hilt-compiler:$hilt_jetpack_version"
+
+    // Hilt testing dependencies
+//    androidTestImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
+//    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hilt_version"
+//    kaptAndroidTest "androidx.hilt:hilt-compiler:$hilt_jetpack_version"
 }
