@@ -1,11 +1,11 @@
 package com.kamikaze.shareddevicemanager.ui.main
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.kamikaze.shareddevicemanager.model.service.AuthState
 import com.kamikaze.shareddevicemanager.model.service.IAuthService
-import javax.inject.Inject
 
-class MainViewModel @Inject constructor(
+class MainViewModel @ViewModelInject constructor(
     private val authService: IAuthService
 ) : ViewModel() {
     val isSigningIn = MutableLiveData<Boolean>().apply {

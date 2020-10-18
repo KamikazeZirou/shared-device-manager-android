@@ -5,25 +5,26 @@ import android.app.Dialog
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.DatePicker
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import com.kamikaze.shareddevicemanager.R
 import com.kamikaze.shareddevicemanager.databinding.ActivityBorrowDeviceBinding
-import dagger.android.support.DaggerAppCompatActivity
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 
 @FlowPreview
 @ExperimentalCoroutinesApi
-class BorrowDeviceActivity : DaggerAppCompatActivity(), DatePickerDialog.OnDateSetListener {
+@AndroidEntryPoint
+class BorrowDeviceActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
     private lateinit var binding: ActivityBorrowDeviceBinding
 
-    @Inject
-    lateinit var viewModel: BorrowDeviceViewModel
+    private val viewModel: BorrowDeviceViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

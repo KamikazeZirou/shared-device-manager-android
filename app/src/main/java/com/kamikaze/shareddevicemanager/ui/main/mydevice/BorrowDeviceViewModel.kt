@@ -1,5 +1,6 @@
 package com.kamikaze.shareddevicemanager.ui.main.mydevice
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.kamikaze.shareddevicemanager.model.data.Device
 import com.kamikaze.shareddevicemanager.model.service.DeviceApplicationService
@@ -12,11 +13,10 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import java.util.*
-import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
 @FlowPreview
-class BorrowDeviceViewModel @Inject constructor(
+class BorrowDeviceViewModel @ViewModelInject constructor(
     private val deviceApplicationService: DeviceApplicationService
 ) :
     ViewModel() {

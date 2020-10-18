@@ -3,21 +3,22 @@ package com.kamikaze.shareddevicemanager.ui.main.members
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.*
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kamikaze.shareddevicemanager.R
 import com.kamikaze.shareddevicemanager.databinding.FragmentMembersBinding
 import com.kamikaze.shareddevicemanager.ui.common.AlertDialogFragment
 import com.kamikaze.shareddevicemanager.ui.common.openPrivacyPolicy
-import dagger.android.support.DaggerFragment
-import javax.inject.Inject
+import dagger.hilt.android.AndroidEntryPoint
 
-class MembersFragment : DaggerFragment(),
+@AndroidEntryPoint
+class MembersFragment : Fragment(),
     InputEmailDialogFragment.InputEmailDialogListener,
     AlertDialogFragment.AlertDialogListener {
     private lateinit var binding: FragmentMembersBinding
 
-    @Inject
-    lateinit var viewModel: MembersViewModel
+    private val viewModel: MembersViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

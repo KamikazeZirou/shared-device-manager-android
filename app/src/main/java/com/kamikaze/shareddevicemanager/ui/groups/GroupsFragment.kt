@@ -4,19 +4,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kamikaze.shareddevicemanager.R
-import dagger.android.support.DaggerFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_groups.*
-import javax.inject.Inject
 
-class GroupsFragment : DaggerFragment() {
+@AndroidEntryPoint
+class GroupsFragment : Fragment() {
     companion object {
         fun newInstance() = GroupsFragment()
     }
 
-    @Inject
-    lateinit var viewModel: GroupsViewModel
+    private val viewModel: GroupsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

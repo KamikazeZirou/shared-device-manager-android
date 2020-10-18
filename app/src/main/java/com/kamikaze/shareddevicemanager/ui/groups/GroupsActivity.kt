@@ -3,7 +3,9 @@ package com.kamikaze.shareddevicemanager.ui.groups
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.kamikaze.shareddevicemanager.R
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class GroupsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

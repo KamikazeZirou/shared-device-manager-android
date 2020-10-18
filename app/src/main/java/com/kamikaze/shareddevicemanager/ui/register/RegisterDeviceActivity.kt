@@ -3,8 +3,10 @@ package com.kamikaze.shareddevicemanager.ui.register
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.kamikaze.shareddevicemanager.R
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class RegisterDeviceActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

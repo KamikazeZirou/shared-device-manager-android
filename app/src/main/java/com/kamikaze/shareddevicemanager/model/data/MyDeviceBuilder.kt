@@ -4,12 +4,15 @@ import android.content.Context
 import android.os.Build
 import com.google.firebase.iid.FirebaseInstanceId
 import com.kamikaze.shareddevicemanager.R
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CompletableDeferred
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class MyDeviceBuilder @Inject constructor(private val context: Context) : IMyDeviceBuilder {
+class MyDeviceBuilder @Inject constructor(
+    @ApplicationContext private val context: Context
+) : IMyDeviceBuilder {
     private var instanceId: String = ""
 
     init {
@@ -19,14 +22,14 @@ class MyDeviceBuilder @Inject constructor(private val context: Context) : IMyDev
     override suspend fun build(name: String): Device {
         if (instanceId.isEmpty()) {
             val deferred = CompletableDeferred<Unit>()
-                FirebaseInstanceId.getInstance().instanceId
-                    .addOnSuccessListener {
-                        instanceId = it.id
-                        deferred.complete(Unit)
-                    }
-                    .addOnFailureListener {
-                        deferred.completeExceptionally(it)
-                    }
+            FirebaseInstanceId.getInstance().instanceId
+                .addOnSuccessListener {
+                    instanceId = it.id
+                    deferred.complete(Unit)
+                }
+                .addOnFailureListener {
+                    deferred.completeExceptionally(it)
+                }
             deferred.await()
         }
 

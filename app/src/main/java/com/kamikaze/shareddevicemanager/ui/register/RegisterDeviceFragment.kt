@@ -7,12 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.kamikaze.shareddevicemanager.R
 import com.kamikaze.shareddevicemanager.databinding.FragmentRegisterDeviceBinding
-import dagger.android.support.DaggerFragment
-import javax.inject.Inject
+import dagger.hilt.android.AndroidEntryPoint
 
-class RegisterDeviceFragment : DaggerFragment() {
+@AndroidEntryPoint
+class RegisterDeviceFragment : Fragment() {
 
     companion object {
         fun newInstance() = RegisterDeviceFragment()
@@ -20,8 +22,7 @@ class RegisterDeviceFragment : DaggerFragment() {
 
     private lateinit var binding: FragmentRegisterDeviceBinding
 
-    @Inject
-    lateinit var viewModel: RegisterDeviceViewModel
+    private val viewModel: RegisterDeviceViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

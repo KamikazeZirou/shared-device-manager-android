@@ -4,9 +4,12 @@ import com.kamikaze.shareddevicemanager.model.data.IMyDeviceBuilder
 import com.kamikaze.shareddevicemanager.model.data.MyDeviceBuilder
 import dagger.Binds
 import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
+@InstallIn(ApplicationComponent::class)
 @Module
 abstract class DeviceModule {
     @Binds

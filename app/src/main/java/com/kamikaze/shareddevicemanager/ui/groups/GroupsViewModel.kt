@@ -1,5 +1,6 @@
 package com.kamikaze.shareddevicemanager.ui.groups
 
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
@@ -9,10 +10,9 @@ import com.kamikaze.shareddevicemanager.model.service.IAuthService
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
-class GroupsViewModel @Inject constructor(
+class GroupsViewModel @ViewModelInject constructor(
     auth: IAuthService,
     private val groupRepository: IGroupRepository
 ) :
