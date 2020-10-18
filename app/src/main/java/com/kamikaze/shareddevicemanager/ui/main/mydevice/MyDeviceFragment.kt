@@ -5,6 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.kamikaze.shareddevicemanager.R
 import com.kamikaze.shareddevicemanager.databinding.FragmentMyDeviceBinding
@@ -13,22 +15,21 @@ import com.kamikaze.shareddevicemanager.ui.common.AlertDialogFragment
 import com.kamikaze.shareddevicemanager.ui.common.openPrivacyPolicy
 import com.kamikaze.shareddevicemanager.ui.detail.DeviceDetailAdapter
 import com.kamikaze.shareddevicemanager.ui.register.RegisterDeviceActivity
-import dagger.android.support.DaggerFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import javax.inject.Inject
 
 @FlowPreview
 @ExperimentalCoroutinesApi
-class MyDeviceFragment : DaggerFragment(), AlertDialogFragment.AlertDialogListener {
+@AndroidEntryPoint
+class MyDeviceFragment : Fragment(), AlertDialogFragment.AlertDialogListener {
     companion object {
         private const val CONFIRM_DISPOSAL_DIALOG_TAG = "ConfirmDisposalDialog"
     }
 
     private lateinit var binding: FragmentMyDeviceBinding
 
-    @Inject
-    lateinit var viewModel: MyDeviceViewModel
+    private val viewModel: MyDeviceViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,

@@ -8,7 +8,10 @@ import com.kamikaze.shareddevicemanager.model.repository.firestore.FirestoreGrou
 import com.kamikaze.shareddevicemanager.model.repository.firestore.FirestoreMemberRepository
 import dagger.Binds
 import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
 
+@InstallIn(ApplicationComponent::class)
 @Module
 abstract class FirestoreRepositoryModule {
     @Binds

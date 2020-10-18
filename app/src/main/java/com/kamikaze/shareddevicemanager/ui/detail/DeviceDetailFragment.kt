@@ -3,17 +3,19 @@ package com.kamikaze.shareddevicemanager.ui.detail
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.kamikaze.shareddevicemanager.R
 import com.kamikaze.shareddevicemanager.databinding.FragmentDeviceDetailBinding
-import dagger.android.support.DaggerFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import javax.inject.Inject
 
 @FlowPreview
 @ExperimentalCoroutinesApi
-class DeviceDetailFragment : DaggerFragment() {
+@AndroidEntryPoint
+class DeviceDetailFragment : Fragment() {
 
     companion object {
         const val EXTRA_DEVICE_ID = "device_id"
@@ -27,8 +29,7 @@ class DeviceDetailFragment : DaggerFragment() {
         }
     }
 
-    @Inject
-    lateinit var viewModel: DeviceDetailViewModel
+    private val viewModel: DeviceDetailViewModel by viewModels()
 
     private lateinit var binding: FragmentDeviceDetailBinding
 
@@ -41,14 +42,14 @@ class DeviceDetailFragment : DaggerFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.list.adapter = DeviceDetailAdapter()
 
-        viewModel.initialize(arguments!!.getString(EXTRA_DEVICE_ID, ""))
+        viewModel.initialize(requireArguments().getString(EXTRA_DEVICE_ID, ""))
 
         viewModel.items.observe(viewLifecycleOwner, Observer {
             (binding.list.adapter as DeviceDetailAdapter).submitList(it)
         })
 
         viewModel.canLink.observe(viewLifecycleOwner, Observer {
-            activity!!.invalidateOptionsMenu()
+            requireActivity().invalidateOptionsMenu()
         })
 
         return binding.root

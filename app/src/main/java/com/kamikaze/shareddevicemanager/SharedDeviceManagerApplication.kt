@@ -1,22 +1,22 @@
 package com.kamikaze.shareddevicemanager
 
 import android.app.Activity
+import android.app.Application
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import androidx.multidex.MultiDex
-import com.kamikaze.shareddevicemanager.di.DaggerApplicationComponent
 import com.kamikaze.shareddevicemanager.model.service.DeviceApplicationService
 import com.kamikaze.shareddevicemanager.model.service.GroupApplicationService
 import com.kamikaze.shareddevicemanager.model.service.IAuthService
-import dagger.android.AndroidInjector
-import dagger.android.support.DaggerApplication
+import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.*
 import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
 @FlowPreview
-class SharedDeviceManagerApplication : DaggerApplication() {
+@HiltAndroidApp
+class SharedDeviceManagerApplication : Application() {
     @Inject
     lateinit var authService: IAuthService
 
@@ -74,10 +74,6 @@ class SharedDeviceManagerApplication : DaggerApplication() {
             override fun onActivityResumed(p0: Activity) {}
 
         })
-    }
-
-    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
-        return DaggerApplicationComponent.factory().create(applicationContext)
     }
 }
 
