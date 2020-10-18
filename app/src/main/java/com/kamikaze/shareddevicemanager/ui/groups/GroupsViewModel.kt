@@ -15,7 +15,6 @@ class GroupsViewModel @ViewModelInject constructor(
     private val groupRepository: IGroupRepository
 ) :
     ViewModel() {
-
     val groups: LiveData<List<Group>> by lazy {
         auth.userFlow
             .flatMapLatest {
@@ -27,4 +26,9 @@ class GroupsViewModel @ViewModelInject constructor(
             }
             .asLiveData()
     }
+
+    fun add(groupName: String) {
+        // TODO
+    }
+
 }

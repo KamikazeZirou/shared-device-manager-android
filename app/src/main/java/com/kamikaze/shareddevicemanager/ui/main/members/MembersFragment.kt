@@ -2,6 +2,7 @@ package com.kamikaze.shareddevicemanager.ui.main.members
 
 import android.content.DialogInterface
 import android.os.Bundle
+import android.text.InputType
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -16,7 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MembersFragment : Fragment(),
-    InputEmailDialogFragment.InputEmailDialogListener,
+    InputDialogFragment.InputDialogListener,
     AlertDialogFragment.AlertDialogListener {
     private lateinit var binding: FragmentMembersBinding
 
@@ -39,8 +40,13 @@ class MembersFragment : Fragment(),
             adapter = MembersAdapter(viewModel)
         }
 
-        binding.fab.setOnClickListener {
-            InputEmailDialogFragment.newInstance(this, getString(R.string.add_member))
+        binding.addMemberFab.setOnClickListener {
+            InputDialogFragment.newInstance(
+                this,
+                getString(R.string.add_member),
+                getString(R.string.email),
+                InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS,
+            )
                 .show(parentFragmentManager, "InputEmailDialog")
         }
 
@@ -92,9 +98,9 @@ class MembersFragment : Fragment(),
         }
     }
 
-    override fun onClickListener(tag: String?, which: Int, email: String) {
+    override fun onClickListener(tag: String?, which: Int, text: String) {
         if (which == DialogInterface.BUTTON_POSITIVE) {
-            viewModel.add(email)
+            viewModel.add(text)
         }
     }
 
