@@ -36,7 +36,7 @@ class MembersViewModelTest {
         }
         mockMemberRepository = mock()
         viewModel =
-            MembersViewModel(mockAuthService, groupApplicationService, mockMemberRepository)
+            MembersViewModel(groupApplicationService, mockMemberRepository)
     }
 
     @Test
@@ -90,12 +90,5 @@ class MembersViewModelTest {
         viewModel.remove("remove-member-id")
         verify(mockMemberRepository, times(1))
             .remove(eq("testGroupId"), eq("remove-member-id"))
-    }
-
-    @Test
-    fun signOut() {
-        viewModel.signOut()
-        verify(mockAuthService, times(1))
-            .signOut()
     }
 }

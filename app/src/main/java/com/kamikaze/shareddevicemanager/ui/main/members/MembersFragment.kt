@@ -4,12 +4,14 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kamikaze.shareddevicemanager.R
 import com.kamikaze.shareddevicemanager.databinding.FragmentMembersBinding
 import com.kamikaze.shareddevicemanager.ui.common.AlertDialogFragment
 import com.kamikaze.shareddevicemanager.ui.common.openPrivacyPolicy
+import com.kamikaze.shareddevicemanager.ui.main.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -18,6 +20,7 @@ class MembersFragment : Fragment(),
     AlertDialogFragment.AlertDialogListener {
     private lateinit var binding: FragmentMembersBinding
 
+    private val mainViewModel: MainViewModel by activityViewModels()
     private val viewModel: MembersViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,7 +79,7 @@ class MembersFragment : Fragment(),
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.sign_out -> {
-                viewModel.signOut()
+                mainViewModel.signOut()
                 true
             }
             R.id.privacy_policy -> {

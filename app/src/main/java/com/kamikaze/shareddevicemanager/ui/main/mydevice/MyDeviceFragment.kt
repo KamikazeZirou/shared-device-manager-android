@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.kamikaze.shareddevicemanager.R
@@ -14,6 +15,7 @@ import com.kamikaze.shareddevicemanager.model.data.Device
 import com.kamikaze.shareddevicemanager.ui.common.AlertDialogFragment
 import com.kamikaze.shareddevicemanager.ui.common.openPrivacyPolicy
 import com.kamikaze.shareddevicemanager.ui.detail.DeviceDetailAdapter
+import com.kamikaze.shareddevicemanager.ui.main.MainViewModel
 import com.kamikaze.shareddevicemanager.ui.register.RegisterDeviceActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -29,6 +31,7 @@ class MyDeviceFragment : Fragment(), AlertDialogFragment.AlertDialogListener {
 
     private lateinit var binding: FragmentMyDeviceBinding
 
+    private val mainViewModel: MainViewModel by activityViewModels()
     private val viewModel: MyDeviceViewModel by viewModels()
 
     override fun onCreateView(
@@ -94,7 +97,7 @@ class MyDeviceFragment : Fragment(), AlertDialogFragment.AlertDialogListener {
                 true
             }
             R.id.sign_out -> {
-                viewModel.signOut()
+                mainViewModel.signOut()
                 true
             }
             R.id.privacy_policy -> {

@@ -8,6 +8,8 @@ import com.kamikaze.shareddevicemanager.model.service.AuthState
 import com.kamikaze.shareddevicemanager.model.service.IAuthService
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
@@ -27,13 +29,14 @@ class MainViewModelTest {
 
     private lateinit var coroutineDispatcher: TestCoroutineDispatcher
     private lateinit var viewModel: MainViewModel
+    private lateinit var mockAuthService: IAuthService
 
     @Before
     fun setUp() {
         coroutineDispatcher = TestCoroutineDispatcher()
         Dispatchers.setMain(coroutineDispatcher)
 
-        val mockAuthService = mock<IAuthService> {
+        mockAuthService = mock {
             // 5秒間隔で典型的な認証状態の遷移をさせる
             // 未知(起動直後) -> サインイン(FirebaseAuthの初期化完了) -> サインアウト(ユーザによる操作)
             on { authStateFlow } doReturn flow {
@@ -72,5 +75,11 @@ class MainViewModelTest {
         assertThat(viewModel.shouldSignIn.value).isFalse()
         coroutineDispatcher.advanceTimeBy(STATE_TRANSITION_INTERVAL)
         assertThat(viewModel.shouldSignIn.value).isFalse()
+    }
+
+    @Test
+    fun signOut() {
+        viewModel.signOut()
+        verify(mockAuthService, times(1)).signOut()
     }
 }

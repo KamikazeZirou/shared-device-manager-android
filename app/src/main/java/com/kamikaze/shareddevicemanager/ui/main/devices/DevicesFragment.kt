@@ -3,6 +3,7 @@ package com.kamikaze.shareddevicemanager.ui.main.devices
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.kamikaze.shareddevicemanager.R
 import com.kamikaze.shareddevicemanager.databinding.FragmentDevicesBinding
 import com.kamikaze.shareddevicemanager.ui.common.openPrivacyPolicy
+import com.kamikaze.shareddevicemanager.ui.main.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -20,6 +22,7 @@ import kotlinx.coroutines.FlowPreview
 class DevicesFragment : Fragment() {
     private lateinit var binding: FragmentDevicesBinding
 
+    private val mainViewModel: MainViewModel by activityViewModels()
     private val viewModel: DevicesViewModel by viewModels()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -64,7 +67,7 @@ class DevicesFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.sign_out -> {
-                viewModel.signOut()
+                mainViewModel.signOut()
                 true
             }
             R.id.privacy_policy -> {

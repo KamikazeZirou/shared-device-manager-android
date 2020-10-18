@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.kamikaze.shareddevicemanager.model.service.DeviceApplicationService
-import com.kamikaze.shareddevicemanager.model.service.IAuthService
 import com.kamikaze.shareddevicemanager.util.Event
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -14,8 +13,7 @@ import kotlinx.coroutines.FlowPreview
 @ExperimentalCoroutinesApi
 @FlowPreview
 class DevicesViewModel @ViewModelInject constructor(
-    private val deviceApplicationService: DeviceApplicationService,
-    private val auth: IAuthService
+    private val deviceApplicationService: DeviceApplicationService
 ) :
     ViewModel() {
 
@@ -27,9 +25,5 @@ class DevicesViewModel @ViewModelInject constructor(
     @SuppressWarnings("unused")
     fun openDevice(deviceId: String) {
         _openDeviceEvent.value = Event(deviceId)
-    }
-
-    fun signOut() {
-        auth.signOut()
     }
 }

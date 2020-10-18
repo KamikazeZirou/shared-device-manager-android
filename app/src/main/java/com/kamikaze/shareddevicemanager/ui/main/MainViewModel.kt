@@ -33,4 +33,8 @@ class MainViewModel @ViewModelInject constructor(
         _shouldSignIn.value =
             (isSigningIn.value == false && _authState.value == AuthState.SIGN_OUT)
     }
+
+    fun signOut() {
+        authService.signOut()
+    }
 }

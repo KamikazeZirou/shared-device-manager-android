@@ -8,12 +8,10 @@ import androidx.lifecycle.asLiveData
 import com.kamikaze.shareddevicemanager.model.data.Member
 import com.kamikaze.shareddevicemanager.model.repository.IMemberRepository
 import com.kamikaze.shareddevicemanager.model.service.GroupApplicationService
-import com.kamikaze.shareddevicemanager.model.service.IAuthService
 import com.kamikaze.shareddevicemanager.util.Event
 import kotlinx.coroutines.flow.flatMapLatest
 
 class MembersViewModel @ViewModelInject constructor(
-    private val authService: IAuthService,
     private val groupService: GroupApplicationService,
     private val memberRepository: IMemberRepository
 ) : ViewModel() {
@@ -24,10 +22,6 @@ class MembersViewModel @ViewModelInject constructor(
                 memberRepository.get(it)
             }
             .asLiveData()
-    }
-
-    fun signOut() {
-        authService.signOut()
     }
 
     fun add(email: String) {
