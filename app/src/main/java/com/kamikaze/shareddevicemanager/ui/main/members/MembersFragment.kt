@@ -40,7 +40,7 @@ class MembersFragment : Fragment(),
             adapter = MembersAdapter(viewModel)
         }
 
-        binding.fab.setOnClickListener {
+        binding.addMemberFab.setOnClickListener {
             InputDialogFragment.newInstance(
                 this,
                 getString(R.string.add_member),
@@ -98,9 +98,9 @@ class MembersFragment : Fragment(),
         }
     }
 
-    override fun onClickListener(tag: String?, which: Int, email: String) {
+    override fun onClickListener(tag: String?, which: Int, text: String) {
         if (which == DialogInterface.BUTTON_POSITIVE) {
-            viewModel.add(email)
+            viewModel.add(text)
         }
     }
 
