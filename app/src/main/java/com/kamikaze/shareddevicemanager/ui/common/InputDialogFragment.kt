@@ -1,4 +1,4 @@
-package com.kamikaze.shareddevicemanager.ui.main.members
+package com.kamikaze.shareddevicemanager.ui.common
 
 import android.app.Dialog
 import android.content.Context
@@ -47,7 +47,7 @@ class InputDialogFragment : DialogFragment() {
         requireArguments().getString(KEY_LABEL)!!
     }
     private val inputType: Int by lazy {
-        requireArguments().getInt(KEY_INPUT_TYPE)!!
+        requireArguments().getInt(KEY_INPUT_TYPE)
     }
 
     override fun onAttach(context: Context) {

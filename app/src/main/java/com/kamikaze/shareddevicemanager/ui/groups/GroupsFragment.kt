@@ -10,7 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.kamikaze.shareddevicemanager.R
-import com.kamikaze.shareddevicemanager.ui.main.members.InputDialogFragment
+import com.kamikaze.shareddevicemanager.ui.common.InputDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_groups.*
 

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.kamikaze.shareddevicemanager.R
 import com.kamikaze.shareddevicemanager.databinding.FragmentMembersBinding
 import com.kamikaze.shareddevicemanager.ui.common.AlertDialogFragment
+import com.kamikaze.shareddevicemanager.ui.common.InputDialogFragment
 import com.kamikaze.shareddevicemanager.ui.common.openPrivacyPolicy
 import com.kamikaze.shareddevicemanager.ui.main.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
