@@ -6,7 +6,6 @@ import com.google.firebase.firestore.Query
 import com.kamikaze.shareddevicemanager.model.data.Invite
 import com.kamikaze.shareddevicemanager.model.data.Member
 import com.kamikaze.shareddevicemanager.model.repository.IMemberRepository
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -14,7 +13,6 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 
-@ExperimentalCoroutinesApi
 @Singleton
 class FirestoreMemberRepository @Inject constructor() :
     IMemberRepository {

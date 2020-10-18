@@ -5,11 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.navArgs
 import com.kamikaze.shareddevicemanager.R
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
 
-@FlowPreview
-@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class DeviceDetailActivity : AppCompatActivity() {
     companion object {

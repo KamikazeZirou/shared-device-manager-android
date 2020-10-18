@@ -10,11 +10,12 @@ import com.kamikaze.shareddevicemanager.model.service.DeviceApplicationService
 import com.kamikaze.shareddevicemanager.model.service.GroupApplicationService
 import com.kamikaze.shareddevicemanager.model.service.IAuthService
 import dagger.hilt.android.HiltAndroidApp
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@ExperimentalCoroutinesApi
-@FlowPreview
 @HiltAndroidApp
 class SharedDeviceManagerApplication : Application() {
     @Inject

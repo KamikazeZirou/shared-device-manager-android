@@ -4,13 +4,9 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.kamikaze.shareddevicemanager.model.data.Device
 import com.kamikaze.shareddevicemanager.model.service.DeviceApplicationService
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-@FlowPreview
-@ExperimentalCoroutinesApi
 class RegisterDeviceViewModel
 @ViewModelInject constructor(
     private val deviceApplicationService: DeviceApplicationService

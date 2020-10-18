@@ -7,11 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.kamikaze.shareddevicemanager.databinding.FragmentDevicesItemBinding
 import com.kamikaze.shareddevicemanager.model.data.Device
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
 
-@FlowPreview
-@ExperimentalCoroutinesApi
 class DevicesAdapter(
     private val viewModel: DevicesViewModel
 ) : ListAdapter<Device, DevicesAdapter.ViewHolder>(DeviceDiffCallback()) {

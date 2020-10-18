@@ -9,11 +9,7 @@ import androidx.lifecycle.Observer
 import com.kamikaze.shareddevicemanager.R
 import com.kamikaze.shareddevicemanager.databinding.FragmentDeviceDetailBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
 
-@FlowPreview
-@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class DeviceDetailFragment : Fragment() {
 

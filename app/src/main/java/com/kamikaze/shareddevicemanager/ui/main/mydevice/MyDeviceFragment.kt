@@ -18,11 +18,7 @@ import com.kamikaze.shareddevicemanager.ui.detail.DeviceDetailAdapter
 import com.kamikaze.shareddevicemanager.ui.main.MainViewModel
 import com.kamikaze.shareddevicemanager.ui.register.RegisterDeviceActivity
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
 
-@FlowPreview
-@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class MyDeviceFragment : Fragment(), AlertDialogFragment.AlertDialogListener {
     companion object {
@@ -55,7 +51,7 @@ class MyDeviceFragment : Fragment(), AlertDialogFragment.AlertDialogListener {
         })
 
         viewModel.deviceStatus.observe(viewLifecycleOwner, Observer {
-            activity!!.invalidateOptionsMenu()
+            requireActivity().invalidateOptionsMenu()
         })
 
         return binding.root

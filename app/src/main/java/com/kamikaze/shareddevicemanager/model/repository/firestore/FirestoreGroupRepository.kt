@@ -4,7 +4,6 @@ import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
 import com.kamikaze.shareddevicemanager.model.data.Group
 import com.kamikaze.shareddevicemanager.model.repository.IGroupRepository
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -14,7 +13,6 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 
-@ExperimentalCoroutinesApi
 @Singleton
 class FirestoreGroupRepository @Inject constructor() :
     IGroupRepository {

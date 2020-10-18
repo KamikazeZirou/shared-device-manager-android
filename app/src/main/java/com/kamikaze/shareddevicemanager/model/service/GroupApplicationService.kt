@@ -1,14 +1,12 @@
 package com.kamikaze.shareddevicemanager.model.service
 
 import com.kamikaze.shareddevicemanager.model.repository.IGroupRepository
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@ExperimentalCoroutinesApi
 @Singleton
 open class GroupApplicationService @Inject constructor(
     private val authService: IAuthService,

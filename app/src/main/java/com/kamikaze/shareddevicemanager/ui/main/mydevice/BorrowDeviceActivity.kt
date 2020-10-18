@@ -13,13 +13,9 @@ import androidx.lifecycle.lifecycleScope
 import com.kamikaze.shareddevicemanager.R
 import com.kamikaze.shareddevicemanager.databinding.ActivityBorrowDeviceBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.launch
 
 
-@FlowPreview
-@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class BorrowDeviceActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
     private lateinit var binding: ActivityBorrowDeviceBinding
@@ -89,7 +85,7 @@ class BorrowDeviceActivity : AppCompatActivity(), DatePickerDialog.OnDateSetList
             val day = args.getInt("day")
 
             return DatePickerDialog(
-                activity!!,
+                requireActivity(),
                 activity as? DatePickerDialog.OnDateSetListener,
                 year,
                 month,

@@ -13,8 +13,6 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
@@ -24,8 +22,6 @@ import org.junit.Rule
 import org.junit.Test
 import java.util.*
 
-@ExperimentalCoroutinesApi
-@FlowPreview
 class DeviceApplicationServiceTest {
     @get:Rule
     val mainCoroutineRule = MainCoroutineRule()

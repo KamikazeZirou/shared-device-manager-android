@@ -6,12 +6,8 @@ import com.kamikaze.shareddevicemanager.R
 import com.kamikaze.shareddevicemanager.model.data.Device
 import com.kamikaze.shareddevicemanager.model.service.DeviceApplicationService
 import com.kamikaze.shareddevicemanager.ui.util.toVisibleStr
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.launch
 
-@ExperimentalCoroutinesApi
-@FlowPreview
 class DeviceDetailViewModel @ViewModelInject constructor(
     private val deviceApplicationService: DeviceApplicationService
 ) :

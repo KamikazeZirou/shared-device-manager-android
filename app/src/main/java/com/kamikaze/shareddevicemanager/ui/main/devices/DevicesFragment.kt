@@ -13,11 +13,7 @@ import com.kamikaze.shareddevicemanager.databinding.FragmentDevicesBinding
 import com.kamikaze.shareddevicemanager.ui.common.openPrivacyPolicy
 import com.kamikaze.shareddevicemanager.ui.main.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
 
-@FlowPreview
-@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class DevicesFragment : Fragment() {
     private lateinit var binding: FragmentDevicesBinding

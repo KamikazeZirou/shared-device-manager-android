@@ -7,11 +7,9 @@ import androidx.lifecycle.asLiveData
 import com.kamikaze.shareddevicemanager.model.data.Group
 import com.kamikaze.shareddevicemanager.model.repository.IGroupRepository
 import com.kamikaze.shareddevicemanager.model.service.IAuthService
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 
-@ExperimentalCoroutinesApi
 class GroupsViewModel @ViewModelInject constructor(
     auth: IAuthService,
     private val groupRepository: IGroupRepository
