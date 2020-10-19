@@ -11,10 +11,9 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 
 class GroupsViewModel @ViewModelInject constructor(
-    auth: IAuthService,
+    private val auth: IAuthService,
     private val groupRepository: IGroupRepository
-) :
-    ViewModel() {
+) : ViewModel() {
     val groups: LiveData<List<Group>> by lazy {
         auth.userFlow
             .flatMapLatest {
@@ -28,7 +27,11 @@ class GroupsViewModel @ViewModelInject constructor(
     }
 
     fun add(groupName: String) {
-        // TODO
+        groupRepository.add(
+            Group(
+                name = groupName,
+                owner = auth.user?.id,
+            )
+        )
     }
-
 }

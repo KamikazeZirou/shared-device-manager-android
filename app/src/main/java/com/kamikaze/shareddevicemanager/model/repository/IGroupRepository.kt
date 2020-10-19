@@ -6,4 +6,5 @@ import kotlinx.coroutines.flow.Flow
 interface IGroupRepository {
     fun getMyGroup(ownerId: String): Flow<Group?>
     fun get(userId: String): Flow<List<Group>>
+    fun add(group: Group)
 }

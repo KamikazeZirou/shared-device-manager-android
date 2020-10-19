@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface IAuthService {
     val userFlow: Flow<User?>
+    val user: User?
     val authStateFlow: Flow<AuthState>
     suspend fun initialize()
     fun signOut()

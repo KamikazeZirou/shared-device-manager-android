@@ -22,6 +22,9 @@ class FirebaseAuthService @Inject constructor() :
     private val _userFlow = MutableStateFlow<User?>(null)
     override val userFlow: StateFlow<User?> = _userFlow
 
+    override val user: User?
+        get() = userFlow.value
+
     private val _authStateFlow = MutableStateFlow(AuthState.UNKNOWN)
     override val authStateFlow: Flow<AuthState> = _authStateFlow
 
