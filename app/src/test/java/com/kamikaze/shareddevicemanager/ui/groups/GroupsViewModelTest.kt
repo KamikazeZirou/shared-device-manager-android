@@ -2,16 +2,14 @@ package com.kamikaze.shareddevicemanager.ui.groups
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
+import com.kamikaze.shareddevicemanager.R
 import com.kamikaze.shareddevicemanager.helper.MainCoroutineRule
 import com.kamikaze.shareddevicemanager.helper.TestLifecycleOwner
 import com.kamikaze.shareddevicemanager.model.data.Group
 import com.kamikaze.shareddevicemanager.model.data.User
 import com.kamikaze.shareddevicemanager.model.repository.IGroupRepository
 import com.kamikaze.shareddevicemanager.model.service.IAuthService
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.*
 import kotlinx.coroutines.flow.flow
 import org.junit.Before
 import org.junit.Rule
@@ -48,6 +46,7 @@ class GroupsViewModelTest {
         }
         viewModel = GroupsViewModel(mockAuthService, mockGroupRepository)
         viewModel.groups.observe(TestLifecycleOwner()) {}
+        viewModel.error.observe(TestLifecycleOwner()) {}
     }
 
     @Test
@@ -61,6 +60,9 @@ class GroupsViewModelTest {
     @Test
     fun addGroup() {
         viewModel.add("test group")
+
+        val error = viewModel.error.value?.getContentIfNotHandled()
+        assertThat(error).isNull()
         verify(mockGroupRepository, times(1))
             .add(
                 Group(
@@ -68,5 +70,15 @@ class GroupsViewModelTest {
                     owner = "uid"
                 )
             )
+    }
+
+    @Test
+    fun addGroup_failed_when_group_name_is_empty() {
+        viewModel.add("")
+
+        val error = viewModel.error.value!!.getContentIfNotHandled()!!
+        assertThat(error).isEqualTo(GroupsViewModel.GroupOpError.ADD_FAILED_EMPTY_GROUP_NAME)
+        assertThat(error.messageId).isEqualTo(R.string.add_group_failed_when_group_name_is_empty)
+        verify(mockGroupRepository, never()).add(any())
     }
 }

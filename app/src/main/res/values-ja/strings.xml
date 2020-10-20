@@ -41,4 +41,5 @@
     <string name="add_group">グループ追加</string>
     <string name="remove_member">%1$sをメンバーから外しますか?</string>
     <string name="title_groups">グループ</string>
+    <string name="add_group_failed_when_group_name_is_empty">グループ名は1文字以上にしてください。</string>
 </resources>
