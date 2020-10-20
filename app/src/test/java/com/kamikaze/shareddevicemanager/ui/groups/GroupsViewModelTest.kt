@@ -78,7 +78,7 @@ class GroupsViewModelTest {
 
         val error = viewModel.error.value!!.getContentIfNotHandled()!!
         assertThat(error).isEqualTo(GroupsViewModel.GroupOpError.ADD_FAILED_EMPTY_GROUP_NAME)
-        assertThat(error.messageId).isEqualTo(R.string.add_group_failed_when_group_name_is_empty)
+        assertThat(error.messageId).isEqualTo(R.string.adding_group_failed_when_group_name_is_empty)
         verify(mockGroupRepository, never()).add(any())
     }
 }

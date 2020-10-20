@@ -48,6 +48,6 @@ class GroupsViewModel @ViewModelInject constructor(
     }
 
     enum class GroupOpError(@StringRes val messageId: Int) {
-        ADD_FAILED_EMPTY_GROUP_NAME(R.string.add_group_failed_when_group_name_is_empty);
+        ADD_FAILED_EMPTY_GROUP_NAME(R.string.adding_group_failed_when_group_name_is_empty);
     }
 }
