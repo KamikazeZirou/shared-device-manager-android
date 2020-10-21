@@ -77,6 +77,8 @@ class FirestoreDeviceRepository @Inject constructor() : IDeviceRepository {
     }.buffer(Channel.CONFLATED)
 
     override fun getByInstanceId(groupId: String, instanceId: String) = callbackFlow {
+        offer(null)
+
         val listenerRegistration = firestore.collection("groups")
             .document(groupId)
             .collection("devices")

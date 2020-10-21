@@ -8,7 +8,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.kamikaze.shareddevicemanager.R
 import com.kamikaze.shareddevicemanager.databinding.FragmentMyDeviceBinding
 import com.kamikaze.shareddevicemanager.model.data.Device
@@ -46,13 +45,13 @@ class MyDeviceFragment : Fragment(), AlertDialogFragment.AlertDialogListener {
         }
 
         binding.registeredDeviceView.adapter = DeviceDetailAdapter()
-        viewModel.items.observe(viewLifecycleOwner, Observer {
+        viewModel.items.observe(viewLifecycleOwner) {
             (binding.registeredDeviceView.adapter as DeviceDetailAdapter).submitList(it)
-        })
+        }
 
-        viewModel.deviceStatus.observe(viewLifecycleOwner, Observer {
+        viewModel.deviceStatus.observe(viewLifecycleOwner) {
             requireActivity().invalidateOptionsMenu()
-        })
+        }
 
         return binding.root
     }
