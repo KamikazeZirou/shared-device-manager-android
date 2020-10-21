@@ -22,7 +22,8 @@
         android:layout_height="72dp"
         android:clickable="true"
         android:focusable="true"
-        android:foreground="?android:attr/selectableItemBackground">
+        android:foreground="?android:attr/selectableItemBackground"
+        android:onClick="@{() -> viewModel.setCurrentGroup(group.id)}">
 
         <ImageView
             android:id="@+id/group_icon_view"

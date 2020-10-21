@@ -56,6 +56,7 @@ class GroupsViewModelTest {
 
         viewModel = GroupsViewModel(mockAuthService, mockGroupRepository, groupApplicationService)
         viewModel.groups.observe(TestLifecycleOwner()) {}
+        viewModel.switchGroupEvent.observe(TestLifecycleOwner()) {}
         viewModel.error.observe(TestLifecycleOwner()) {}
     }
 
@@ -96,6 +97,9 @@ class GroupsViewModelTest {
     @Test
     fun setCurrentGroup() {
         viewModel.setCurrentGroup("gid2")
+
         assertThat(groupApplicationService.groupId).isEqualTo("gid2")
+        val event = viewModel.switchGroupEvent.value!!.getContentIfNotHandled()
+        assertThat(event).isNotNull()
     }
 }

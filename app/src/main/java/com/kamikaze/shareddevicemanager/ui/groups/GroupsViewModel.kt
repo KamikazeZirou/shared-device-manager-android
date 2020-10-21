@@ -32,6 +32,9 @@ class GroupsViewModel @ViewModelInject constructor(
             .asLiveData()
     }
 
+    private val _switchGroupEvent = MutableLiveData<Event<Unit>>()
+    val switchGroupEvent: LiveData<Event<Unit>> = _switchGroupEvent
+
     private val _error = MutableLiveData<Event<GroupOpError>>()
     val error: LiveData<Event<GroupOpError>> = _error
 
@@ -51,6 +54,7 @@ class GroupsViewModel @ViewModelInject constructor(
 
     fun setCurrentGroup(id: String) {
         groupApplicationService.groupId = id
+        _switchGroupEvent.value = Event(Unit)
     }
 
     enum class GroupOpError(@StringRes val messageId: Int) {
