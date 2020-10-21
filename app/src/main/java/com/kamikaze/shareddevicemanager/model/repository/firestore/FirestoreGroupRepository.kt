@@ -23,7 +23,7 @@ class FirestoreGroupRepository @Inject constructor() :
 
         val listenerRegistration = firestore.collection("groups")
             .whereEqualTo("owner", ownerId)
-            .limit(1)
+            .whereEqualTo("default", true)
             .addSnapshotListener { documentSnapshots, _ ->
                 documentSnapshots?.documentChanges?.forEach {
                     when (it.type) {

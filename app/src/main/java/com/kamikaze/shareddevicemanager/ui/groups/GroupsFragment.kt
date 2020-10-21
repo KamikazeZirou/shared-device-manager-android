@@ -51,6 +51,10 @@ class GroupsFragment : Fragment(),
             groupsAdapter.submitList(it)
         }
 
+        viewModel.switchGroupEvent.observe(viewLifecycleOwner, EventObserver {
+            requireActivity().finish()
+        })
+
         viewModel.error.observe(viewLifecycleOwner, EventObserver {
             Toast.makeText(
                 requireContext(),
@@ -61,9 +65,7 @@ class GroupsFragment : Fragment(),
             showInputGroupNameDialog()
         })
 
-
-        requireActivity()
-            .findViewById<FloatingActionButton>(R.id.add_group_fab)
+        view.findViewById<FloatingActionButton>(R.id.add_group_fab)
             .setOnClickListener {
                 showInputGroupNameDialog()
             }
