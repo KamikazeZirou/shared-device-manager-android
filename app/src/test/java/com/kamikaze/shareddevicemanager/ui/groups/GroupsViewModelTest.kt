@@ -39,7 +39,7 @@ class GroupsViewModelTest {
             on { user } doReturn mockUser
         }
         mockGroupRepository = mock() {
-            on { get("uid") } doReturn flow {
+            on { getAffiliated("uid") } doReturn flow {
                 emit(
                     listOf(
                         Group("gid", "group-name", "uid", listOf("uid"), true),
@@ -48,7 +48,8 @@ class GroupsViewModelTest {
                 )
             }
         }
-        groupApplicationService = GroupApplicationService(mockAuthService, mockGroupRepository)
+        groupApplicationService =
+            GroupApplicationService(mockAuthService, mockGroupRepository, mock())
 
         mainCoroutineRule.launch {
             groupApplicationService.initialize()

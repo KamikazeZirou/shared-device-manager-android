@@ -9,10 +9,7 @@ import com.kamikaze.shareddevicemanager.model.data.IMyDeviceBuilder
 import com.kamikaze.shareddevicemanager.model.data.User
 import com.kamikaze.shareddevicemanager.model.repository.IDeviceRepository
 import com.kamikaze.shareddevicemanager.model.repository.IGroupRepository
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.*
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
@@ -62,7 +59,7 @@ class DeviceApplicationServiceTest {
             on { userFlow } doReturn flowOf<User?>(User("testUserId", "testUserName"))
         }
         val mockGroupRepository = mock<IGroupRepository> {
-            on { getMyGroup("testUserId") } doReturn flowOf<Group?>(
+            on { getDefault("testUserId") } doReturn flowOf<Group?>(
                 Group(
                     id = "testGroupId",
                     name = "testGroupName",
@@ -70,6 +67,7 @@ class DeviceApplicationServiceTest {
                     default = true
                 )
             )
+            on { get(any()) } doReturn flowOf<Group?>(null)
         }
 
         mockDeviceRepository = mock<IDeviceRepository> {
@@ -86,7 +84,8 @@ class DeviceApplicationServiceTest {
             onBlocking { build() } doReturn testMyDevice
         }
 
-        val groupApplicationService = GroupApplicationService(mockAuthService, mockGroupRepository)
+        val groupApplicationService =
+            GroupApplicationService(mockAuthService, mockGroupRepository, mock())
         deviceApplicationService = DeviceApplicationService(
             groupApplicationService = groupApplicationService,
             deviceRepository = mockDeviceRepository,

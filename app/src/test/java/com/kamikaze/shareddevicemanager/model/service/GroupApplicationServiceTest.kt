@@ -6,17 +6,19 @@ import com.kamikaze.shareddevicemanager.helper.MainCoroutineRule
 import com.kamikaze.shareddevicemanager.model.data.Group
 import com.kamikaze.shareddevicemanager.model.data.User
 import com.kamikaze.shareddevicemanager.model.repository.IGroupRepository
+import com.kamikaze.shareddevicemanager.model.repository.IUserPreferenceRepository
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.stub
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.After
 import org.junit.Before
-
 import org.junit.Rule
 import org.junit.Test
 
+@Suppress("NonAsciiCharacters")
 class GroupApplicationServiceTest {
     @get:Rule
     val mainCoroutineRule = MainCoroutineRule()
@@ -27,6 +29,7 @@ class GroupApplicationServiceTest {
     lateinit var groupApplicationService: GroupApplicationService
     lateinit var mockAuthService: IAuthService
     lateinit var mockGroupRepository: IGroupRepository
+    lateinit var mockUserPreferenceRepository: IUserPreferenceRepository
 
     @Before
     fun setUp() {
@@ -36,7 +39,7 @@ class GroupApplicationServiceTest {
         }
 
         mockGroupRepository = mock {
-            on { getMyGroup("testUserId") } doReturn flowOf<Group?>(
+            on { getDefault("testUserId") } doReturn flowOf<Group?>(
                 Group(
                     id = "testGroupId",
                     name = "testGroupName",
@@ -44,16 +47,31 @@ class GroupApplicationServiceTest {
                     default = true
                 )
             )
+            on { get(any()) } doReturn flowOf<Group?>(null)
+            on { get("testGroupId") } doReturn flowOf<Group?>(
+                Group(
+                    id = "testGroupId",
+                    name = "testGroupName",
+                    owner = "testUserId",
+                    default = true
+                )
+            )
+            on { get("testGroupId2") } doReturn flowOf<Group?>(
+                Group(
+                    id = "testGroupId2",
+                    name = "testGroupName2",
+                    owner = "testUserId2",
+                    default = false
+                )
+            )
         }
+        mockUserPreferenceRepository = mock()
 
         groupApplicationService = GroupApplicationService(
             mockAuthService,
             mockGroupRepository,
+            mockUserPreferenceRepository,
         )
-
-        mainCoroutineRule.launch {
-            groupApplicationService.initialize()
-        }
     }
 
     @After
@@ -61,7 +79,33 @@ class GroupApplicationServiceTest {
     }
 
     @Test
-    fun getCurrentGroupId() = mainCoroutineRule.runBlockingTest {
+    fun `アプリ起動時、グループ未選択なら、デフォルトグループを選択すること`() = mainCoroutineRule.runBlockingTest {
+        mockUserPreferenceRepository.stub {
+            on { getString(IUserPreferenceRepository.KEY_SELECTED_GROUP_ID) } doReturn null
+        }
+
+        groupApplicationService.initialize()
+
+        assertThat(groupApplicationService.groupId).isEqualTo("testGroupId")
+    }
+
+    @Test
+    fun `アプリ起動時、前回選択されていたグループを選択すること`() = mainCoroutineRule.runBlockingTest {
+        mockUserPreferenceRepository.stub {
+            on { getString(IUserPreferenceRepository.KEY_SELECTED_GROUP_ID) } doReturn "testGroupId"
+        }
+        groupApplicationService.initialize()
+
+        assertThat(groupApplicationService.groupId).isEqualTo("testGroupId")
+    }
+
+    @Test
+    fun `アプリ起動時、前回選択されていたグループが存在しないなら、デフォルトグループを選択すること`() = mainCoroutineRule.runBlockingTest {
+        mockUserPreferenceRepository.stub {
+            on { getString(IUserPreferenceRepository.KEY_SELECTED_GROUP_ID) } doReturn "testGroupId3"
+        }
+        groupApplicationService.initialize()
+
         assertThat(groupApplicationService.groupId).isEqualTo("testGroupId")
     }
 }

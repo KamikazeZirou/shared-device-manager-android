@@ -23,7 +23,7 @@ class GroupsViewModel @ViewModelInject constructor(
     val groups: LiveData<List<Group>> by lazy {
         auth.userFlow
             .flatMapLatest {
-                groupRepository.get(it?.id ?: "")
+                groupRepository.getAffiliated(it?.id ?: "")
             }
             .map {
                 // グループ追加ボタンをグループと重ならないようにするために、末尾に空のGroup追加する

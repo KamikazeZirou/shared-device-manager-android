@@ -18,7 +18,7 @@ class FirestoreGroupRepository @Inject constructor() :
     IGroupRepository {
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
 
-    override fun getMyGroup(ownerId: String): Flow<Group?> = callbackFlow {
+    override fun getDefault(ownerId: String): Flow<Group?> = callbackFlow {
         offer(null)
 
         val listenerRegistration = firestore.collection("groups")
@@ -46,7 +46,11 @@ class FirestoreGroupRepository @Inject constructor() :
 
     }.buffer(Channel.CONFLATED)
 
-    override fun get(userId: String): Flow<List<Group>> = callbackFlow {
+    override fun get(id: String): Flow<Group?> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getAffiliated(userId: String): Flow<List<Group>> = callbackFlow {
         offer(listOf())
 
         val groups = mutableListOf<Group>()

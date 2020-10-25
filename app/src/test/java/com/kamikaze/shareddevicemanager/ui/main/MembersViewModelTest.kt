@@ -31,7 +31,7 @@ class MembersViewModelTest {
     @Before
     fun setUp() {
         mockAuthService = mock()
-        groupApplicationService = GroupApplicationService(mock(), mock()).apply {
+        groupApplicationService = GroupApplicationService(mock(), mock(), mock()).apply {
             groupId = "testGroupId"
         }
         mockMemberRepository = mock()
