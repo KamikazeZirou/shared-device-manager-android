@@ -46,9 +46,29 @@ class FirestoreGroupRepository @Inject constructor() :
 
     }.buffer(Channel.CONFLATED)
 
-    override fun get(id: String): Flow<Group?> {
-        TODO("Not yet implemented")
-    }
+    override fun get(id: String): Flow<Group?> = callbackFlow {
+        if (id.isEmpty()) {
+            offer(null)
+            awaitClose {}
+            return@callbackFlow
+        }
+
+        val listenerRegistration = firestore.collection("groups")
+            .document(id)
+            .addSnapshotListener { snapshots, e ->
+                if (e != null) {
+                    offer(null)
+                }
+
+                if (snapshots != null && snapshots.exists()) {
+                    offer(snapshots.toObject(Group::class.java))
+                } else {
+                    offer(null)
+                }
+            }
+
+        awaitClose { listenerRegistration.remove() }
+    }.buffer(Channel.CONFLATED)
 
     override fun getAffiliated(userId: String): Flow<List<Group>> = callbackFlow {
         offer(listOf())

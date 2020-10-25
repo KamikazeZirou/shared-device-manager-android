@@ -9,7 +9,12 @@ import com.kamikaze.shareddevicemanager.model.data.IMyDeviceBuilder
 import com.kamikaze.shareddevicemanager.model.data.User
 import com.kamikaze.shareddevicemanager.model.repository.IDeviceRepository
 import com.kamikaze.shareddevicemanager.model.repository.IGroupRepository
-import com.nhaarman.mockitokotlin2.*
+import com.kamikaze.shareddevicemanager.model.repository.IUserPreferenceRepository
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
@@ -17,7 +22,7 @@ import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import java.util.*
+import java.util.Date
 
 class DeviceApplicationServiceTest {
     @get:Rule
@@ -84,8 +89,12 @@ class DeviceApplicationServiceTest {
             onBlocking { build() } doReturn testMyDevice
         }
 
+        val mockUserPref = mock<IUserPreferenceRepository> {
+            on { getString(IUserPreferenceRepository.KEY_SELECTED_GROUP_ID) } doReturn ""
+        }
+
         val groupApplicationService =
-            GroupApplicationService(mockAuthService, mockGroupRepository, mock())
+            GroupApplicationService(mockAuthService, mockGroupRepository, mockUserPref)
         deviceApplicationService = DeviceApplicationService(
             groupApplicationService = groupApplicationService,
             deviceRepository = mockDeviceRepository,

@@ -11,6 +11,8 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.stub
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.After
@@ -81,7 +83,7 @@ class GroupApplicationServiceTest {
     @Test
     fun `アプリ起動時、グループ未選択なら、デフォルトグループを選択すること`() = mainCoroutineRule.runBlockingTest {
         mockUserPreferenceRepository.stub {
-            on { getString(IUserPreferenceRepository.KEY_SELECTED_GROUP_ID) } doReturn null
+            on { getString(IUserPreferenceRepository.KEY_SELECTED_GROUP_ID) } doReturn ""
         }
 
         groupApplicationService.initialize()
@@ -92,11 +94,11 @@ class GroupApplicationServiceTest {
     @Test
     fun `アプリ起動時、前回選択されていたグループを選択すること`() = mainCoroutineRule.runBlockingTest {
         mockUserPreferenceRepository.stub {
-            on { getString(IUserPreferenceRepository.KEY_SELECTED_GROUP_ID) } doReturn "testGroupId"
+            on { getString(IUserPreferenceRepository.KEY_SELECTED_GROUP_ID) } doReturn "testGroupId2"
         }
         groupApplicationService.initialize()
 
-        assertThat(groupApplicationService.groupId).isEqualTo("testGroupId")
+        assertThat(groupApplicationService.groupId).isEqualTo("testGroupId2")
     }
 
     @Test
@@ -107,5 +109,21 @@ class GroupApplicationServiceTest {
         groupApplicationService.initialize()
 
         assertThat(groupApplicationService.groupId).isEqualTo("testGroupId")
+
+        // グループ設定を忘れること
+        verify(mockUserPreferenceRepository, times(1))
+            .putString(IUserPreferenceRepository.KEY_SELECTED_GROUP_ID, "")
+    }
+
+    @Test
+    fun `グループ選択`() = mainCoroutineRule.runBlockingTest {
+        mockUserPreferenceRepository.stub {
+            on { getString(any()) } doReturn ""
+        }
+        groupApplicationService.initialize()
+        groupApplicationService.groupId = "abc"
+        assertThat(groupApplicationService.groupId).isEqualTo("abc")
+        verify(mockUserPreferenceRepository, times(1))
+            .putString(IUserPreferenceRepository.KEY_SELECTED_GROUP_ID, "abc")
     }
 }

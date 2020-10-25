@@ -1,7 +1,7 @@
 package com.kamikaze.shareddevicemanager.di
 
 import com.kamikaze.shareddevicemanager.model.repository.IUserPreferenceRepository
-import com.kamikaze.shareddevicemanager.model.repository.android.UserPreferenceRepository
+import com.kamikaze.shareddevicemanager.model.repository.android.LocalUserPreferenceRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -11,5 +11,5 @@ import dagger.hilt.android.components.ApplicationComponent
 @Module
 abstract class PreferenceModule {
     @Binds
-    abstract fun bindUserPreferenceRepository(repo: UserPreferenceRepository): IUserPreferenceRepository
+    abstract fun bindUserPreferenceRepository(repo: LocalUserPreferenceRepository): IUserPreferenceRepository
 }
