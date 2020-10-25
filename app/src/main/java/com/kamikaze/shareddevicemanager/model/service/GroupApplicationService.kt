@@ -3,7 +3,7 @@ package com.kamikaze.shareddevicemanager.model.service
 import com.google.common.annotations.VisibleForTesting
 import com.kamikaze.shareddevicemanager.model.data.Group
 import com.kamikaze.shareddevicemanager.model.repository.IGroupRepository
-import com.kamikaze.shareddevicemanager.model.repository.IUserPreferenceRepository
+import com.kamikaze.shareddevicemanager.model.repository.IUserPreferences
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,7 +20,7 @@ import javax.inject.Singleton
 open class GroupApplicationService @Inject constructor(
     private val authService: IAuthService,
     private val groupRepository: IGroupRepository,
-    private val userPreferenceRepository: IUserPreferenceRepository
+    private val userPreferences: IUserPreferences
 ) {
     suspend fun initialize() {
         coroutineScope {
@@ -58,8 +58,8 @@ open class GroupApplicationService @Inject constructor(
                     // 前回選択していたグループが存在しないとき
 
                     // 前回選択していたグループを消去する
-                    userPreferenceRepository.putString(
-                        IUserPreferenceRepository.KEY_SELECTED_GROUP_ID,
+                    userPreferences.putString(
+                        IUserPreferences.KEY_SELECTED_GROUP_ID,
                         ""
                     )
 
@@ -71,7 +71,7 @@ open class GroupApplicationService @Inject constructor(
 
     private val _requestGroupIdFlow =
         MutableStateFlow(
-            userPreferenceRepository.getString(IUserPreferenceRepository.KEY_SELECTED_GROUP_ID)
+            userPreferences.getString(IUserPreferences.KEY_SELECTED_GROUP_ID)
         )
 
     @VisibleForTesting
@@ -94,8 +94,8 @@ open class GroupApplicationService @Inject constructor(
             // ただ、消したときのテストコードの書き方がわからないので残す。
             _groupIdFlow.value = value
 
-            userPreferenceRepository.putString(
-                IUserPreferenceRepository.KEY_SELECTED_GROUP_ID,
+            userPreferences.putString(
+                IUserPreferences.KEY_SELECTED_GROUP_ID,
                 value
             )
         }

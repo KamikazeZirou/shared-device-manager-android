@@ -6,7 +6,7 @@ import com.kamikaze.shareddevicemanager.helper.MainCoroutineRule
 import com.kamikaze.shareddevicemanager.model.data.Group
 import com.kamikaze.shareddevicemanager.model.data.User
 import com.kamikaze.shareddevicemanager.model.repository.IGroupRepository
-import com.kamikaze.shareddevicemanager.model.repository.IUserPreferenceRepository
+import com.kamikaze.shareddevicemanager.model.repository.IUserPreferences
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
@@ -31,7 +31,7 @@ class GroupApplicationServiceTest {
     lateinit var groupApplicationService: GroupApplicationService
     lateinit var mockAuthService: IAuthService
     lateinit var mockGroupRepository: IGroupRepository
-    lateinit var mockUserPreferenceRepository: IUserPreferenceRepository
+    lateinit var mockUserPreferences: IUserPreferences
 
     @Before
     fun setUp() {
@@ -68,14 +68,14 @@ class GroupApplicationServiceTest {
             )
         }
 
-        mockUserPreferenceRepository = mock {
-            on { getString(IUserPreferenceRepository.KEY_SELECTED_GROUP_ID) } doReturn "last_group_id"
+        mockUserPreferences = mock {
+            on { getString(IUserPreferences.KEY_SELECTED_GROUP_ID) } doReturn "last_group_id"
         }
 
         groupApplicationService = GroupApplicationService(
             mockAuthService,
             mockGroupRepository,
-            mockUserPreferenceRepository,
+            mockUserPreferences,
         )
     }
 
@@ -117,8 +117,8 @@ class GroupApplicationServiceTest {
 
         // Assert
         assertThat(groupApplicationService.groupId).isEqualTo("testGroupId")
-        verify(mockUserPreferenceRepository, times(1))
-            .putString(IUserPreferenceRepository.KEY_SELECTED_GROUP_ID, "")
+        verify(mockUserPreferences, times(1))
+            .putString(IUserPreferences.KEY_SELECTED_GROUP_ID, "")
     }
 
     @Test
@@ -132,8 +132,8 @@ class GroupApplicationServiceTest {
         // Assert
         groupApplicationService.groupId = "abc"
         assertThat(groupApplicationService.groupId).isEqualTo("abc")
-        verify(mockUserPreferenceRepository, times(1))
-            .putString(IUserPreferenceRepository.KEY_SELECTED_GROUP_ID, "abc")
+        verify(mockUserPreferences, times(1))
+            .putString(IUserPreferences.KEY_SELECTED_GROUP_ID, "abc")
     }
 
     @Test

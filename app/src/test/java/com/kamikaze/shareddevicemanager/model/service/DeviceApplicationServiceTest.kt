@@ -9,7 +9,7 @@ import com.kamikaze.shareddevicemanager.model.data.IMyDeviceBuilder
 import com.kamikaze.shareddevicemanager.model.data.User
 import com.kamikaze.shareddevicemanager.model.repository.IDeviceRepository
 import com.kamikaze.shareddevicemanager.model.repository.IGroupRepository
-import com.kamikaze.shareddevicemanager.model.repository.IUserPreferenceRepository
+import com.kamikaze.shareddevicemanager.model.repository.IUserPreferences
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
@@ -89,8 +89,8 @@ class DeviceApplicationServiceTest {
             onBlocking { build() } doReturn testMyDevice
         }
 
-        val mockUserPref = mock<IUserPreferenceRepository> {
-            on { getString(IUserPreferenceRepository.KEY_SELECTED_GROUP_ID) } doReturn ""
+        val mockUserPref = mock<IUserPreferences> {
+            on { getString(IUserPreferences.KEY_SELECTED_GROUP_ID) } doReturn ""
         }
 
         val groupApplicationService =

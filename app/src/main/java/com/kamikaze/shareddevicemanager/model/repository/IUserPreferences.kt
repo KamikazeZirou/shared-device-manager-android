@@ -1,6 +1,6 @@
 package com.kamikaze.shareddevicemanager.model.repository
 
-interface IUserPreferenceRepository {
+interface IUserPreferences {
     companion object {
         const val KEY_SELECTED_GROUP_ID = "selected_group_id"
     }
