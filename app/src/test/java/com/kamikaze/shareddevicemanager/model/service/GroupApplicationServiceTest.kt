@@ -10,9 +10,9 @@ import com.kamikaze.shareddevicemanager.model.repository.IUserPreferenceReposito
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.stub
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.After
@@ -67,7 +67,10 @@ class GroupApplicationServiceTest {
                 )
             )
         }
-        mockUserPreferenceRepository = mock()
+
+        mockUserPreferenceRepository = mock {
+            on { getString(IUserPreferenceRepository.KEY_SELECTED_GROUP_ID) } doReturn "last_group_id"
+        }
 
         groupApplicationService = GroupApplicationService(
             mockAuthService,
@@ -82,48 +85,60 @@ class GroupApplicationServiceTest {
 
     @Test
     fun `アプリ起動時、グループ未選択なら、デフォルトグループを選択すること`() = mainCoroutineRule.runBlockingTest {
-        mockUserPreferenceRepository.stub {
-            on { getString(IUserPreferenceRepository.KEY_SELECTED_GROUP_ID) } doReturn ""
-        }
+        // Arrange
+        groupApplicationService.requestGroupIdFlow = flowOf("")
 
+        // Act
         groupApplicationService.initialize()
 
+        // Assert
         assertThat(groupApplicationService.groupId).isEqualTo("testGroupId")
     }
 
     @Test
     fun `アプリ起動時、前回選択されていたグループを選択すること`() = mainCoroutineRule.runBlockingTest {
-        mockUserPreferenceRepository.stub {
-            on { getString(IUserPreferenceRepository.KEY_SELECTED_GROUP_ID) } doReturn "testGroupId2"
-        }
+        // Arrange
+        groupApplicationService.requestGroupIdFlow = flowOf("testGroupId2")
+
+        // Act
         groupApplicationService.initialize()
 
+        // Assert
         assertThat(groupApplicationService.groupId).isEqualTo("testGroupId2")
     }
 
     @Test
     fun `アプリ起動時、前回選択されていたグループが存在しないなら、デフォルトグループを選択すること`() = mainCoroutineRule.runBlockingTest {
-        mockUserPreferenceRepository.stub {
-            on { getString(IUserPreferenceRepository.KEY_SELECTED_GROUP_ID) } doReturn "testGroupId3"
-        }
+        // Arrange
+        groupApplicationService.requestGroupIdFlow = flowOf("testGroupId3")
+
+        // Act
         groupApplicationService.initialize()
 
+        // Assert
         assertThat(groupApplicationService.groupId).isEqualTo("testGroupId")
-
-        // グループ設定を忘れること
         verify(mockUserPreferenceRepository, times(1))
             .putString(IUserPreferenceRepository.KEY_SELECTED_GROUP_ID, "")
     }
 
     @Test
     fun `グループ選択`() = mainCoroutineRule.runBlockingTest {
-        mockUserPreferenceRepository.stub {
-            on { getString(any()) } doReturn ""
-        }
+        // Arrange
+        groupApplicationService.requestGroupIdFlow = flowOf("")
+
+        // Act
         groupApplicationService.initialize()
+
+        // Assert
         groupApplicationService.groupId = "abc"
         assertThat(groupApplicationService.groupId).isEqualTo("abc")
         verify(mockUserPreferenceRepository, times(1))
             .putString(IUserPreferenceRepository.KEY_SELECTED_GROUP_ID, "abc")
     }
+
+    @Test
+    fun `前回設定値がグループIDの初期値になっているか`() = mainCoroutineRule.runBlockingTest {
+        assertThat(groupApplicationService.requestGroupIdFlow.first()).isEqualTo("last_group_id")
+    }
+
 }

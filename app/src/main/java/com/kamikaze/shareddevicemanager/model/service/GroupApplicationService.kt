@@ -1,5 +1,6 @@
 package com.kamikaze.shareddevicemanager.model.service
 
+import com.google.common.annotations.VisibleForTesting
 import com.kamikaze.shareddevicemanager.model.data.Group
 import com.kamikaze.shareddevicemanager.model.repository.IGroupRepository
 import com.kamikaze.shareddevicemanager.model.repository.IUserPreferenceRepository
@@ -33,12 +34,14 @@ open class GroupApplicationService @Inject constructor(
                     } else {
                         null
                     }
-                }.flatMapLatest { userId ->
+                }.combine(requestGroupIdFlow) { userId, groupId ->
                     if (userId != null) {
-                        getGroup(userId)
+                        getGroup(userId, groupId)
                     } else {
                         flowOf(null)
                     }
+                }.flatMapLatest {
+                    it
                 }.collect {
                     _groupIdFlow.value = it?.id ?: ""
                 }
@@ -46,10 +49,7 @@ open class GroupApplicationService @Inject constructor(
         }
     }
 
-    private fun getGroup(userId: String): Flow<Group?> {
-        val groupId =
-            userPreferenceRepository.getString(IUserPreferenceRepository.KEY_SELECTED_GROUP_ID)
-
+    private fun getGroup(userId: String, groupId: String): Flow<Group?> {
         return groupRepository.get(groupId)
             .flatMapLatest {
                 it?.let {
@@ -69,6 +69,16 @@ open class GroupApplicationService @Inject constructor(
             }
     }
 
+    private val _requestGroupIdFlow =
+        MutableStateFlow(
+            userPreferenceRepository.getString(IUserPreferenceRepository.KEY_SELECTED_GROUP_ID)
+        )
+
+    @VisibleForTesting
+    // UnitTestのとき、flowOf<String>("hoge")などに差し替えられるようにする。
+    // _requestGroupIdFlow(MutableStateFlow)を監視すると、Jobが終わらずUnitTestが失敗する問題への対処
+    var requestGroupIdFlow: Flow<String> = _requestGroupIdFlow
+
     private val _groupIdFlow = MutableStateFlow("")
 
     val groupIdFlow: Flow<String> = _groupIdFlow
@@ -76,7 +86,14 @@ open class GroupApplicationService @Inject constructor(
     var groupId: String
         get() = _groupIdFlow.value
         set(value) {
+            _requestGroupIdFlow.value = value
+
+            // FIXME 消す
+            // _requestGroupIdFlowが変化すると、ここで設定しなくても_groupIdFlowは更新されるので、消して良い。
+            // 残しておくとvalueが存在しないgroupIdのときに動作が微妙になる。
+            // ただ、消したときのテストコードの書き方がわからないので残す。
             _groupIdFlow.value = value
+
             userPreferenceRepository.putString(
                 IUserPreferenceRepository.KEY_SELECTED_GROUP_ID,
                 value
