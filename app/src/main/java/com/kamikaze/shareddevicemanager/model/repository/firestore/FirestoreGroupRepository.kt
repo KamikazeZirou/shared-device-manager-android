@@ -120,4 +120,12 @@ class FirestoreGroupRepository @Inject constructor() :
                 )
             )
     }
+
+    override fun remove(group: Group) {
+        group.id?.let {
+            firestore.collection("groups")
+                .document(it)
+                .delete()
+        }
+    }
 }
