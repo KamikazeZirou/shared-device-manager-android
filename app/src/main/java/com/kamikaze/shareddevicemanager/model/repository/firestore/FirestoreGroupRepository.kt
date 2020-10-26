@@ -120,4 +120,8 @@ class FirestoreGroupRepository @Inject constructor() :
                 )
             )
     }
+
+    override fun remove(group: Group) {
+        TODO("Not yet implemented")
+    }
 }

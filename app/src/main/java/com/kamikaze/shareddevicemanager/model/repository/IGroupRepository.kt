@@ -8,4 +8,5 @@ interface IGroupRepository {
     fun getDefault(ownerId: String): Flow<Group?>
     fun getAffiliated(userId: String): Flow<List<Group>>
     fun add(group: Group)
+    fun remove(group: Group)
 }

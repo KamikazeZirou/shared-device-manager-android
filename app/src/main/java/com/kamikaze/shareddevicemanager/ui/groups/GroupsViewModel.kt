@@ -57,6 +57,17 @@ class GroupsViewModel @ViewModelInject constructor(
         _switchGroupEvent.value = Event(Unit)
     }
 
+    private val _requestRemoveGroup = MutableLiveData<Event<Group>>()
+    val requestRemoveGroup: LiveData<Event<Group>> = _requestRemoveGroup
+
+    fun requestRemove(group: Group) {
+        _requestRemoveGroup.value = Event(group)
+    }
+
+    fun remove(group: Group) {
+        groupRepository.remove(group)
+    }
+
     enum class GroupOpError(@StringRes val messageId: Int) {
         ADD_FAILED_EMPTY_GROUP_NAME(R.string.adding_group_failed_when_group_name_is_empty);
     }

@@ -10,7 +10,12 @@ import com.kamikaze.shareddevicemanager.model.data.User
 import com.kamikaze.shareddevicemanager.model.repository.IGroupRepository
 import com.kamikaze.shareddevicemanager.model.service.GroupApplicationService
 import com.kamikaze.shareddevicemanager.model.service.IAuthService
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.never
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import org.junit.Before
@@ -43,7 +48,7 @@ class GroupsViewModelTest {
                 emit(
                     listOf(
                         Group("gid", "group-name", "uid", listOf("uid"), true),
-                        Group("gid2", "group-name2", "uid2", listOf("uid2"), true),
+                        Group("gid2", "group-name2", "uid2", listOf("uid2"), false),
                     )
                 )
             }
@@ -66,7 +71,7 @@ class GroupsViewModelTest {
         val groups = viewModel.groups.value!!
         assertThat(groups).hasSize(3)
         assertThat(groups[0]).isEqualTo(Group("gid", "group-name", "uid", listOf("uid"), true))
-        assertThat(groups[1]).isEqualTo(Group("gid2", "group-name2", "uid2", listOf("uid2"), true))
+        assertThat(groups[1]).isEqualTo(Group("gid2", "group-name2", "uid2", listOf("uid2"), false))
         assertThat(groups[2]).isEqualTo(Group())
     }
 
@@ -102,5 +107,26 @@ class GroupsViewModelTest {
         assertThat(groupApplicationService.groupId).isEqualTo("gid2")
         val event = viewModel.switchGroupEvent.value!!.getContentIfNotHandled()
         assertThat(event).isNotNull()
+    }
+
+    @Test
+    fun requestRemove() {
+        viewModel.requestRemove(Group("gid2", "group-name2", "uid2", listOf("uid2"), false))
+        assertThat(viewModel.requestRemoveGroup.value!!.getContentIfNotHandled()).isEqualTo(
+            Group(
+                "gid2",
+                "group-name2",
+                "uid2",
+                listOf("uid2"),
+                false
+            )
+        )
+    }
+
+    @Test
+    fun remove() {
+        val group = Group("gid2", "group-name2", "uid2", listOf("uid2"), false)
+        viewModel.remove(group)
+        verify(mockGroupRepository, times(1)).remove(group)
     }
 }
