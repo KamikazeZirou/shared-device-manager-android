@@ -121,6 +121,12 @@ class FirestoreGroupRepository @Inject constructor() :
             )
     }
 
+    override fun edit(group: Group) {
+        firestore.collection("groups")
+            .document(group.id!!)
+            .update("name", group.name)
+    }
+
     override fun remove(group: Group) {
         group.id?.let {
             firestore.collection("groups")

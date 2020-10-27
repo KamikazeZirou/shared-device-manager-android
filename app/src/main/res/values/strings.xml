@@ -40,6 +40,7 @@
     <string name="group_name">Group Name</string>
     <string name="add_member">Add Member</string>
     <string name="add_group">Add Group</string>
+    <string name="edit_group">Edit Group</string>
     <string name="remove_member">Are you sure you want to remove %1$s from the team?</string>
     <string name="remove_group">Are you sure you want to remove %1$s?</string>
     <string name="title_groups">Groups</string>

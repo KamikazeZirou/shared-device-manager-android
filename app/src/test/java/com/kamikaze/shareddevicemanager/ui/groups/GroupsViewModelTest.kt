@@ -63,7 +63,7 @@ class GroupsViewModelTest {
         viewModel = GroupsViewModel(mockAuthService, mockGroupRepository, groupApplicationService)
         viewModel.groups.observe(TestLifecycleOwner()) {}
         viewModel.switchGroupEvent.observe(TestLifecycleOwner()) {}
-        viewModel.error.observe(TestLifecycleOwner()) {}
+        viewModel.addError.observe(TestLifecycleOwner()) {}
     }
 
     @Test
@@ -79,7 +79,7 @@ class GroupsViewModelTest {
     fun addGroup() {
         viewModel.add("test group")
 
-        val error = viewModel.error.value?.getContentIfNotHandled()
+        val error = viewModel.addError.value?.getContentIfNotHandled()
         assertThat(error).isNull()
         verify(mockGroupRepository, times(1))
             .add(
@@ -94,10 +94,43 @@ class GroupsViewModelTest {
     fun addGroup_failed_when_group_name_is_empty() {
         viewModel.add("")
 
-        val error = viewModel.error.value!!.getContentIfNotHandled()!!
-        assertThat(error).isEqualTo(GroupsViewModel.GroupOpError.ADD_FAILED_EMPTY_GROUP_NAME)
+        val error = viewModel.addError.value!!.getContentIfNotHandled()!!
         assertThat(error.messageId).isEqualTo(R.string.adding_group_failed_when_group_name_is_empty)
         verify(mockGroupRepository, never()).add(any())
+    }
+
+    @Test
+    fun editGroup() {
+        viewModel.edit(Group(id = "gid", name = "name"), "edited name")
+
+        val error = viewModel.editError.value?.getContentIfNotHandled()
+        assertThat(error).isNull()
+        verify(mockGroupRepository, times(1))
+            .edit(Group(id = "gid", name = "edited name"))
+    }
+
+    @Test
+    fun editGroup_failed_when_group_name_is_empty() {
+        viewModel.edit(Group(id = "gid", name = "name"), "")
+
+        val error = viewModel.editError.value!!.getContentIfNotHandled()!!
+        assertThat(error.messageId).isEqualTo(R.string.adding_group_failed_when_group_name_is_empty)
+        assertThat(error.group).isEqualTo(Group(id = "gid", name = "name"))
+        verify(mockGroupRepository, never()).edit(any())
+    }
+
+    @Test
+    fun requestEdit() {
+        viewModel.requestEdit(Group("gid2", "group-name2", "uid2", listOf("uid2"), false))
+        assertThat(viewModel.requestEditGroup.value!!.getContentIfNotHandled()).isEqualTo(
+            Group(
+                "gid2",
+                "group-name2",
+                "uid2",
+                listOf("uid2"),
+                false
+            )
+        )
     }
 
     @Test
