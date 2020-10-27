@@ -58,14 +58,33 @@ class GroupsFragment : Fragment(),
             requireActivity().finish()
         })
 
-        viewModel.error.observe(viewLifecycleOwner, EventObserver {
+        view.findViewById<FloatingActionButton>(R.id.add_group_fab)
+            .setOnClickListener {
+                showAddGroupDialog()
+            }
+
+        viewModel.addError.observe(viewLifecycleOwner, EventObserver {
             Toast.makeText(
                 requireContext(),
                 it.messageId,
                 Toast.LENGTH_SHORT
             ).show()
 
-            showInputGroupNameDialog()
+            showAddGroupDialog()
+        })
+
+        viewModel.requestEditGroup.observe(viewLifecycleOwner, EventObserver { group ->
+            showEditGroupDialog(group)
+        })
+
+        viewModel.editError.observe(viewLifecycleOwner, EventObserver {
+            Toast.makeText(
+                requireContext(),
+                it.messageId,
+                Toast.LENGTH_SHORT
+            ).show()
+
+            showEditGroupDialog(it.group)
         })
 
         viewModel.requestRemoveGroup.observe(viewLifecycleOwner, EventObserver { group ->
@@ -80,26 +99,42 @@ class GroupsFragment : Fragment(),
             )
                 .show(parentFragmentManager, "ConfirmRemoveGroupDialog")
         })
-
-        view.findViewById<FloatingActionButton>(R.id.add_group_fab)
-            .setOnClickListener {
-                showInputGroupNameDialog()
-            }
     }
 
-    private fun showInputGroupNameDialog() {
+    private fun showAddGroupDialog() {
         InputDialogFragment
             .newInstance(
-                this,
-                getString(R.string.add_group),
-                getString(R.string.group_name),
+                fragment = this,
+                title = getString(R.string.add_group),
+                label = getString(R.string.group_name),
             )
-            .show(parentFragmentManager, "InputGroupNameDialog")
+            .show(parentFragmentManager, "AddGroup")
     }
 
-    override fun onClickListener(tag: String?, which: Int, text: String) {
-        if (which == DialogInterface.BUTTON_POSITIVE) {
-            viewModel.add(text)
+    private fun showEditGroupDialog(group: Group) {
+        val data = Bundle().apply {
+            putParcelable("group", group)
+        }
+
+        InputDialogFragment
+            .newInstance(
+                fragment = this,
+                title = getString(R.string.edit_group),
+                label = getString(R.string.group_name),
+                initialValue = group.name ?: "",
+                data = data,
+            )
+            .show(parentFragmentManager, "EditGroup")
+    }
+
+    override fun onClickListener(tag: String?, which: Int, value: String, data: Bundle) {
+        if (which != DialogInterface.BUTTON_POSITIVE) {
+            return
+        }
+
+        when (tag) {
+            "AddGroup" -> viewModel.add(value)
+            "EditGroup" -> viewModel.edit(data.get("group") as Group, value)
         }
     }
 
