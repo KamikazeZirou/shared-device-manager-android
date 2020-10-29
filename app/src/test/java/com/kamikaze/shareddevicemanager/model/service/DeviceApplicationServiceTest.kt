@@ -6,11 +6,7 @@ import com.kamikaze.shareddevicemanager.helper.MainCoroutineRule
 import com.kamikaze.shareddevicemanager.model.data.Device
 import com.kamikaze.shareddevicemanager.model.data.Group
 import com.kamikaze.shareddevicemanager.model.data.IMyDeviceBuilder
-import com.kamikaze.shareddevicemanager.model.data.User
 import com.kamikaze.shareddevicemanager.model.repository.IDeviceRepository
-import com.kamikaze.shareddevicemanager.model.repository.IGroupRepository
-import com.kamikaze.shareddevicemanager.model.repository.IUserPreferences
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
@@ -59,23 +55,7 @@ class DeviceApplicationServiceTest {
 
     @Before
     fun setUp() {
-        val mockAuthService = mock<IAuthService> {
-            on { authStateFlow } doReturn flowOf(AuthState.SIGN_IN)
-            on { userFlow } doReturn flowOf<User?>(User("testUserId", "testUserName"))
-        }
-        val mockGroupRepository = mock<IGroupRepository> {
-            on { getDefault("testUserId") } doReturn flowOf<Group?>(
-                Group(
-                    id = "testGroupId",
-                    name = "testGroupName",
-                    owner = "testUserId",
-                    default = true
-                )
-            )
-            on { get(any()) } doReturn flowOf<Group?>(null)
-        }
-
-        mockDeviceRepository = mock<IDeviceRepository> {
+        mockDeviceRepository = mock {
             onBlocking {
                 getByInstanceId(
                     "testGroupId",
@@ -89,22 +69,22 @@ class DeviceApplicationServiceTest {
             onBlocking { build() } doReturn testMyDevice
         }
 
-        val mockUserPref = mock<IUserPreferences> {
-            on { getString(IUserPreferences.KEY_SELECTED_GROUP_ID) } doReturn ""
+        val mockGroupApplicationService = mock<IGroupApplicationService> {
+            val dummyGroup = Group(
+                id = "testGroupId",
+                name = "testGroupName",
+                owner = "testUserId",
+                default = true
+            )
+            on { group } doReturn dummyGroup
+            on { groupFlow } doReturn flowOf(dummyGroup)
         }
-
-        val groupApplicationService =
-            GroupApplicationService(mockAuthService, mockGroupRepository, mockUserPref)
         deviceApplicationService = DeviceApplicationService(
-            groupApplicationService = groupApplicationService,
+            groupApplicationService = mockGroupApplicationService,
             deviceRepository = mockDeviceRepository,
             deviceBuilder = mockDeviceBuilder,
             coroutineContexts = mainCoroutineRule
         )
-
-        mainCoroutineRule.launch {
-            groupApplicationService.initialize()
-        }
 
         mainCoroutineRule.launch {
             deviceApplicationService.initialize()

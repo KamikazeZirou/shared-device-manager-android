@@ -10,10 +10,12 @@ import com.kamikaze.shareddevicemanager.model.repository.IUserPreferences
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.stub
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.After
 import org.junit.Before
@@ -68,9 +70,7 @@ class GroupApplicationServiceTest {
             )
         }
 
-        mockUserPreferences = mock {
-            on { getString(IUserPreferences.KEY_SELECTED_GROUP_ID) } doReturn "last_group_id"
-        }
+        mockUserPreferences = mock()
 
         groupApplicationService = GroupApplicationService(
             mockAuthService,
@@ -86,58 +86,117 @@ class GroupApplicationServiceTest {
     @Test
     fun `アプリ起動時、グループ未選択なら、デフォルトグループを選択すること`() = mainCoroutineRule.runBlockingTest {
         // Arrange
-        groupApplicationService.requestGroupIdFlow = flowOf("")
+        mockUserPreferences.stub {
+            on { getString(IUserPreferences.KEY_SELECTED_GROUP_ID) } doReturn ""
+        }
 
         // Act
-        groupApplicationService.initialize()
+        val job = launch {
+            groupApplicationService.initialize()
+        }
 
         // Assert
-        assertThat(groupApplicationService.groupId).isEqualTo("testGroupId")
+        assertThat(groupApplicationService.groupFlow.first()).isEqualTo(
+            Group(
+                id = "testGroupId",
+                name = "testGroupName",
+                owner = "testUserId",
+                default = true
+            )
+        )
+
+        job.cancel()
     }
 
     @Test
     fun `アプリ起動時、前回選択されていたグループを選択すること`() = mainCoroutineRule.runBlockingTest {
         // Arrange
-        groupApplicationService.requestGroupIdFlow = flowOf("testGroupId2")
+        mockUserPreferences.stub {
+            on { getString(IUserPreferences.KEY_SELECTED_GROUP_ID) } doReturn "testGroupId2"
+        }
 
         // Act
-        groupApplicationService.initialize()
+        val job = launch {
+            groupApplicationService.initialize()
+        }
 
         // Assert
-        assertThat(groupApplicationService.groupId).isEqualTo("testGroupId2")
+        assertThat(groupApplicationService.groupFlow.first()).isEqualTo(
+            Group(
+                id = "testGroupId2",
+                name = "testGroupName2",
+                owner = "testUserId2",
+                default = false
+            )
+        )
+
+        job.cancel()
     }
 
     @Test
     fun `アプリ起動時、前回選択されていたグループが存在しないなら、デフォルトグループを選択すること`() = mainCoroutineRule.runBlockingTest {
         // Arrange
-        groupApplicationService.requestGroupIdFlow = flowOf("testGroupId3")
+        mockUserPreferences.stub {
+            on { getString(IUserPreferences.KEY_SELECTED_GROUP_ID) } doReturn "testGroupId3"
+        }
 
         // Act
-        groupApplicationService.initialize()
+        val job = launch {
+            groupApplicationService.initialize()
+        }
 
         // Assert
-        assertThat(groupApplicationService.groupId).isEqualTo("testGroupId")
+        assertThat(groupApplicationService.groupFlow.first()).isEqualTo(
+            Group(
+                id = "testGroupId",
+                name = "testGroupName",
+                owner = "testUserId",
+                default = true
+            )
+        )
         verify(mockUserPreferences, times(1))
             .putString(IUserPreferences.KEY_SELECTED_GROUP_ID, "")
+
+        job.cancel()
     }
 
     @Test
     fun `グループ選択`() = mainCoroutineRule.runBlockingTest {
         // Arrange
-        groupApplicationService.requestGroupIdFlow = flowOf("")
+        mockUserPreferences.stub {
+            on { getString(IUserPreferences.KEY_SELECTED_GROUP_ID) } doReturn ""
+        }
+
+        val job = launch {
+            groupApplicationService.initialize()
+        }
 
         // Act
-        groupApplicationService.initialize()
+        groupApplicationService.select("testGroupId2")
 
         // Assert
-        groupApplicationService.groupId = "abc"
-        assertThat(groupApplicationService.groupId).isEqualTo("abc")
         verify(mockUserPreferences, times(1))
-            .putString(IUserPreferences.KEY_SELECTED_GROUP_ID, "abc")
+            .putString(IUserPreferences.KEY_SELECTED_GROUP_ID, "testGroupId2")
+
+        val group = groupApplicationService.groupFlow.first()
+        assertThat(group).isEqualTo(
+            Group(
+                id = "testGroupId2",
+                name = "testGroupName2",
+                owner = "testUserId2",
+                default = false
+            )
+        )
+
+        // 後始末。runBlockingの外に出せないのでここ。
+        job.cancel()
     }
 
     @Test
     fun `前回設定値がグループIDの初期値になっているか`() = mainCoroutineRule.runBlockingTest {
+        mockUserPreferences.stub {
+            on { getString(IUserPreferences.KEY_SELECTED_GROUP_ID) } doReturn "last_group_id"
+        }
         assertThat(groupApplicationService.requestGroupIdFlow.first()).isEqualTo("last_group_id")
     }
 

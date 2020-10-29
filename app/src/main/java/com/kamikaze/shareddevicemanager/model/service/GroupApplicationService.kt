@@ -16,12 +16,18 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
+interface IGroupApplicationService {
+    val groupFlow: Flow<Group>
+    val group: Group
+    fun select(groupId: String)
+}
+
 @Singleton
 open class GroupApplicationService @Inject constructor(
     private val authService: IAuthService,
     private val groupRepository: IGroupRepository,
     private val userPreferences: IUserPreferences
-) {
+) : IGroupApplicationService {
     suspend fun initialize() {
         coroutineScope {
             launch {
@@ -34,7 +40,7 @@ open class GroupApplicationService @Inject constructor(
                     } else {
                         null
                     }
-                }.combine(requestGroupIdFlow) { userId, groupId ->
+                }.combine(_requestGroupIdFlow) { userId, groupId ->
                     if (userId != null) {
                         getGroup(userId, groupId)
                     } else {
@@ -43,7 +49,7 @@ open class GroupApplicationService @Inject constructor(
                 }.flatMapLatest {
                     it
                 }.collect {
-                    _groupIdFlow.value = it?.id ?: ""
+                    _groupFlow.value = it ?: Group()
                 }
             }
         }
@@ -69,34 +75,27 @@ open class GroupApplicationService @Inject constructor(
             }
     }
 
-    private val _requestGroupIdFlow =
+    private val _requestGroupIdFlow by lazy {
         MutableStateFlow(
             userPreferences.getString(IUserPreferences.KEY_SELECTED_GROUP_ID)
         )
+    }
 
     @VisibleForTesting
-    // UnitTestのとき、flowOf<String>("hoge")などに差し替えられるようにする。
-    // _requestGroupIdFlow(MutableStateFlow)を監視すると、Jobが終わらずUnitTestが失敗する問題への対処
-    var requestGroupIdFlow: Flow<String> = _requestGroupIdFlow
+    val requestGroupIdFlow: Flow<String>
+        get() = _requestGroupIdFlow
 
-    private val _groupIdFlow = MutableStateFlow("")
+    private val _groupFlow = MutableStateFlow(Group())
+    override val groupFlow: Flow<Group> = _groupFlow
 
-    val groupIdFlow: Flow<String> = _groupIdFlow
+    override val group: Group = _groupFlow.value
 
-    var groupId: String
-        get() = _groupIdFlow.value
-        set(value) {
-            _requestGroupIdFlow.value = value
+    override fun select(groupId: String) {
+        _requestGroupIdFlow.value = groupId
 
-            // FIXME 消す
-            // _requestGroupIdFlowが変化すると、ここで設定しなくても_groupIdFlowは更新されるので、消して良い。
-            // 残しておくとvalueが存在しないgroupIdのときに動作が微妙になる。
-            // ただ、消したときのテストコードの書き方がわからないので残す。
-            _groupIdFlow.value = value
-
-            userPreferences.putString(
-                IUserPreferences.KEY_SELECTED_GROUP_ID,
-                value
-            )
-        }
+        userPreferences.putString(
+            IUserPreferences.KEY_SELECTED_GROUP_ID,
+            groupId
+        )
+    }
 }

@@ -9,8 +9,8 @@ import androidx.lifecycle.asLiveData
 import com.kamikaze.shareddevicemanager.R
 import com.kamikaze.shareddevicemanager.model.data.Group
 import com.kamikaze.shareddevicemanager.model.repository.IGroupRepository
-import com.kamikaze.shareddevicemanager.model.service.GroupApplicationService
 import com.kamikaze.shareddevicemanager.model.service.IAuthService
+import com.kamikaze.shareddevicemanager.model.service.IGroupApplicationService
 import com.kamikaze.shareddevicemanager.util.Event
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.map
 class GroupsViewModel @ViewModelInject constructor(
     private val auth: IAuthService,
     private val groupRepository: IGroupRepository,
-    private val groupApplicationService: GroupApplicationService
+    private val groupApplicationService: IGroupApplicationService
 ) : ViewModel() {
     val groups: LiveData<List<Group>> by lazy {
         auth.userFlow
@@ -56,7 +56,7 @@ class GroupsViewModel @ViewModelInject constructor(
     }
 
     fun setCurrentGroup(id: String) {
-        groupApplicationService.groupId = id
+        groupApplicationService.select(id)
         _switchGroupEvent.value = Event(Unit)
     }
 

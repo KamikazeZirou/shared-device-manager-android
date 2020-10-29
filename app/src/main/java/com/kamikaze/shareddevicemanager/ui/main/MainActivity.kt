@@ -5,15 +5,14 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
+import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.firebase.ui.auth.AuthUI
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.kamikaze.shareddevicemanager.R
+import com.kamikaze.shareddevicemanager.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_main.*
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -21,31 +20,34 @@ class MainActivity : AppCompatActivity() {
         const val RC_SIGN_IN = 9001
     }
 
+    private lateinit var binding: ActivityMainBinding
     private val mainViewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding.apply {
+            lifecycleOwner = this@MainActivity
+            viewModel = mainViewModel
 
-        val navController = findNavController(R.id.nav_host_fragment)
-        val navView: BottomNavigationView = findViewById(R.id.nav_view)
-        navView.setupWithNavController(navController)
+            val navController = findNavController(R.id.nav_host_fragment)
+            navView.setupWithNavController(navController)
 
-        val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.navigation_device_list,
-                R.id.navigation_my_device,
-                R.id.navigation_member_list,
+            val appBarConfiguration = AppBarConfiguration(
+                setOf(
+                    R.id.navigation_device_list,
+                    R.id.navigation_my_device,
+                    R.id.navigation_member_list,
+                )
             )
-        )
-        toolbar.setupWithNavController(navController, appBarConfiguration)
-        setSupportActionBar(toolbar)
-
-        toolbar.setOnClickListener {
-            navController.navigate(R.id.navigation_groups)
+            toolbar.setupWithNavController(navController, appBarConfiguration)
+            setSupportActionBar(toolbar)
+            toolbar.setOnClickListener {
+                navController.navigate(R.id.navigation_groups)
+            }
         }
 
-        mainViewModel.shouldSignIn.observe(this, Observer {
+        mainViewModel.shouldSignIn.observe(this, {
             if (it) {
                 startSignIn()
             }
