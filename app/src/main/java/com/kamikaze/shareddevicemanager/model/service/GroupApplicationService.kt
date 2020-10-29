@@ -1,6 +1,5 @@
 package com.kamikaze.shareddevicemanager.model.service
 
-import com.google.common.annotations.VisibleForTesting
 import com.kamikaze.shareddevicemanager.model.data.Group
 import com.kamikaze.shareddevicemanager.model.repository.IGroupRepository
 import com.kamikaze.shareddevicemanager.model.repository.IUserPreferences
@@ -80,10 +79,6 @@ open class GroupApplicationService @Inject constructor(
             userPreferences.getString(IUserPreferences.KEY_SELECTED_GROUP_ID)
         )
     }
-
-    @VisibleForTesting
-    val requestGroupIdFlow: Flow<String>
-        get() = _requestGroupIdFlow
 
     private val _groupFlow = MutableStateFlow(Group())
     override val groupFlow: Flow<Group> = _groupFlow

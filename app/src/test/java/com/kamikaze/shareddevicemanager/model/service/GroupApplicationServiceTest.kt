@@ -198,12 +198,4 @@ class GroupApplicationServiceTest {
         // 後始末。runBlockingの外に出せないのでここ。
         job.cancel()
     }
-
-    @Test
-    fun `前回設定値がグループIDの初期値になっているか`() = mainCoroutineRule.runBlockingTest {
-        mockUserPreferences.stub {
-            on { getString(IUserPreferences.KEY_SELECTED_GROUP_ID) } doReturn "last_group_id"
-        }
-        assertThat(groupApplicationService.requestGroupIdFlow.first()).isEqualTo("last_group_id")
-    }
 }
