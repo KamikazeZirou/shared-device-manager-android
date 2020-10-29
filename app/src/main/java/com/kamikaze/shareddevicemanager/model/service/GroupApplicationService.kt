@@ -87,8 +87,7 @@ open class GroupApplicationService @Inject constructor(
 
     private val _groupFlow = MutableStateFlow(Group())
     override val groupFlow: Flow<Group> = _groupFlow
-
-    override val group: Group = _groupFlow.value
+    override val group: Group get() = _groupFlow.value
 
     override fun select(groupId: String) {
         _requestGroupIdFlow.value = groupId

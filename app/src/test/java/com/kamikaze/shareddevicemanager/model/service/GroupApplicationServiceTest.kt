@@ -178,8 +178,15 @@ class GroupApplicationServiceTest {
         verify(mockUserPreferences, times(1))
             .putString(IUserPreferences.KEY_SELECTED_GROUP_ID, "testGroupId2")
 
-        val group = groupApplicationService.groupFlow.first()
-        assertThat(group).isEqualTo(
+        assertThat(groupApplicationService.groupFlow.first()).isEqualTo(
+            Group(
+                id = "testGroupId2",
+                name = "testGroupName2",
+                owner = "testUserId2",
+                default = false
+            )
+        )
+        assertThat(groupApplicationService.group).isEqualTo(
             Group(
                 id = "testGroupId2",
                 name = "testGroupName2",
@@ -199,5 +206,4 @@ class GroupApplicationServiceTest {
         }
         assertThat(groupApplicationService.requestGroupIdFlow.first()).isEqualTo("last_group_id")
     }
-
 }
