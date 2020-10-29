@@ -5,14 +5,21 @@ import com.kamikaze.shareddevicemanager.model.data.IMyDeviceBuilder
 import com.kamikaze.shareddevicemanager.model.repository.IDeviceRepository
 import com.kamikaze.shareddevicemanager.util.ICoroutineContexts
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class DeviceApplicationService @Inject constructor(
-    private val groupApplicationService: GroupApplicationService,
+    private val groupApplicationService: IGroupApplicationService,
     private val deviceRepository: IDeviceRepository,
     private val deviceBuilder: IMyDeviceBuilder,
     private val coroutineContexts: ICoroutineContexts
@@ -30,10 +37,10 @@ class DeviceApplicationService @Inject constructor(
                 val localMyDevice = deviceBuilder.build()
                 _myDeviceFlow.value = localMyDevice
 
-                groupApplicationService.groupIdFlow
-                    .flatMapLatest { groupId ->
-                        if (groupId.isNotEmpty()) {
-                            deviceRepository.getByInstanceId(groupId, localMyDevice.instanceId)
+                groupApplicationService.groupFlow
+                    .flatMapLatest { group ->
+                        if (!group.id.isNullOrEmpty()) {
+                            deviceRepository.getByInstanceId(group.id, localMyDevice.instanceId)
                         } else {
                             flowOf(null)
                         }
@@ -51,10 +58,10 @@ class DeviceApplicationService @Inject constructor(
 
             // 端末一覧の監視
             launch {
-                groupApplicationService.groupIdFlow
-                    .flatMapLatest { groupId ->
-                        if (groupId.isNotEmpty()) {
-                            deviceRepository.get(groupId)
+                groupApplicationService.groupFlow
+                    .flatMapLatest { group ->
+                        if (!group.id.isNullOrEmpty()) {
+                            deviceRepository.get(group.id)
                         } else {
                             flowOf(null)
                         }
@@ -74,12 +81,12 @@ class DeviceApplicationService @Inject constructor(
             .flowOn(coroutineContexts.default)
 
     fun add(device: Device) {
-        val groupId = groupApplicationService.groupId
+        val groupId = groupApplicationService.group.id ?: ""
         deviceRepository.add(groupId, device)
     }
 
     fun update(device: Device) {
-        val groupId = groupApplicationService.groupId
+        val groupId = groupApplicationService.group.id ?: ""
         deviceRepository.update(groupId, device)
     }
 }

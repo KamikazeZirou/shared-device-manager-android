@@ -1,10 +1,10 @@
 package com.kamikaze.shareddevicemanager.ui.main
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Observer
 import com.google.common.truth.Truth.assertThat
 import com.kamikaze.shareddevicemanager.helper.TestLifecycleOwner
 import com.kamikaze.shareddevicemanager.model.service.AuthState
+import com.kamikaze.shareddevicemanager.model.service.GroupApplicationService
 import com.kamikaze.shareddevicemanager.model.service.IAuthService
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
@@ -48,9 +48,10 @@ class MainViewModelTest {
             }
         }
 
-        viewModel = MainViewModel(authService = mockAuthService)
-        viewModel.shouldSignIn.observe(TestLifecycleOwner(), Observer {})
-        viewModel.isSigningIn.observe(TestLifecycleOwner(), Observer {})
+        val mockGroupApplicationService = GroupApplicationService(mockAuthService, mock(), mock())
+        viewModel = MainViewModel(authService = mockAuthService, mockGroupApplicationService)
+        viewModel.shouldSignIn.observe(TestLifecycleOwner(), {})
+        viewModel.isSigningIn.observe(TestLifecycleOwner(), {})
     }
 
     /*

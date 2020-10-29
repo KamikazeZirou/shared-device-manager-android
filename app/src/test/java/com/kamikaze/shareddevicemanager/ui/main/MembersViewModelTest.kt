@@ -4,12 +4,17 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
 import com.kamikaze.shareddevicemanager.helper.MainCoroutineRule
 import com.kamikaze.shareddevicemanager.helper.TestLifecycleOwner
+import com.kamikaze.shareddevicemanager.model.data.Group
 import com.kamikaze.shareddevicemanager.model.data.Member
 import com.kamikaze.shareddevicemanager.model.repository.IMemberRepository
-import com.kamikaze.shareddevicemanager.model.service.GroupApplicationService
-import com.kamikaze.shareddevicemanager.model.service.IAuthService
+import com.kamikaze.shareddevicemanager.model.service.IGroupApplicationService
 import com.kamikaze.shareddevicemanager.ui.main.members.MembersViewModel
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.stub
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
@@ -25,18 +30,16 @@ class MembersViewModelTest {
 
     private lateinit var viewModel: MembersViewModel
     private lateinit var mockMemberRepository: IMemberRepository
-    private lateinit var mockAuthService: IAuthService
-    private lateinit var groupApplicationService: GroupApplicationService
+    private lateinit var groupApplicationService: IGroupApplicationService
 
     @Before
     fun setUp() {
-        mockAuthService = mock()
-        groupApplicationService = GroupApplicationService(mock(), mock(), mock()).apply {
-            groupId = "testGroupId"
+        groupApplicationService = mock {
+            on { group } doReturn Group("testGroupId")
+            on { groupFlow } doReturn flowOf(Group("testGroupId"))
         }
         mockMemberRepository = mock()
-        viewModel =
-            MembersViewModel(groupApplicationService, mockMemberRepository)
+        viewModel = MembersViewModel(groupApplicationService, mockMemberRepository)
     }
 
     @Test

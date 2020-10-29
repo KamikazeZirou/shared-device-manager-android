@@ -8,8 +8,8 @@ import com.kamikaze.shareddevicemanager.helper.TestLifecycleOwner
 import com.kamikaze.shareddevicemanager.model.data.Group
 import com.kamikaze.shareddevicemanager.model.data.User
 import com.kamikaze.shareddevicemanager.model.repository.IGroupRepository
-import com.kamikaze.shareddevicemanager.model.service.GroupApplicationService
 import com.kamikaze.shareddevicemanager.model.service.IAuthService
+import com.kamikaze.shareddevicemanager.model.service.IGroupApplicationService
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
@@ -17,7 +17,6 @@ import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -31,7 +30,7 @@ class GroupsViewModelTest {
 
     lateinit var mockAuthService: IAuthService
     lateinit var mockGroupRepository: IGroupRepository
-    lateinit var groupApplicationService: GroupApplicationService
+    lateinit var groupApplicationService: IGroupApplicationService
     lateinit var viewModel: GroupsViewModel
 
     @Before
@@ -53,12 +52,11 @@ class GroupsViewModelTest {
                 )
             }
         }
-        groupApplicationService =
-            GroupApplicationService(mockAuthService, mockGroupRepository, mock())
-
-        mainCoroutineRule.launch {
-            groupApplicationService.initialize()
-        }
+        groupApplicationService = mock()
+//        groupApplicationService = mock {
+//            on { group } doReturn Group("testGroupId")
+//            on { groupFlow } doReturn flowOf(Group("testGroupId"))
+//        }
 
         viewModel = GroupsViewModel(mockAuthService, mockGroupRepository, groupApplicationService)
         viewModel.groups.observe(TestLifecycleOwner()) {}
@@ -137,7 +135,7 @@ class GroupsViewModelTest {
     fun setCurrentGroup() {
         viewModel.setCurrentGroup("gid2")
 
-        assertThat(groupApplicationService.groupId).isEqualTo("gid2")
+        verify(groupApplicationService, times(1)).select("gid2")
         val event = viewModel.switchGroupEvent.value!!.getContentIfNotHandled()
         assertThat(event).isNotNull()
     }

@@ -7,29 +7,29 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.kamikaze.shareddevicemanager.model.data.Member
 import com.kamikaze.shareddevicemanager.model.repository.IMemberRepository
-import com.kamikaze.shareddevicemanager.model.service.GroupApplicationService
+import com.kamikaze.shareddevicemanager.model.service.IGroupApplicationService
 import com.kamikaze.shareddevicemanager.util.Event
 import kotlinx.coroutines.flow.flatMapLatest
 
 class MembersViewModel @ViewModelInject constructor(
-    private val groupService: GroupApplicationService,
+    private val groupService: IGroupApplicationService,
     private val memberRepository: IMemberRepository
 ) : ViewModel() {
 
     val members: LiveData<List<Member>> by lazy {
-        groupService.groupIdFlow
+        groupService.groupFlow
             .flatMapLatest {
-                memberRepository.get(it)
+                memberRepository.get(it.id ?: "")
             }
             .asLiveData()
     }
 
     fun add(email: String) {
-        memberRepository.invite(groupService.groupId, email)
+        memberRepository.invite(groupService.group.id ?: "", email)
     }
 
     fun remove(id: String) {
-        memberRepository.remove(groupService.groupId, id)
+        memberRepository.remove(groupService.group.id ?: "", id)
     }
 
     private val _requestRemoveMember = MutableLiveData<Event<Member>>()
