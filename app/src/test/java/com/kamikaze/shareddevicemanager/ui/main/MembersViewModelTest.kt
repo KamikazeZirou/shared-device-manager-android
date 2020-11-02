@@ -77,6 +77,7 @@ class MembersViewModelTest {
                     email = "general@gmail.com",
                     role = Member.Role.GENERAL
                 ),
+                Member()
             )
         )
     }

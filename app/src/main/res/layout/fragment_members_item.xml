@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="android.text.TextUtils" />
+
         <variable
             name="member"
             type="com.kamikaze.shareddevicemanager.model.data.Member" />
@@ -15,9 +17,11 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        invisibleUnless="@{!TextUtils.isEmpty(member.id)}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
+        android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground">
 
         <TextView

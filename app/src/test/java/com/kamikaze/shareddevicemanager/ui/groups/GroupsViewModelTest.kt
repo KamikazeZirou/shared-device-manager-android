@@ -53,10 +53,6 @@ class GroupsViewModelTest {
             }
         }
         groupApplicationService = mock()
-//        groupApplicationService = mock {
-//            on { group } doReturn Group("testGroupId")
-//            on { groupFlow } doReturn flowOf(Group("testGroupId"))
-//        }
 
         viewModel = GroupsViewModel(mockAuthService, mockGroupRepository, groupApplicationService)
         viewModel.groups.observe(TestLifecycleOwner()) {}

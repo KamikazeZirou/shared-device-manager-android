@@ -10,6 +10,7 @@ import com.kamikaze.shareddevicemanager.model.repository.IMemberRepository
 import com.kamikaze.shareddevicemanager.model.service.IGroupApplicationService
 import com.kamikaze.shareddevicemanager.util.Event
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 
 class MembersViewModel @ViewModelInject constructor(
     private val groupService: IGroupApplicationService,
@@ -20,6 +21,10 @@ class MembersViewModel @ViewModelInject constructor(
         groupService.groupFlow
             .flatMapLatest {
                 memberRepository.get(it.id ?: "")
+            }
+            .map {
+                // FloatingActionButtonと最下行が被るので、余白として空の項目を追加しておく
+                it.toMutableList() + Member()
             }
             .asLiveData()
     }
