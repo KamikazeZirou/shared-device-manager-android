@@ -6,14 +6,14 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import com.kamikaze.shareddevicemanager.model.data.Group
+import androidx.lifecycle.map
 import com.kamikaze.shareddevicemanager.model.service.AuthState
-import com.kamikaze.shareddevicemanager.model.service.GroupApplicationService
 import com.kamikaze.shareddevicemanager.model.service.IAuthService
+import com.kamikaze.shareddevicemanager.model.service.IGroupApplicationService
 
 class MainViewModel @ViewModelInject constructor(
     private val authService: IAuthService,
-    groupApplicationService: GroupApplicationService,
+    groupApplicationService: IGroupApplicationService,
 ) : ViewModel() {
     val isSigningIn = MutableLiveData<Boolean>().apply {
         value = false
@@ -25,7 +25,15 @@ class MainViewModel @ViewModelInject constructor(
 
     val shouldSignIn: LiveData<Boolean> = _shouldSignIn
 
-    val group: LiveData<Group> = groupApplicationService.groupFlow.asLiveData()
+    val groupName: LiveData<String> = groupApplicationService.groupFlow.asLiveData()
+        .map {
+            it.name ?: ""
+        }
+
+    val groupNameInitial: LiveData<String> = groupName
+        .map {
+            it.firstOrNull()?.toString() ?: ""
+        }
 
     private val _authState = authService.authStateFlow.asLiveData()
 
