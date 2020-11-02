@@ -26,7 +26,7 @@ class GroupsViewModel @ViewModelInject constructor(
                 groupRepository.getAffiliated(it?.id ?: "")
             }
             .map {
-                // グループ追加ボタンをグループと重ならないようにするために、末尾に空のGroup追加する
+                // FloatingActionButtonと最下行が被るので、余白として空の項目を追加しておく
                 it.toMutableList() + Group()
             }
             .asLiveData()
