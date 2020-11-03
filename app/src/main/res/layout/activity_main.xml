@@ -63,7 +63,7 @@
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp">
 
-                <!-- Group名の先頭をアイコンのように表示する -->
+                <!-- Group名の先頭文字をアイコンのように表示する -->
                 <FrameLayout
                     android:layout_width="40dp"
                     android:layout_height="40dp"
@@ -75,9 +75,10 @@
                         android:background="@drawable/fake_group_icon_bg"
                         android:text="@{viewModel.groupNameInitial}"
                         android:textAlignment="center"
-                        android:textColor="@android:color/black"
+                        android:textColor="@color/colorPrimary"
                         android:textSize="28dp"
-                        tools:ignore="SpUsage" />
+                        tools:ignore="SpUsage"
+                        tools:text="G" />
                 </FrameLayout>
 
                 <TextView
