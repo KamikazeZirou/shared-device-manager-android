@@ -24,6 +24,11 @@ class FirestoreMemberRepository @Inject constructor() :
         val members = mutableListOf<Member>()
         offer(members.toList())
 
+        if (groupId.isEmpty()) {
+            awaitClose {}
+            return@callbackFlow
+        }
+
         val listenerRegistration = firestore.collection("groups")
             .document(groupId)
             .collection("members")
