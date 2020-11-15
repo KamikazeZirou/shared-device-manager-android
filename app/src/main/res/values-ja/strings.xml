@@ -43,4 +43,5 @@
     <string name="remove_group">グループ%1$sを削除しますか?</string>
     <string name="title_groups">グループ</string>
     <string name="adding_group_failed_when_group_name_is_empty">グループ名は1文字以上にしてください。</string>
+    <string name="add_member_remarks">※本アプリにサインアップ済みのユーザでないと登録できません。</string>
 </resources>

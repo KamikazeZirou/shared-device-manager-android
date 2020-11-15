@@ -52,6 +52,7 @@ class MembersFragment : Fragment(),
                 title = getString(R.string.add_member),
                 label = getString(R.string.email),
                 inputType = InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS,
+                remarks = getString(R.string.add_member_remarks)
             )
                 .show(parentFragmentManager, "InputEmailDialog")
         }
