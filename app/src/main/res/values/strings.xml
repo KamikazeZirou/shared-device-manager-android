@@ -45,4 +45,5 @@
     <string name="remove_group">Are you sure you want to remove %1$s?</string>
     <string name="title_groups">Groups</string>
     <string name="adding_group_failed_when_group_name_is_empty">The group name must be at least one letter.</string>
+    <string name="add_member_remarks">Please enter the email addresses of a user who has already sign-up with the app.</string>
 </resources>

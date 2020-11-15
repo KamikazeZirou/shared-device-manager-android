@@ -4,7 +4,8 @@ import androidx.annotation.VisibleForTesting
 import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.Exclude
 import com.google.firebase.firestore.IgnoreExtraProperties
-import java.util.*
+import java.util.Calendar
+import java.util.Date
 
 @IgnoreExtraProperties
 data class Device(
@@ -26,10 +27,10 @@ data class Device(
 ) {
     companion object {
         @VisibleForTesting
-        const val NAME_MAX_LENGTH = 80
+        const val NAME_MAX_LENGTH = 255
 
         @VisibleForTesting
-        const val USER_NAME_MAX_LENGTH = 40
+        const val USER_NAME_MAX_LENGTH = 255
 
         fun validateName(name: String): Boolean =
             when {

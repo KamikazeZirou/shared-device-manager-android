@@ -128,6 +128,18 @@ class GroupsViewModelTest {
     }
 
     @Test
+    fun `所有者ならグループの編集できること`() {
+        val group = Group("gid2", "group-name2", "uid", listOf("uid"), false)
+        assertThat(viewModel.canEdit(group)).isTrue()
+    }
+
+    @Test
+    fun `所有者でないならグループの編集できないこと`() {
+        val group = Group("gid2", "group-name2", "uid2", listOf("uid2"), false)
+        assertThat(viewModel.canEdit(group)).isFalse()
+    }
+
+    @Test
     fun setCurrentGroup() {
         viewModel.setCurrentGroup("gid2")
 
@@ -155,5 +167,23 @@ class GroupsViewModelTest {
         val group = Group("gid2", "group-name2", "uid2", listOf("uid2"), false)
         viewModel.remove(group)
         verify(mockGroupRepository, times(1)).remove(group)
+    }
+
+    @Test
+    fun `所有グループ かつ デフォルトグループでないなら削除できる`() {
+        val group = Group("gid2", "group-name2", "uid", listOf("uid"), false)
+        assertThat(viewModel.canRemove(group)).isTrue()
+    }
+
+    @Test
+    fun `デフォルトグループの削除不可`() {
+        val group = Group("gid2", "group-name2", "uid", listOf("uid"), true)
+        assertThat(viewModel.canRemove(group)).isFalse()
+    }
+
+    @Test
+    fun `所有していないグループの削除不可`() {
+        val group = Group("gid2", "group-name2", "uid2", listOf("uid2"), false)
+        assertThat(viewModel.canRemove(group)).isFalse()
     }
 }

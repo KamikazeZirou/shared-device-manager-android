@@ -4,7 +4,8 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import java.util.*
+import java.util.Calendar
+import java.util.Date
 
 class DeviceTest {
     private lateinit var device: Device
@@ -161,13 +162,6 @@ class DeviceTest {
         assertThat(device.readableOS).isEqualTo("Android 10")
     }
 
-    // 端末名の最大長は80文字
-    @Test
-    fun nameMaxLength() {
-        assertThat(Device.NAME_MAX_LENGTH).isEqualTo(80)
-    }
-
-    // 端末名は0文字より大きく80文字以下
     @Test
     fun validateName_emptyString_returnFalse() {
         assertThat(Device.validateName("")).isFalse()
@@ -188,13 +182,6 @@ class DeviceTest {
         assertThat(Device.validateName("1".repeat(Device.NAME_MAX_LENGTH + 1))).isFalse()
     }
 
-    // 端末利用者名の最大長は40文字
-    @Test
-    fun userNameMaxLength() {
-        assertThat(Device.USER_NAME_MAX_LENGTH).isEqualTo(40)
-    }
-
-    // 端末利用者名は0文字より大きく40文字以下
     @Test
     fun validateUserName() {
         assertThat(Device.validateUserName("")).isFalse()

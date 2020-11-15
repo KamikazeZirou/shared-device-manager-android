@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:focusable="true"
-        android:foreground="?android:attr/selectableItemBackground">
+        android:background="?android:attr/selectableItemBackground">
 
         <TextView
             android:id="@+id/member_name_text"
@@ -43,7 +43,7 @@
 
         <ImageView
             android:id="@+id/imageButton"
-            invisibleUnless="@{member.canDelete}"
+            invisibleUnless="@{viewModel.canRemove(member)}"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginTop="8dp"

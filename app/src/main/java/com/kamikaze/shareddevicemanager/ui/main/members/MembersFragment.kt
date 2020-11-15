@@ -39,8 +39,9 @@ class MembersFragment : Fragment(),
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentMembersBinding.inflate(inflater, container, false)
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
 
-        // Set the adapter
         binding.list.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = MembersAdapter(viewModel)
@@ -52,6 +53,7 @@ class MembersFragment : Fragment(),
                 title = getString(R.string.add_member),
                 label = getString(R.string.email),
                 inputType = InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS,
+                remarks = getString(R.string.add_member_remarks)
             )
                 .show(parentFragmentManager, "InputEmailDialog")
         }

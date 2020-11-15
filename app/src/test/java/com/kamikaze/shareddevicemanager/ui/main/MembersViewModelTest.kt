@@ -6,7 +6,9 @@ import com.kamikaze.shareddevicemanager.helper.MainCoroutineRule
 import com.kamikaze.shareddevicemanager.helper.TestLifecycleOwner
 import com.kamikaze.shareddevicemanager.model.data.Group
 import com.kamikaze.shareddevicemanager.model.data.Member
+import com.kamikaze.shareddevicemanager.model.data.User
 import com.kamikaze.shareddevicemanager.model.repository.IMemberRepository
+import com.kamikaze.shareddevicemanager.model.service.IAuthService
 import com.kamikaze.shareddevicemanager.model.service.IGroupApplicationService
 import com.kamikaze.shareddevicemanager.ui.main.members.MembersViewModel
 import com.nhaarman.mockitokotlin2.doReturn
@@ -29,17 +31,19 @@ class MembersViewModelTest {
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private lateinit var viewModel: MembersViewModel
+    private lateinit var mockAuthService: IAuthService
     private lateinit var mockMemberRepository: IMemberRepository
     private lateinit var groupApplicationService: IGroupApplicationService
 
     @Before
     fun setUp() {
+        mockAuthService = mock()
         groupApplicationService = mock {
-            on { group } doReturn Group("testGroupId")
-            on { groupFlow } doReturn flowOf(Group("testGroupId"))
+            on { group } doReturn Group("testGroupId", owner = "uid")
+            on { groupFlow } doReturn flowOf(Group("testGroupId", owner = "uid"))
         }
         mockMemberRepository = mock()
-        viewModel = MembersViewModel(groupApplicationService, mockMemberRepository)
+        viewModel = MembersViewModel(mockAuthService, groupApplicationService, mockMemberRepository)
     }
 
     @Test
@@ -94,5 +98,55 @@ class MembersViewModelTest {
         viewModel.remove("remove-member-id")
         verify(mockMemberRepository, times(1))
             .remove(eq("testGroupId"), eq("remove-member-id"))
+    }
+
+    @Test
+    fun `グループ所有者ならメンバーを削除できること`() {
+        mockAuthService.stub {
+            on { user } doReturn User(id = "uid", name = "user")
+        }
+        assertThat(viewModel.canRemove(Member(role = Member.Role.GENERAL))).isTrue()
+    }
+
+    @Test
+    fun `グループ所有者でないならメンバーを削除できないこと`() {
+        mockAuthService.stub {
+            on { user } doReturn User(id = "uid2", name = "user2")
+        }
+        assertThat(viewModel.canRemove(Member(role = Member.Role.GENERAL))).isFalse()
+    }
+
+    @Test
+    fun `自分がグループ所有者でも自分自身は削除できないこと`() {
+        mockAuthService.stub {
+            on { user } doReturn User(id = "uid", name = "user")
+        }
+        assertThat(viewModel.canRemove(Member(id = "uid", role = Member.Role.OWNER))).isFalse()
+    }
+
+    @Test
+    fun `グループ所有者ならメンバーを追加できること`() = mainCoroutineRule.runBlockingTest {
+        // Given
+        mockAuthService.stub {
+            on { user } doReturn User(id = "uid", name = "user")
+            on { userFlow } doReturn flowOf(User(id = "uid", name = "user"))
+        }
+        viewModel.canAdd.observe(TestLifecycleOwner(), {})
+
+        // When&Then
+        assertThat(viewModel.canAdd.value!!).isTrue()
+    }
+
+    @Test
+    fun `グループ所有者でないならメンバー追加できないこと`() = mainCoroutineRule.runBlockingTest {
+        // Given
+        mockAuthService.stub {
+            on { user } doReturn User(id = "uid2", name = "user2")
+            on { userFlow } doReturn flowOf(User(id = "uid2", name = "user2"))
+        }
+        viewModel.canAdd.observe(TestLifecycleOwner(), {})
+
+        // When&Then
+        assertThat(viewModel.canAdd.value!!).isFalse()
     }
 }
