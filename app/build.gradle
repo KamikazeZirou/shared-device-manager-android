@@ -12,6 +12,8 @@ apply plugin: 'com.google.gms.google-services'
 
 apply plugin: 'dagger.hilt.android.plugin'
 
+apply plugin: 'com.github.triplet.play'
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
@@ -19,7 +21,7 @@ android {
         applicationId "com.kamikaze.shareddevicemanager"
         minSdkVersion 19
         targetSdkVersion 29
-        versionCode 5
+        versionCode 6
         versionName "0.2.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
@@ -44,6 +46,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+}
+
+play {
+    track = "internal"
+    status = "completed"
+    defaultToAppBundles = true
+    // GPPの認証用環境変数が未定義のときは無効化。有効だと不要なときまで認証情報が求められる。
+    enabled = (System.getenv("ANDROID_PUBLISHER_CREDENTIALS") != null)
 }
 
 dependencies {
