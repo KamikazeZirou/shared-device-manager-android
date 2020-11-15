@@ -52,6 +52,8 @@ play {
     track = "internal"
     status = "completed"
     defaultToAppBundles = true
+    // GPPの認証用環境変数が未定義のときは無効化。有効だと不要なときまで認証情報が求められる。
+    enabled = (System.getenv("ANDROID_PUBLISHER_CREDENTIALS") != null)
 }
 
 dependencies {
