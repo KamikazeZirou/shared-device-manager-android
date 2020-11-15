@@ -4,6 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.main.members.MembersFragment">
 
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.kamikaze.shareddevicemanager.ui.main.members.MembersViewModel" />
+
+    </data>
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -17,6 +25,7 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/add_member_fab"
+            invisibleUnless="@{viewModel.canAdd}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"

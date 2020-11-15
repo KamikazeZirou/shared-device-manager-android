@@ -123,4 +123,30 @@ class MembersViewModelTest {
         }
         assertThat(viewModel.canRemove(Member(id = "uid", role = Member.Role.OWNER))).isFalse()
     }
+
+    @Test
+    fun `グループ所有者ならメンバーを追加できること`() = mainCoroutineRule.runBlockingTest {
+        // Given
+        mockAuthService.stub {
+            on { user } doReturn User(id = "uid", name = "user")
+            on { userFlow } doReturn flowOf(User(id = "uid", name = "user"))
+        }
+        viewModel.canAdd.observe(TestLifecycleOwner(), {})
+
+        // When&Then
+        assertThat(viewModel.canAdd.value!!).isTrue()
+    }
+
+    @Test
+    fun `グループ所有者でないならメンバー追加できないこと`() = mainCoroutineRule.runBlockingTest {
+        // Given
+        mockAuthService.stub {
+            on { user } doReturn User(id = "uid2", name = "user2")
+            on { userFlow } doReturn flowOf(User(id = "uid2", name = "user2"))
+        }
+        viewModel.canAdd.observe(TestLifecycleOwner(), {})
+
+        // When&Then
+        assertThat(viewModel.canAdd.value!!).isFalse()
+    }
 }

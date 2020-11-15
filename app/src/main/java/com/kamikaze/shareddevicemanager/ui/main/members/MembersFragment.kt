@@ -39,8 +39,9 @@ class MembersFragment : Fragment(),
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentMembersBinding.inflate(inflater, container, false)
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
 
-        // Set the adapter
         binding.list.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = MembersAdapter(viewModel)
