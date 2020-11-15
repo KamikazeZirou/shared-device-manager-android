@@ -43,6 +43,8 @@ open class GroupApplicationService @Inject constructor(
                     if (userId != null) {
                         getGroup(userId, groupId)
                     } else {
+                        // サインアウトした時はこのケース。グループの選択を消す。
+                        select("")
                         flowOf(null)
                     }
                 }.flatMapLatest {
