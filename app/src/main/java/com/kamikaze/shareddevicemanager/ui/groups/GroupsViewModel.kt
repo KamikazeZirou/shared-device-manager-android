@@ -66,12 +66,16 @@ class GroupsViewModel @ViewModelInject constructor(
     private val _requestEditGroup = MutableLiveData<Event<Group>>()
     val requestEditGroup: LiveData<Event<Group>> = _requestEditGroup
 
+    fun remove(group: Group) {
+        groupRepository.remove(group)
+    }
+
     fun requestRemove(group: Group) {
         _requestRemoveGroup.value = Event(group)
     }
 
-    fun remove(group: Group) {
-        groupRepository.remove(group)
+    fun canRemove(group: Group): Boolean {
+        return isOwner(group) && group.default == false
     }
 
     fun edit(group: Group, name: String) {
@@ -85,6 +89,15 @@ class GroupsViewModel @ViewModelInject constructor(
 
     fun requestEdit(group: Group) {
         _requestEditGroup.value = Event(group)
+    }
+
+    fun canEdit(group: Group): Boolean {
+        return isOwner(group)
+    }
+
+    private fun isOwner(group: Group): Boolean {
+        val userId = auth.user?.id ?: return false
+        return group.owner == userId
     }
 
     sealed class GroupOpError(@StringRes val messageId: Int) {

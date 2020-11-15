@@ -106,16 +106,11 @@ class FirestoreGroupRepository @Inject constructor() :
     }.buffer(Channel.CONFLATED)
 
     override fun add(group: Group) {
-        require(group.id == null)
-        require(group.name != null)
-        require(group.owner != null)
-        require(group.default != true)
-
         firestore.collection("groups")
             .add(
                 // ここの変換処理も自動テストしたいが・・・
                 group.copy(
-                    members = listOf(group.owner),
+                    members = listOf(group.owner!!),
                     default = false,
                 )
             )
