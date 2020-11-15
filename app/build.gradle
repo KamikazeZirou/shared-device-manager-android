@@ -12,6 +12,8 @@ apply plugin: 'com.google.gms.google-services'
 
 apply plugin: 'dagger.hilt.android.plugin'
 
+apply plugin: 'com.github.triplet.play'
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
@@ -44,6 +46,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+}
+
+play {
+    track = "internal"
+    status = "completed"
+    defaultToAppBundles = true
 }
 
 dependencies {
